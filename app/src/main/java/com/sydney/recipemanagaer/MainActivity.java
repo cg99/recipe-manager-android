@@ -1,13 +1,8 @@
 package com.sydney.recipemanagaer;
 
-import static com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener;
-
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -29,18 +24,39 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         BottomNavigationView bottomNav = findViewById(R.id.nav_view);
-        bottomNav.setOnNavigationItemSelectedListener(navListener);
+        bottomNav.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
 
-        // keep the selected fragment when rotating the device
+            int id = item.getItemId();
+            if (id == R.id.homeFragment) {
+                selectedFragment = new HomeFragment();
+            } else if (id == R.id.dashboardFragment) {
+                selectedFragment = new DashboardFragment();
+            } else if (id == R.id.createRecipeFragment) {
+                selectedFragment = new CreateRecipeFragment();
+            } else if (id == R.id.favoriteFragment) {
+                selectedFragment = new FavoriteFragment();
+            }
+
+            if (selectedFragment != null) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+            }
+
+            return true; // Return true to display the item as the selected item
+        });
+
+        // Set the home fragment as default
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new HomeFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
         }
 
 
+        // nothing
         textView = findViewById(R.id.text_view);
         RequestQueue queue = Volley.newRequestQueue(this);
 
+
+        // server
         String url = "http://10.0.2.2:3000/recipe"; // Your URL
 //        String url ="https://recipe-manager-server.onrender.com"; // server URL
 
@@ -61,67 +77,5 @@ public class MainActivity extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
-    private OnNavigationItemSelectedListener navListener =
-            new OnNavigationItemSelectedListener() {
-                @SuppressLint("NonConstantResourceId")
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    Fragment selectedFragment = null;
-
-                    int itemId = item.getItemId();
-
-                    if (itemId == R.id.nav_home) {
-                        selectedFragment = new HomeFragment();
-                    } else if (itemId == R.id.nav_dashboard) {
-                        selectedFragment = new DashboardFragment();
-                    } else if (itemId == R.id.nav_create) {
-                        selectedFragment = new CreateRecipeFragment();
-                    } else if (itemId == R.id.nav_favorite) {
-                        selectedFragment = new FavoriteFragment();
-                    }
-
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            selectedFragment).commit();
-
-                    return true;
-                }
-            };
-
-
-    @Override
-    protected  void onStart() {
-        super.onStart();
-        System.out.println("Start");
-    }
-
-    @Override
-    protected  void onResume() {
-        super.onResume();
-        System.out.println("Resume");
-    }
-
-    @Override
-    protected  void onPause() {
-        super.onPause();
-        System.out.println("Pause");
-    }
-
-    @Override
-    protected  void onStop() {
-        super.onStop();
-        System.out.println("Stop");
-    }
-
-    @Override
-    protected  void onDestroy() {
-        super.onDestroy();
-        System.out.println("Destroy");
-    }
-
-    @Override
-    protected  void onRestart() {
-        super.onRestart();
-        System.out.println("Restart");
-    }
 
 }

@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- Color for the BottomNavigationView items (icon & text) when they are not selected -->
+    <color name="bottom_nav_item_color">#757575</color> <!-- Grey -->
+
+    <!-- Color for the BottomNavigationView items (icon & text) when they are selected -->
+    <color name="bottom_nav_item_selected_color">#D32F2F</color> <!-- Red -->
 </resources>
