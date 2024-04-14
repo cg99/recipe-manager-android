@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
             // Validate input...
 
             // If login is successful
+            Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show();
             navigateToMainActivity();
         });
 
