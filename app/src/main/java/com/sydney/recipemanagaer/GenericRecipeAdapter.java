@@ -1,5 +1,6 @@
 package com.sydney.recipemanagaer;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,15 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 public class GenericRecipeAdapter extends RecyclerView.Adapter<GenericRecipeAdapter.ViewHolder> {
-
+    public interface OnRecipeClickListener {
+        void onRecipeClick(Recipe recipe);
+    }
     private List<Recipe> dataList;
+    private OnRecipeClickListener listener;
 
-    public GenericRecipeAdapter(List<Recipe> dataList) {
+    public GenericRecipeAdapter(List<Recipe> dataList, OnRecipeClickListener listener) {
         this.dataList = dataList;
+        this.listener = listener;
     }
 
     @Override
@@ -40,6 +45,13 @@ public class GenericRecipeAdapter extends RecyclerView.Adapter<GenericRecipeAdap
                 .error(R.drawable.error_image) // An error image to show if the real image fails to load
                 .into(holder.featuredImageView); // The target ImageView to load the image into
 
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onRecipeClick(recipe);
+            } else {
+                Log.e("Adapter", "Listener not initialized");
+            }
+        });
     }
 
 
