@@ -1,43 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="10dp"
+    android:paddingRight="10dp"
+    android:paddingLeft="10dp"
+    android:paddingBottom="0dp"
+    android:fitsSystemWindows="true"
+    tools:context=".HomeFragment">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:context=".HomeFragment"
+    <!-- top section with search and filter-->
+    <include layout="@layout/top_section" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent"
+        android:paddingBottom="50dp"
+        >
 
-        <!-- top section with search and filter-->
-        <include layout="@layout/top_section"/>
-
-
-        <!-- Recent Recipes Section -->
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/recent_recipes"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_recent_recipes"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-           />
+            <!-- Recent Recipes Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/recent_recipes"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-        <!-- Popular Posts Section -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/popular_posts"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            <!-- Making RecyclerView height wrap_content and not scrollable -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_recent_recipes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_popular_posts"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            <!-- Popular Posts Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/popular_posts"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
- />
-
-    </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_popular_posts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

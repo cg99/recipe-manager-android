@@ -4,60 +4,37 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CreateRecipeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CreateRecipeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public CreateRecipeFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CreateRecipeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CreateRecipeFragment newInstance(String param1, String param2) {
-        CreateRecipeFragment fragment = new CreateRecipeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private EditText editTextRecipeName, editTextRecipeDescription, editTextIngredients, editTextInstructions;
+    private Button buttonSubmitRecipe;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_create_recipe, container, false);
+
+        editTextRecipeName = view.findViewById(R.id.editTextRecipeName);
+        editTextRecipeDescription = view.findViewById(R.id.editTextRecipeDescription);
+        editTextIngredients = view.findViewById(R.id.editTextIngredients);
+        editTextInstructions = view.findViewById(R.id.editTextInstructions);
+        buttonSubmitRecipe = view.findViewById(R.id.buttonSubmitRecipe);
+
+        buttonSubmitRecipe.setOnClickListener(v -> submitRecipe());
+
+        return view;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_recipe, container, false);
+    private void submitRecipe() {
+        String name = editTextRecipeName.getText().toString();
+        String description = editTextRecipeDescription.getText().toString();
+        String ingredients = editTextIngredients.getText().toString();
+        String instructions = editTextInstructions.getText().toString();
+
+        // Validate input and process the recipe creation
+        // Here, you can communicate with ViewModel or directly with your data layer
     }
 }
