@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="50dp"
     tools:context=".CreateRecipeFragment">
 
     <LinearLayout
@@ -58,6 +59,30 @@
             android:inputType="textMultiLine"
             android:minLines="5"
             android:padding="8dp"
+            android:layout_marginBottom="16dp"/>
+
+        <EditText
+            android:id="@+id/editTextCookingTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/cooking_time"
+            android:inputType="number"
+            android:padding="8dp"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/buttonSelectImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_image"
+            android:backgroundTint="@color/dark"
+            android:layout_marginBottom="16dp"/>
+
+        <ImageView
+            android:id="@+id/imageViewSelected"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
             android:layout_marginBottom="16dp"/>
 
         <Button

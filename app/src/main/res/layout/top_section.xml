@@ -15,6 +15,7 @@
         android:queryHint="search recipe"
         app:iconifiedByDefault="false"
         android:focusedByDefault="false"
+        android:background="@color/light_gray"
         app:searchIcon="@drawable/ic_search"
         app:closeIcon="@drawable/ic_clear"
         />
