@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
@@ -21,7 +21,7 @@ public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRec
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         SearchView searchView = view.findViewById(R.id.search_view);
-        Button filterButton = view.findViewById(R.id.button_filter);
+        ImageButton filterButton = view.findViewById(R.id.button_filter);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -94,23 +94,7 @@ public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRec
 
     @Override
     public void onRecipeClick(Recipe recipe) {
-        RecipeDetailFragment detailFragment = new RecipeDetailFragment();
-        Bundle args = new Bundle();
-        args.putString("title", recipe.getName());
-        args.putString("description", recipe.getDescription());
-        args.putString("imageUrl", recipe.getFeaturedImgURL());
-        args.putString("instructions", recipe.getInstructions());
-        args.putString("cookingTime", "Cooking Time: " + recipe.getCookingTime() + " minutes");
-        detailFragment.setArguments(args);
-
-        // Perform the fragment transaction to display the RecipeDetailFragment
-        if (getActivity() != null) {
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, detailFragment)
-                    .addToBackStack(null)
-                    .commit();
-        }
-
+        Util.handleViewRecipeDetail(recipe, getActivity());
     }
 
     private void setupRecyclerView(RecyclerView recyclerView, List<Recipe> recipes) {

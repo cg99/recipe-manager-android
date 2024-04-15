@@ -33,4 +33,5 @@
     <string name="create_recipe">Create Recipe</string>
     <string name="select_image">Upload Image</string>
     <string name="cooking_time">Cooking Time (minutes)</string>
+    <string name="toggle_favorite">Toggle Favorite</string>
 </resources>

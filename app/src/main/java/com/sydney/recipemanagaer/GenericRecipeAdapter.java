@@ -18,9 +18,9 @@ public class GenericRecipeAdapter extends RecyclerView.Adapter<GenericRecipeAdap
         void onRecipeClick(Recipe recipe);
     }
     private List<Recipe> dataList;
-    private OnRecipeClickListener listener;
+    OnRecipeClickListener listener;
 
-    public GenericRecipeAdapter(List<Recipe> dataList, OnRecipeClickListener listener) {
+    GenericRecipeAdapter(List<Recipe> dataList, OnRecipeClickListener listener) {
         this.dataList = dataList;
         this.listener = listener;
     }
@@ -64,15 +64,15 @@ public class GenericRecipeAdapter extends RecyclerView.Adapter<GenericRecipeAdap
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
         public TextView descriptionTextView;
-
         public ImageView featuredImageView;
-
+        public ImageView favoriteIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.nameTextView);
             descriptionTextView = itemView.findViewById(R.id.descriptionTextView);
             featuredImageView = itemView.findViewById(R.id.featuredImageView);
+            favoriteIcon = itemView.findViewById(R.id.imageViewFavorite);
         }
     }
 }
