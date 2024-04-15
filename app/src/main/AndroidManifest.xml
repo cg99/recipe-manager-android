@@ -25,7 +25,9 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"
+            />
 
         <uses-library
             android:name="org.apache.http.legacy"
