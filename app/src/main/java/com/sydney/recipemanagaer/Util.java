@@ -28,4 +28,13 @@ public class Util {
             System.out.println("Error: Activity provided is not a FragmentActivity and cannot perform fragment transactions.");
         }
     }
+
+
+    public static User getUser() {
+        return new User("John Doe",
+                "john.doe@example.com",
+                "Passionate food lover.",
+                "https://picsum.photos/id/250/200.jpg");
+
+    }
 }
