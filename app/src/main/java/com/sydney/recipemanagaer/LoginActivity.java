@@ -2,6 +2,7 @@ package com.sydney.recipemanagaer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -27,10 +28,18 @@ public class LoginActivity extends AppCompatActivity {
         TextView textViewRegister = findViewById(R.id.textViewRegister);
 
         buttonLogin.setOnClickListener(view -> {
-            // Validate input...
+            // Validate input
+            String username = editTextEmail.getText().toString();
+            String password = editTextPassword.getText().toString();
 
-            // If login is successful
-            Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show();
+            // Perform validation
+            if (isValidCredentials(username, password)) {
+                // If provided credentials are valid then go to homepage
+                Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+            } else {
+                // If credentials are invalid, show an error message
+                Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
+            }
             navigateToMainActivity();
         });
 
@@ -40,6 +49,10 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+    }
+    private boolean isValidCredentials(String username, String password) {
+        //check if both fields are non-empty
+        return !TextUtils.isEmpty(username) && !TextUtils.isEmpty(password);
     }
 
     private boolean userIsLoggedIn() {
