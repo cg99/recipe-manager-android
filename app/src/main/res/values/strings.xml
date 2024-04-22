@@ -34,4 +34,9 @@
     <string name="select_image">Upload Image</string>
     <string name="cooking_time">Cooking Time (minutes)</string>
     <string name="toggle_favorite">Toggle Favorite</string>
+    <string name="recipe_name_hint">name\n</string>
+    <string name="recipe_description_hint">enter description</string>
+    <string name="instructions_hint">instructions\n</string>
+    <string name="cooking_time_hint">in minutes\n</string>
+    <string name="add_new_recipe">Add New Recipe</string>
 </resources>

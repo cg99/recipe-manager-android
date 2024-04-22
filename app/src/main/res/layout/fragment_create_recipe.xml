@@ -7,6 +7,7 @@
     android:paddingBottom="50dp"
     tools:context=".CreateRecipeFragment">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,76 +16,138 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/create_recipe"
-            android:textSize="24dp"
+            android:layout_height="wrap_content"
+            android:text="@string/add_new_recipe"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textStyle="bold"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="10dp"
             />
 
+
+        <!-- Recipe Name -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/recipe_name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
         <EditText
             android:id="@+id/editTextRecipeName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/recipe_name"
+            android:hint="@string/recipe_name_hint"
             android:inputType="textPersonName"
             android:padding="8dp"
+            android:background="@drawable/border"
             android:layout_marginBottom="16dp"/>
 
+        <!-- Recipe Description -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/recipe_description"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
         <EditText
             android:id="@+id/editTextRecipeDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/recipe_description"
+            android:hint="@string/recipe_description_hint"
             android:inputType="textMultiLine"
             android:minLines="3"
             android:padding="8dp"
+            android:background="@drawable/border"
             android:layout_marginBottom="16dp"/>
 
-        <EditText
-            android:id="@+id/editTextIngredients"
+        <!-- Ingredients (using Chips for selection) -->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/ingredients"
-            android:inputType="textMultiLine"
-            android:minLines="3"
-            android:padding="8dp"
-            android:layout_marginBottom="16dp"/>
+            android:text="@string/ingredients"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupIngredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:singleLine="false"
+            app:chipSpacing="8dp"
+            android:layout_marginBottom="16dp">
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Flour"
+                app:closeIconEnabled="false"/>
 
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sugar"
+                app:closeIconEnabled="false"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Eggs"
+                app:closeIconEnabled="false"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Butter"
+                app:closeIconEnabled="false"/>
+        </com.google.android.material.chip.ChipGroup>
+
+        <!-- Instructions -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instructions"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
         <EditText
             android:id="@+id/editTextInstructions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/instructions"
+            android:hint="@string/instructions_hint"
             android:inputType="textMultiLine"
             android:minLines="5"
             android:padding="8dp"
+            android:background="@drawable/border"
             android:layout_marginBottom="16dp"/>
 
+        <!-- Cooking Time -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cooking_time"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
         <EditText
             android:id="@+id/editTextCookingTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/cooking_time"
+            android:hint="@string/cooking_time_hint"
             android:inputType="number"
             android:padding="8dp"
+            android:background="@drawable/border"
             android:layout_marginBottom="16dp"/>
 
+        <!-- Image Selection and Preview -->
         <Button
             android:id="@+id/buttonSelectImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/select_image"
             android:backgroundTint="@color/dark"
-            android:layout_marginBottom="16dp"/>
-
+            android:layout_marginBottom="8dp"/>
         <ImageView
             android:id="@+id/imageViewSelected"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:layout_marginBottom="16dp"/>
 
+        <!-- Submit Button -->
         <Button
             android:id="@+id/buttonSubmitRecipe"
             android:layout_width="match_parent"

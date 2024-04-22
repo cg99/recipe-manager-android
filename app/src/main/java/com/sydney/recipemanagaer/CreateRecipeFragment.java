@@ -8,10 +8,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 
 /**
  * Fragment to handle the creation of new recipes, including input fields for
@@ -30,6 +34,7 @@ public class CreateRecipeFragment extends Fragment {
 
     // Launcher for selecting an image from the gallery
     private ActivityResultLauncher<String> imagePickerLauncher;
+    private ChipGroup chipGroupIngredients;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,11 +48,13 @@ public class CreateRecipeFragment extends Fragment {
                     imageViewSelected.setImageURI(uri);
                 }
         );
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_recipe, container, false);
+
 
         // Initialize all view components
         initViews(view);
@@ -64,7 +71,7 @@ public class CreateRecipeFragment extends Fragment {
     private void initViews(View view) {
         editTextRecipeName = view.findViewById(R.id.editTextRecipeName);
         editTextRecipeDescription = view.findViewById(R.id.editTextRecipeDescription);
-        editTextIngredients = view.findViewById(R.id.editTextIngredients);
+        chipGroupIngredients = view.findViewById(R.id.chipGroupIngredients);
         editTextInstructions = view.findViewById(R.id.editTextInstructions);
         editTextCookingTime = view.findViewById(R.id.editTextCookingTime);
         imageViewSelected = view.findViewById(R.id.imageViewSelected);
@@ -80,7 +87,28 @@ public class CreateRecipeFragment extends Fragment {
             imagePickerLauncher.launch("image/*");
         });
 
+        setupChipGroup(view);
+
         buttonSubmitRecipe.setOnClickListener(v -> submitRecipe());
+    }
+
+    private void setupChipGroup(View view) {
+        chipGroupIngredients.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            if (checkedIds.isEmpty()) {
+                Toast.makeText(getContext(), "No ingredients selected", Toast.LENGTH_SHORT).show();
+            } else {
+                StringBuilder selected = new StringBuilder("Selected ingredients: ");
+                for (int id : checkedIds) {
+                    Chip chip = group.findViewById(id);
+                    if (chip != null) {
+                        selected.append(chip.getText()).append(", ");
+                    }
+                }
+                // Remove the last comma and space
+                if (selected.length() > 0) selected.setLength(selected.length() - 2);
+                Toast.makeText(getContext(), selected.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     /**

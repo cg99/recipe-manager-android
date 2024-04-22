@@ -19,6 +19,7 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="31"
         android:requestLegacyExternalStorage="true"
+        android:enableOnBackInvokedCallback="true"
         >
         <activity
             android:name=".RegisterActivity"
