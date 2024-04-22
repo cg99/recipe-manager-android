@@ -67,14 +67,14 @@ public class GenericRecipeAdapter extends RecyclerView.Adapter<GenericRecipeAdap
         public TextView nameTextView;
         public TextView descriptionTextView;
         public ImageView featuredImageView;
-        public ImageView favoriteIcon;
+//        public ImageView favoriteIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.nameTextView);
             descriptionTextView = itemView.findViewById(R.id.descriptionTextView);
             featuredImageView = itemView.findViewById(R.id.featuredImageView);
-            favoriteIcon = itemView.findViewById(R.id.imageViewFavorite);
+//            favoriteIcon = itemView.findViewById(R.id.imageViewFavorite);
         }
     }
 }
