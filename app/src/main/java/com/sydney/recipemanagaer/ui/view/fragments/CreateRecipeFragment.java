@@ -1,4 +1,4 @@
-package com.sydney.recipemanagaer;
+package com.sydney.recipemanagaer.ui.view.fragments;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.sydney.recipemanagaer.ui.view.adapters.IngredientAdapter;
+import com.sydney.recipemanagaer.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;

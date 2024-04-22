@@ -1,4 +1,4 @@
-package com.sydney.recipemanagaer;
+package com.sydney.recipemanagaer.model;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.sydney.recipemanagaer;
+package com.sydney.recipemanagaer.ui.view.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +10,9 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.sydney.recipemanagaer.R;
+import com.sydney.recipemanagaer.model.User;
+import com.sydney.recipemanagaer.utils.Util;
 
 
 public class DashboardFragment extends Fragment {

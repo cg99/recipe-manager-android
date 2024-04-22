@@ -1,4 +1,4 @@
-package com.sydney.recipemanagaer;
+package com.sydney.recipemanagaer.ui.view.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +9,11 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.sydney.recipemanagaer.R;
+import com.sydney.recipemanagaer.model.Recipe;
+import com.sydney.recipemanagaer.utils.Util;
+import com.sydney.recipemanagaer.ui.view.adapters.FavoriteAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;

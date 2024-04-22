@@ -1,4 +1,4 @@
-package com.sydney.recipemanagaer;
+package com.sydney.recipemanagaer.model;
 
 public class User {
     private String name, email, bio, password, profilePic;

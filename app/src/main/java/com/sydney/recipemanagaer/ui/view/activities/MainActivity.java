@@ -1,4 +1,4 @@
-package com.sydney.recipemanagaer;
+package com.sydney.recipemanagaer.ui.view.activities;
 
 import android.os.Bundle;
 import android.widget.TextView;
@@ -7,6 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.sydney.recipemanagaer.ui.view.fragments.CreateRecipeFragment;
+import com.sydney.recipemanagaer.ui.view.fragments.DashboardFragment;
+import com.sydney.recipemanagaer.ui.view.fragments.FavoriteFragment;
+import com.sydney.recipemanagaer.ui.view.fragments.HomeFragment;
+import com.sydney.recipemanagaer.R;
 
 
 public class MainActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package com.sydney.recipemanagaer;
+package com.sydney.recipemanagaer.ui.view.adapters;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.sydney.recipemanagaer.R;
+import com.sydney.recipemanagaer.model.Recipe;
 
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class GenericRecipeAdapter extends RecyclerView.Adapter<GenericRecipeAdap
     private List<Recipe> dataList;
     OnRecipeClickListener listener;
 
-    GenericRecipeAdapter(List<Recipe> dataList, OnRecipeClickListener listener) {
+    public GenericRecipeAdapter(List<Recipe> dataList, OnRecipeClickListener listener) {
         this.dataList = dataList;
         this.listener = listener;
     }

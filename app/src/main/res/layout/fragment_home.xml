@@ -10,7 +10,7 @@
     android:paddingLeft="10dp"
     android:paddingBottom="0dp"
     android:fitsSystemWindows="true"
-    tools:context=".HomeFragment">
+    tools:context=".ui.view.fragments.HomeFragment">
 
     <!-- top section with search and filter-->
     <include layout="@layout/top_section" />

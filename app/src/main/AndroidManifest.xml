@@ -22,10 +22,10 @@
         android:enableOnBackInvokedCallback="true"
         >
         <activity
-            android:name=".RegisterActivity"
+            android:name=".ui.view.activities.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.view.activities.MainActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan"
             />
@@ -35,7 +35,7 @@
             android:required="false" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.view.activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

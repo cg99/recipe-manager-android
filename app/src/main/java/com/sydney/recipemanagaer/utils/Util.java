@@ -1,9 +1,14 @@
-package com.sydney.recipemanagaer;
+package com.sydney.recipemanagaer.utils;
 
 import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.FragmentActivity;
+
+import com.sydney.recipemanagaer.R;
+import com.sydney.recipemanagaer.model.Recipe;
+import com.sydney.recipemanagaer.model.User;
+import com.sydney.recipemanagaer.ui.view.fragments.RecipeDetailFragment;
 
 public class Util {
     public static void handleViewRecipeDetail(Recipe recipe, Activity activity) {
