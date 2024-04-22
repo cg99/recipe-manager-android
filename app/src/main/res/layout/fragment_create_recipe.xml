@@ -7,7 +7,6 @@
     android:paddingBottom="50dp"
     tools:context=".CreateRecipeFragment">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,117 +19,105 @@
             android:text="@string/add_new_recipe"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textStyle="bold"
-            android:layout_marginBottom="10dp"
-            />
+            android:layout_marginBottom="10dp"/>
 
-
+        <!-- Each TextInputLayout contains a label and an EditText with a clear outlined style -->
         <!-- Recipe Name -->
-        <TextView
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/recipe_name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-        <EditText
-            android:id="@+id/editTextRecipeName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/recipe_name_hint"
-            android:inputType="textPersonName"
-            android:padding="8dp"
-            android:background="@drawable/border"
-            android:layout_marginBottom="16dp"/>
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/recipe_name">
+
+            <EditText
+                android:id="@+id/editTextRecipeName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:padding="8dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Recipe Description -->
-        <TextView
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/recipe_description"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-        <EditText
-            android:id="@+id/editTextRecipeDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/recipe_description_hint"
-            android:inputType="textMultiLine"
-            android:minLines="3"
-            android:padding="8dp"
-            android:background="@drawable/border"
-            android:layout_marginBottom="16dp"/>
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/recipe_description">
 
-        <!-- Ingredients (using Chips for selection) -->
-        <TextView
+            <EditText
+                android:id="@+id/editTextRecipeDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:padding="8dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Input field for ingredient selection -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/ingredients"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            app:hintEnabled="true"
+            app:hintAnimationEnabled="true"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/select_ingredients">
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextViewIngredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:textSize="16dp"
+                android:completionThreshold="1"
+                android:drawableEnd="@drawable/ic_dropdown"
+                android:padding="8dp"
+                android:imeOptions="actionDone"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- ChipGroup for displaying selected ingredients as chips -->
         <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupIngredients"
+            android:id="@+id/chipGroupSelectedIngredients"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:singleLine="false"
-            app:chipSpacing="8dp"
-            android:layout_marginBottom="16dp">
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Flour"
-                app:closeIconEnabled="false"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sugar"
-                app:closeIconEnabled="false"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Eggs"
-                app:closeIconEnabled="false"/>
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Butter"
-                app:closeIconEnabled="false"/>
-        </com.google.android.material.chip.ChipGroup>
+            android:padding="4dp"
+            app:singleSelection="false"
+            app:chipSpacing="8dp"/>
 
         <!-- Instructions -->
-        <TextView
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/instructions"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-        <EditText
-            android:id="@+id/editTextInstructions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/instructions_hint"
-            android:inputType="textMultiLine"
-            android:minLines="5"
-            android:padding="8dp"
-            android:background="@drawable/border"
-            android:layout_marginBottom="16dp"/>
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/instructions">
+
+            <EditText
+                android:id="@+id/editTextInstructions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="5"
+                android:padding="8dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Cooking Time -->
-        <TextView
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/cooking_time"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-        <EditText
-            android:id="@+id/editTextCookingTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/cooking_time_hint"
-            android:inputType="number"
-            android:padding="8dp"
-            android:background="@drawable/border"
-            android:layout_marginBottom="16dp"/>
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/cooking_time">
+
+            <EditText
+                android:id="@+id/editTextCookingTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:padding="8dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Image Selection and Preview -->
         <Button
@@ -156,6 +143,5 @@
             android:backgroundTint="@color/primary"
             android:textColor="@android:color/white"
             android:layout_marginTop="16dp"/>
-
     </LinearLayout>
 </ScrollView>
