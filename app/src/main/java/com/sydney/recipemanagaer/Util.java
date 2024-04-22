@@ -13,6 +13,7 @@ public class Util {
             Bundle args = new Bundle();
             args.putString("title", recipe.getName());
             args.putString("description", recipe.getDescription());
+            args.putString("ingredients", String.join(", ", recipe.getIngredients())); // Joining the list of ingredients into a single string
             args.putString("imageUrl", recipe.getFeaturedImgURL());
             args.putString("instructions", recipe.getInstructions());
             args.putString("cookingTime", "Time: " + recipe.getCookingTime() + " minutes"); // Pass as int if you want to use it as a number later

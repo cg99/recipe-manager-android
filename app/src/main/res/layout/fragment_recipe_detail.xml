@@ -30,6 +30,14 @@
         android:padding="8dp"/>
 
     <TextView
+        android:id="@+id/textViewRecipeIngredients"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:padding="8dp"/>
+
+
+    <TextView
         android:id="@+id/textViewRecipeInstructions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
