@@ -69,12 +69,13 @@
                 android:id="@+id/autoCompleteTextViewIngredients"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textSize="16dp"
                 android:completionThreshold="1"
                 android:drawableEnd="@drawable/ic_dropdown"
+                android:imeOptions="actionDone"
+                android:inputType="text"
                 android:padding="8dp"
-                android:imeOptions="actionDone"/>
+                android:paddingStart="16dp"
+                android:textSize="16dp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- ChipGroup for displaying selected ingredients as chips -->
@@ -82,9 +83,8 @@
             android:id="@+id/chipGroupSelectedIngredients"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
-            app:singleSelection="false"
-            app:chipSpacing="8dp"/>
+            app:chipSpacing="8dp"
+            app:singleSelection="false" />
 
         <!-- Instructions -->
         <com.google.android.material.textfield.TextInputLayout

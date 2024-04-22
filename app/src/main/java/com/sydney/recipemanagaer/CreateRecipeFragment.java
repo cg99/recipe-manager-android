@@ -9,6 +9,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -126,12 +127,44 @@ public class CreateRecipeFragment extends Fragment {
      * Collects the input data from the fields and handles the creation of a new recipe.
      */
     private void submitRecipe() {
-        String name = editTextRecipeName.getText().toString();
-        String description = editTextRecipeDescription.getText().toString();
-//        String ingredients = editTextIngredients.getText().toString();
-        String instructions = editTextInstructions.getText().toString();
-        String cookingTime = editTextCookingTime.getText().toString();
+        String name = editTextRecipeName.getText().toString().trim();
+        String description = editTextRecipeDescription.getText().toString().trim();
+        String instructions = editTextInstructions.getText().toString().trim();
+        String cookingTimeStr = editTextCookingTime.getText().toString().trim();
 
-        // Placeholder for recipe submission logic
+        // Collecting the ingredients from the ChipGroup
+        StringBuilder ingredientsBuilder = new StringBuilder();
+        for (int i = 0; i < chipGroup.getChildCount(); i++) {
+            Chip chip = (Chip) chipGroup.getChildAt(i);
+            if (i > 0) ingredientsBuilder.append(", ");
+            ingredientsBuilder.append(chip.getText().toString());
+        }
+        String ingredients = ingredientsBuilder.toString();
+
+        // Basic validation to check if any field is empty
+        if (name.isEmpty() || description.isEmpty() || ingredients.isEmpty() || instructions.isEmpty() || cookingTimeStr.isEmpty()) {
+            // Show an error message or toast notification to the user
+            Toast.makeText(getContext(), "Please fill in all fields.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int cookingTime;
+        try {
+            cookingTime = Integer.parseInt(cookingTimeStr);  // Convert cooking time to integer
+        } catch (NumberFormatException e) {
+            // Handle case where cooking time is not a valid integer
+            Toast.makeText(getContext(), "Invalid cooking time. Please enter a number.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // If all validations are passed, proceed to use the data
+        // Here you might call a method to save the data to a database or send to a server
+        // e.g., viewModel.createRecipe(new Recipe(name, description, ingredients, instructions, cookingTime, imageUri));
+        Toast.makeText(getContext(), "Recipe submitted successfully!", Toast.LENGTH_LONG).show();
+
+        // Optionally, clear the form or navigate away
+        // clearForm();
+        // navigateToRecipeList();
     }
+
 }
