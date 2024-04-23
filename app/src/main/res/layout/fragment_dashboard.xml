@@ -45,5 +45,23 @@
             android:textSize="14sp"
             android:text="Short bio about the user..."/>
 
+        <!-- Admin Dashboard Link -->
+        <Button
+            android:id="@+id/btnAdminDashboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Admin Dashboard"
+            android:visibility="gone"/> <!-- Initially hidden -->
+
+        <!-- My Recipes for users -->
+        <TextView
+            android:id="@+id/textViewMyRecipes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="My Recipes"
+            />
+
     </LinearLayout>
 </ScrollView>

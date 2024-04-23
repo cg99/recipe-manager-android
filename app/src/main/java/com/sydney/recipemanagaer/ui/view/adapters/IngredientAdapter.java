@@ -44,13 +44,22 @@ public class IngredientAdapter extends ArrayAdapter<String> {
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                List<String> filterList = (List<String>) results.values;
-                if (results != null && results.count > 0) {
-                    clear();
-                    for (String item : filterList) {
-                        add(item);
+                if (results.values instanceof List<?>) { // Check if results.values is indeed a List
+                    List<?> rawList = (List<?>) results.values;
+                    List<String> filterList = new ArrayList<>();
+                    for (Object object : rawList) {
+                        if (object instanceof String) { // Further checks to ensure it's List<String>
+                            filterList.add((String) object);
+                        }
                     }
-                    notifyDataSetChanged();
+
+                    if (!filterList.isEmpty()) {
+                        clear();
+                        for (String item : filterList) {
+                            add(item);
+                        }
+                        notifyDataSetChanged();
+                    }
                 }
             }
         };

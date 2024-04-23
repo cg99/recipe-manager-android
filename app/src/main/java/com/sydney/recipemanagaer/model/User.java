@@ -1,13 +1,16 @@
 package com.sydney.recipemanagaer.model;
 
 public class User {
-    private String name, email, bio, password, profilePic;
+    private String name, email, username, bio, password, profilePic;
+    private boolean isAdmin;
 
-    public User(String name, String email, String bio, String profilePic) {
+    public User(String name, String email, String username, String bio, String profilePic, boolean isAdmin) {
         this.name = name;
         this.email = email;
         this.bio = bio;
         this.profilePic = profilePic;
+        this.username = username;
+        this.isAdmin = isAdmin;
     }
 
     public String getName() {
@@ -16,6 +19,9 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+    public String getUsername() {
+        return username;
     }
 
     public String getBio() {
@@ -48,5 +54,9 @@ public class User {
 
     public void setProfilePic(String profilePic) {
         this.profilePic = profilePic;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
     }
 }

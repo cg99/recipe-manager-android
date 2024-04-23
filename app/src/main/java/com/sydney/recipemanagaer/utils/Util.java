@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.Recipe;
-import com.sydney.recipemanagaer.model.User;
 import com.sydney.recipemanagaer.ui.view.fragments.RecipeDetailFragment;
 
 public class Util {
@@ -35,12 +34,4 @@ public class Util {
         }
     }
 
-
-    public static User getUser() {
-        return new User("John Doe",
-                "john.doe@example.com",
-                "Passionate food lover.",
-                "https://picsum.photos/id/250/200.jpg");
-
-    }
 }
