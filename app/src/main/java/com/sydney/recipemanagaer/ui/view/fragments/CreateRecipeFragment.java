@@ -14,14 +14,19 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.sydney.recipemanagaer.ui.view.adapters.IngredientAdapter;
 import com.sydney.recipemanagaer.R;
+import com.sydney.recipemanagaer.model.Recipe;
+import com.sydney.recipemanagaer.ui.view.adapters.IngredientAdapter;
+import com.sydney.recipemanagaer.ui.viewmodel.RecipeViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -45,6 +50,7 @@ public class CreateRecipeFragment extends Fragment {
     private ChipGroup chipGroup;
     private List<String> ingredients;
     private IngredientAdapter adapter;
+    private RecipeViewModel viewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,8 @@ public class CreateRecipeFragment extends Fragment {
                     imageViewSelected.setImageURI(uri);  // Display the selected image
                 }
         );
+
+        viewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
     }
 
     @Override
@@ -160,13 +168,51 @@ public class CreateRecipeFragment extends Fragment {
         }
 
         // If all validations are passed, proceed to use the data
-        // Here you might call a method to save the data to a database or send to a server
-        // e.g., viewModel.createRecipe(new Recipe(name, description, ingredients, instructions, cookingTime, imageUri));
-        Toast.makeText(getContext(), "Recipe submitted successfully!", Toast.LENGTH_LONG).show();
+        viewModel.createRecipe(new Recipe(
+                name, description, Collections.singletonList(ingredients),
+                instructions, cookingTime, imageUri.toString()
+        )).observe(getViewLifecycleOwner(), result -> {
+            if ("Recipe created successfully!".equals(result)) {
+                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                clearRecipeForm();
+                navigateToHome();  // Navigate to the HomeFragment after submission
+            } else {
+                Toast.makeText(getContext(), "Failed to create recipe.", Toast.LENGTH_LONG).show();
+            }
+        });
 
         // Optionally, clear the form or navigate away
-        // clearForm();
-        // navigateToRecipeList();
+        clearRecipeForm();
+        navigateToHome();
     }
+
+    private void clearRecipeForm() {
+        editTextRecipeName.setText("");
+        editTextRecipeDescription.setText("");
+        editTextInstructions.setText("");
+        editTextCookingTime.setText("");
+        autoCompleteTextView.setText("");
+        chipGroup.removeAllViews();  // Remove all chips from the ChipGroup
+        imageViewSelected.setImageResource(android.R.color.transparent);  // Reset or remove the image
+        imageUri = null;  // Clear the stored URI
+    }
+
+    private void navigateToHome() {
+        // Check if fragment is attached to the activity
+        if (isAdded() && getActivity() != null) {
+            // Use the FragmentManager to start a new transaction and replace the current fragment with the HomeFragment
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new HomeFragment())
+                    .commit();
+        }
+
+        // Assuming your BottomNavigationView's ID is nav_view and is part of your Activity layout
+        BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.nav_view);
+        bottomNavigationView.setSelectedItemId(R.id.homeFragment);  // Set the Home item as selected
+
+    }
+
+
+
 
 }

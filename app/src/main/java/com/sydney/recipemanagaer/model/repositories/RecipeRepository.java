@@ -1,6 +1,9 @@
 package com.sydney.recipemanagaer.model.repositories;
 
+import android.os.Handler;
+
 import androidx.lifecycle.MutableLiveData;
+
 import com.sydney.recipemanagaer.model.Recipe;
 
 import java.util.ArrayList;
@@ -27,5 +30,20 @@ public class RecipeRepository {
         // Add other recipes similarly...
         liveData.setValue(recipes);
         return liveData;
+    }
+
+    public MutableLiveData<String> createRecipe(Recipe recipe) {
+        MutableLiveData<String> responseLiveData = new MutableLiveData<>();
+
+        // Simulate network delay using Handler
+        new Handler().postDelayed(() -> {
+            // Simulating a successful post request
+            responseLiveData.setValue("Recipe created successfully!");
+
+            // Simulate an error response
+            // responseLiveData.setValue("Failed to create recipe.");
+        }, 2000);  // Delay of 2 seconds
+
+        return responseLiveData;
     }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 public class Recipe {
     private String name;
     private String description;
-    private List<String> ingredients; // Changed from String to List<String> to handle multiple ingredients
+    private List<String> ingredients;
     private String instructions;
     private int cookingTime;
     private String featuredImgURL;

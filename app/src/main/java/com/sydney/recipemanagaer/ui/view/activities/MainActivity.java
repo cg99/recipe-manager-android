@@ -5,13 +5,14 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.ui.view.fragments.CreateRecipeFragment;
 import com.sydney.recipemanagaer.ui.view.fragments.DashboardFragment;
 import com.sydney.recipemanagaer.ui.view.fragments.FavoriteFragment;
 import com.sydney.recipemanagaer.ui.view.fragments.HomeFragment;
-import com.sydney.recipemanagaer.R;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -23,28 +24,38 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         BottomNavigationView bottomNav = findViewById(R.id.nav_view);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        // Create fragments one time
+        Fragment homeFragment = new HomeFragment();
+        Fragment dashboardFragment = new DashboardFragment();
+        Fragment createRecipeFragment = new CreateRecipeFragment();
+        Fragment favoriteFragment = new FavoriteFragment();
+
+        // Initialize with home fragment
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
+
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
-
             int id = item.getItemId();
             if (id == R.id.homeFragment) {
-                selectedFragment = new HomeFragment();
+                selectedFragment = homeFragment;
             } else if (id == R.id.dashboardFragment) {
-                selectedFragment = new DashboardFragment();
+                selectedFragment = dashboardFragment;
             } else if (id == R.id.createRecipeFragment) {
-                selectedFragment = new CreateRecipeFragment();
+                selectedFragment = createRecipeFragment;
             } else if (id == R.id.favoriteFragment) {
-                selectedFragment = new FavoriteFragment();
+                selectedFragment = favoriteFragment;
             }
 
             if (selectedFragment != null) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
             }
 
             return true; // Return true to display the item as the selected item
         });
 
-        // Set the home fragment as default
+    // Set the home fragment as default
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
         }
