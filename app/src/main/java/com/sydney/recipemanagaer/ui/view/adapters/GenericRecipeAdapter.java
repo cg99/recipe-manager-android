@@ -37,7 +37,7 @@ public class GenericRecipeAdapter extends RecyclerView.Adapter<GenericRecipeAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (dataList != null && !dataList.isEmpty()) {
             Recipe recipe = dataList.get(position);
-            holder.nameTextView.setText(recipe.getName());
+            holder.nameTextView.setText(recipe.getTitle());
             holder.descriptionTextView.setText(recipe.getDescription());
 
 

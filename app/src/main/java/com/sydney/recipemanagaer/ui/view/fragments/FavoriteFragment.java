@@ -51,7 +51,7 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.Favori
 
     @Override
     public void onRemoveFavorite(Recipe recipe) {
-        Toast.makeText(getContext(), "Removed from Favorites: " + recipe.getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Removed from Favorites: " + recipe.getTitle(), Toast.LENGTH_SHORT).show();
         // Optionally update backend or local database
     }
 

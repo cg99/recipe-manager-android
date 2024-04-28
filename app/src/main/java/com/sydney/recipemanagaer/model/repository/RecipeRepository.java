@@ -136,7 +136,8 @@ public class RecipeRepository {
         for (int i = 0; i < response.length(); i++) {
             try {
                 JSONObject recipeObject = response.getJSONObject(i);
-                String name = recipeObject.getString("name");
+                String recipeId = recipeObject.getString("_id");
+                String title = recipeObject.getString("title");
                 String description = recipeObject.getString("description");
                 List<String> ingredients = new ArrayList<>();
                 JSONArray ingredientsArray = recipeObject.getJSONArray("ingredients");
@@ -146,7 +147,7 @@ public class RecipeRepository {
                 String instructions = recipeObject.getString("instructions");
                 int cookingTime = recipeObject.getInt("cookingTime");
                 String featuredImgURL = recipeObject.getString("featuredImgURL");
-                Recipe recipe = new Recipe(name, description, ingredients, instructions, cookingTime, featuredImgURL);
+                Recipe recipe = new Recipe(recipeId, title, description, ingredients, instructions, cookingTime, featuredImgURL);
                 recipes.add(recipe);
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -15,7 +15,8 @@ public class Util {
         if (activity instanceof FragmentActivity) {
             RecipeDetailFragment detailFragment = new RecipeDetailFragment();
             Bundle args = new Bundle();
-            args.putString("title", recipe.getName());
+            args.putString("recipeId", recipe.getRecipeId());
+            args.putString("title", recipe.getTitle());
             args.putString("description", recipe.getDescription());
             args.putString("ingredients", String.join(", ", recipe.getIngredients())); // Joining the list of ingredients into a single string
             args.putString("imageUrl", recipe.getFeaturedImgURL());

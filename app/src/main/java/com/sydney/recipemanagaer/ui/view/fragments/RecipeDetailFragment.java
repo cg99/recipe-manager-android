@@ -60,9 +60,10 @@ public class RecipeDetailFragment extends Fragment {
             }
         }
 
+        String recipeId = args.getString("recipeId");
         RecipeRepository recipeRepository = new RecipeRepository(getContext());
         viewModel = new ViewModelProvider(this, new RecipeViewModelFactory(recipeRepository)).get(RecipeViewModel.class);
-        buttonDeleteRecipe.setOnClickListener(view1 -> viewModel.deleteRecipe("66223c87bf0e44b6224be3cd").observe(getActivity(), result -> {
+        buttonDeleteRecipe.setOnClickListener(view1 -> viewModel.deleteRecipe(recipeId).observe(getActivity(), result -> {
             if (result.equals("Deleted successfully")) {
                 Toast.makeText(getContext(), "Recipe deleted.", Toast.LENGTH_SHORT).show();
 

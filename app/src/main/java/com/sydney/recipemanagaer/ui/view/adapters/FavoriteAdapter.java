@@ -41,7 +41,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
-        holder.nameTextView.setText(recipe.getName());
+        holder.nameTextView.setText(recipe.getTitle());
         holder.descriptionTextView.setText(recipe.getDescription());
         holder.favoriteIcon.setImageResource(R.drawable.ic_favorite_fill);
 

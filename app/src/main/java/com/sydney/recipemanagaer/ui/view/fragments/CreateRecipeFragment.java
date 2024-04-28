@@ -138,7 +138,7 @@ public class CreateRecipeFragment extends Fragment {
      * Collects the input data from the fields and handles the creation of a new recipe.
      */
     private void submitRecipe() {
-        String name = editTextRecipeName.getText().toString().trim();
+        String title = editTextRecipeName.getText().toString().trim();
         String description = editTextRecipeDescription.getText().toString().trim();
         String instructions = editTextInstructions.getText().toString().trim();
         String cookingTimeStr = editTextCookingTime.getText().toString().trim();
@@ -149,7 +149,7 @@ public class CreateRecipeFragment extends Fragment {
             ingredients.add(chip.getText().toString());
         }
         // Basic validation to check if any field is empty
-        if (name.isEmpty() || description.isEmpty() || ingredients.isEmpty() || instructions.isEmpty() || cookingTimeStr.isEmpty()) {
+        if (title.isEmpty() || description.isEmpty() || ingredients.isEmpty() || instructions.isEmpty() || cookingTimeStr.isEmpty()) {
             // Show an error message or toast notification to the user
             Toast.makeText(getContext(), "Please fill in all fields.", Toast.LENGTH_SHORT).show();
             return;
@@ -166,7 +166,7 @@ public class CreateRecipeFragment extends Fragment {
 
         // If all validations are passed, proceed to use the data
         viewModel.createRecipe(new Recipe(
-                name, description, ingredients,
+                title, description, ingredients,
                 instructions, cookingTime, "https://picsum.photos/id/236/200.jpg"
         )).observe(getViewLifecycleOwner(), result -> {
             if ("Recipe created successfully!".equals(result)) {

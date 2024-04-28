@@ -33,7 +33,7 @@ public class ApiService {
         String url = BASE_URL + "/recipe";
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("name", recipeData.getName());
+            jsonObject.put("title", recipeData.getTitle());
             jsonObject.put("description", recipeData.getDescription());
             jsonObject.put("ingredients", new JSONArray(recipeData.getIngredients()));
             jsonObject.put("instructions", recipeData.getInstructions());
