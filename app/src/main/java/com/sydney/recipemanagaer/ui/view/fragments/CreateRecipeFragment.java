@@ -21,12 +21,13 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.Recipe;
+import com.sydney.recipemanagaer.model.repository.RecipeRepository;
 import com.sydney.recipemanagaer.ui.view.adapters.IngredientAdapter;
 import com.sydney.recipemanagaer.ui.viewmodel.RecipeViewModel;
+import com.sydney.recipemanagaer.ui.viewmodel.factory.RecipeViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -64,8 +65,8 @@ public class CreateRecipeFragment extends Fragment {
                     imageViewSelected.setImageURI(uri);  // Display the selected image
                 }
         );
-
-        viewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
+        RecipeRepository recipeRepository = new RecipeRepository(getContext());
+        viewModel = new ViewModelProvider(this, new RecipeViewModelFactory(recipeRepository)).get(RecipeViewModel.class);
     }
 
     @Override
@@ -142,15 +143,11 @@ public class CreateRecipeFragment extends Fragment {
         String instructions = editTextInstructions.getText().toString().trim();
         String cookingTimeStr = editTextCookingTime.getText().toString().trim();
 
-        // Collecting the ingredients from the ChipGroup
-        StringBuilder ingredientsBuilder = new StringBuilder();
+        List<String> ingredients = new ArrayList<>();
         for (int i = 0; i < chipGroup.getChildCount(); i++) {
             Chip chip = (Chip) chipGroup.getChildAt(i);
-            if (i > 0) ingredientsBuilder.append(", ");
-            ingredientsBuilder.append(chip.getText().toString());
+            ingredients.add(chip.getText().toString());
         }
-        String ingredients = ingredientsBuilder.toString();
-
         // Basic validation to check if any field is empty
         if (name.isEmpty() || description.isEmpty() || ingredients.isEmpty() || instructions.isEmpty() || cookingTimeStr.isEmpty()) {
             // Show an error message or toast notification to the user
@@ -169,8 +166,8 @@ public class CreateRecipeFragment extends Fragment {
 
         // If all validations are passed, proceed to use the data
         viewModel.createRecipe(new Recipe(
-                name, description, Collections.singletonList(ingredients),
-                instructions, cookingTime, imageUri.toString()
+                name, description, ingredients,
+                instructions, cookingTime, "https://picsum.photos/id/236/200.jpg"
         )).observe(getViewLifecycleOwner(), result -> {
             if ("Recipe created successfully!".equals(result)) {
                 Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();

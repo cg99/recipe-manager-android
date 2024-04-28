@@ -4,13 +4,25 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.sydney.recipemanagaer.model.Recipe;
-import com.sydney.recipemanagaer.model.repositories.RecipeRepository;
+import com.sydney.recipemanagaer.model.repository.RecipeRepository;
+
+import java.util.List;
 
 public class RecipeViewModel extends ViewModel {
-    RecipeRepository recipeRepository = new RecipeRepository();
+    private RecipeRepository recipeRepository;
 
+    public RecipeViewModel(RecipeRepository repository) {
+        this.recipeRepository = repository;
+    }
     public LiveData<String> createRecipe(Recipe recipe) {
-        // Logic to save recipe to database or server
         return recipeRepository.createRecipe(recipe);
+    }
+
+    public LiveData<List<Recipe>> getRecipes() {
+        return recipeRepository.getRecipes();
+    }
+
+    public LiveData<String> deleteRecipe(String recipeId) {
+        return recipeRepository.deleteRecipe(recipeId);
     }
 }

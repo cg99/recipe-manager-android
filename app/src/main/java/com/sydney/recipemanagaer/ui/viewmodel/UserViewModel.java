@@ -3,7 +3,7 @@ package com.sydney.recipemanagaer.ui.viewmodel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import com.sydney.recipemanagaer.model.User;
-import com.sydney.recipemanagaer.model.repositories.UserRepository;
+import com.sydney.recipemanagaer.model.repository.UserRepository;
 
 import java.util.List;
 

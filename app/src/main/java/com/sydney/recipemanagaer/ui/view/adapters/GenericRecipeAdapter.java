@@ -35,32 +35,42 @@ public class GenericRecipeAdapter extends RecyclerView.Adapter<GenericRecipeAdap
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Recipe recipe = dataList.get(position);
-        holder.nameTextView.setText(recipe.getName());
-        holder.descriptionTextView.setText(recipe.getDescription());
+        if (dataList != null && !dataList.isEmpty()) {
+            Recipe recipe = dataList.get(position);
+            holder.nameTextView.setText(recipe.getName());
+            holder.descriptionTextView.setText(recipe.getDescription());
 
 
-        // Use Glide to load the image asynchronously
-        Glide.with(holder.itemView.getContext())
-                .load(recipe.getFeaturedImgURL())
-                .placeholder(R.drawable.placeholder_image_foreground) // A placeholder image to show until the real image is loaded
-                .error(R.drawable.error_image) // An error image to show if the real image fails to load
-                .into(holder.featuredImageView); // The target ImageView to load the image into
+            // Use Glide to load the image asynchronously
+            Glide.with(holder.itemView.getContext())
+                    .load(recipe.getFeaturedImgURL())
+                    .placeholder(R.drawable.placeholder_image_foreground) // A placeholder image to show until the real image is loaded
+                    .error(R.drawable.error_image) // An error image to show if the real image fails to load
+                    .into(holder.featuredImageView); // The target ImageView to load the image into
 
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onRecipeClick(recipe);
-            } else {
-                Log.e("Adapter", "Listener not initialized");
-            }
-        });
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onRecipeClick(recipe);
+                } else {
+                    Log.e("Adapter", "Listener not initialized");
+                }
+            });
+        } else {
+            // Handle the null or empty response
+            // For example, display a message or a loading indicator
+            holder.nameTextView.setText("No recipes available");
+            holder.descriptionTextView.setText("");
+            holder.featuredImageView.setImageResource(R.drawable.placeholder_image_foreground);
+
+            Log.e("Adapter", "No data");
+        }
     }
 
 
 
     @Override
     public int getItemCount() {
-        return dataList.size();
+        return dataList != null && !dataList.isEmpty() ? dataList.size() : 0;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

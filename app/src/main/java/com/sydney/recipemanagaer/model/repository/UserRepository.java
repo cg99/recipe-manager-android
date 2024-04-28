@@ -1,4 +1,4 @@
-package com.sydney.recipemanagaer.model.repositories;
+package com.sydney.recipemanagaer.model.repository;
 
 import androidx.lifecycle.MutableLiveData;
 

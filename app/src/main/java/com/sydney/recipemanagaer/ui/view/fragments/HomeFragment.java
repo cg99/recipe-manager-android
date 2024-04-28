@@ -14,8 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.Recipe;
+import com.sydney.recipemanagaer.model.repository.RecipeRepository;
 import com.sydney.recipemanagaer.ui.view.adapters.GenericRecipeAdapter;
-import com.sydney.recipemanagaer.ui.viewmodel.HomeViewModel;
+import com.sydney.recipemanagaer.ui.viewmodel.factory.RecipeViewModelFactory;
+import com.sydney.recipemanagaer.ui.viewmodel.RecipeViewModel;
 import com.sydney.recipemanagaer.utils.Util;
 
 import java.util.List;
@@ -23,13 +25,16 @@ import java.util.List;
 public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRecipeClickListener {
     private RecyclerView recyclerRecentRecipes;
     private RecyclerView recyclerPopularPosts;
-    private HomeViewModel viewModel;
+    private RecipeViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+//        viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        RecipeRepository recipeRepository = new RecipeRepository(getContext());
+        viewModel = new ViewModelProvider(this, new RecipeViewModelFactory(recipeRepository)).get(RecipeViewModel.class);
+
         recyclerRecentRecipes = view.findViewById(R.id.recycler_recent_recipes);
         recyclerPopularPosts = view.findViewById(R.id.recycler_popular_posts);
 
