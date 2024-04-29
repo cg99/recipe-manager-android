@@ -34,7 +34,7 @@ public class DashboardFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         viewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
-                userName.setText(user.getName());
+                userName.setText(user.getUsername());
                 userEmail.setText(user.getEmail());
                 userBio.setText(user.getBio());
 

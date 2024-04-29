@@ -5,9 +5,11 @@ import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.sydney.recipemanagaer.model.Recipe;
+import com.sydney.recipemanagaer.model.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,4 +56,51 @@ public class ApiService {
                 errorListener);
         networkingClient.getRequestQueue().add(stringRequest);
     }
+
+    public void login(String email, String password) {
+        String url = BASE_URL + "/login";
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("email", email);
+            jsonObject.put("password", password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                // Handle login response
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Handle login error
+            }
+        });
+        networkingClient.getRequestQueue().add(jsonObjectRequest);
+    }
+
+    public void register(User user, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+        String url = BASE_URL + "/user/signup";
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("fullname", user.getFullName());
+            jsonObject.put("username", user.getUsername());
+            jsonObject.put("email", user.getEmail());
+            jsonObject.put("password", user.getPassword());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, responseListener, errorListener);
+
+        networkingClient.getRequestQueue().add(jsonObjectRequest);
+    }
+
+    // Method to get a user's data by ID
+    public void getUserData(String userId, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+        String url = BASE_URL + "/user/" + userId; // Adjust URL to include the user ID
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, responseListener, errorListener);
+        networkingClient.getRequestQueue().add(jsonObjectRequest);
+    }
+
 }

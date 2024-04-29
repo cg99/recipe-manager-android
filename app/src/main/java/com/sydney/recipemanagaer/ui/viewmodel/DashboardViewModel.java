@@ -8,7 +8,7 @@ import com.sydney.recipemanagaer.model.repository.UserRepository;
 
 public class DashboardViewModel extends ViewModel {
     private MutableLiveData<User> userLiveData = new MutableLiveData<>();
-    private UserRepository userRepository = new UserRepository();
+    private UserRepository userRepository;
     private MutableLiveData<Boolean> isAdminLiveData = new MutableLiveData<>();
 
 

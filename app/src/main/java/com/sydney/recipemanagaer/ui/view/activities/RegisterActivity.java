@@ -10,16 +10,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.sydney.recipemanagaer.R;
+import com.sydney.recipemanagaer.model.User;
+import com.sydney.recipemanagaer.model.repository.UserRepository;
+import com.sydney.recipemanagaer.ui.viewmodel.UserViewModel;
+import com.sydney.recipemanagaer.ui.viewmodel.factory.UserViewModelFactory;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText fullNameEditText;
+    private EditText usernameEditText;
     private EditText emailEditText;
     private EditText passwordEditText;
     private EditText confirmPasswordEditText;
     private Button signupButton;
+
+    private UserViewModel userViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,23 +36,29 @@ public class RegisterActivity extends AppCompatActivity {
 
         TextView textViewLogin = findViewById(R.id.textViewLogin);
 
-        fullNameEditText = findViewById(R.id.signup_fullname);
-        emailEditText = findViewById(R.id.signup_email);
-        passwordEditText = findViewById(R.id.signup_password);
-        confirmPasswordEditText = findViewById(R.id.signup_confirm_password);
+        fullNameEditText = findViewById(R.id.textFullName);
+        usernameEditText = findViewById(R.id.textUsername);
+        emailEditText = findViewById(R.id.textEmail);
+        passwordEditText = findViewById(R.id.textPassword);
+        confirmPasswordEditText = findViewById(R.id.textConfirmPassword);
         signupButton = findViewById(R.id.signup_button);
+
+        UserRepository userRepository = new UserRepository(this);
+        userViewModel = new ViewModelProvider(this, new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+
 
         signupButton.setOnClickListener(view -> {
 
             // Retrieve input from EditText fields
             String fullName = fullNameEditText.getText().toString();
+            String username = usernameEditText.getText().toString();
             String email = emailEditText.getText().toString();
             String password = passwordEditText.getText().toString();
             String confirmPassword = confirmPasswordEditText.getText().toString();
 
             // if conditions to check the empty fields
-            if (TextUtils.isEmpty(fullName) || TextUtils.isEmpty(email) ||
-                    TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
+            if (TextUtils.isEmpty(fullName) || TextUtils.isEmpty(username) ||
+                    TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
                 Toast.makeText(RegisterActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -60,9 +74,17 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
-            //code to signup and redirect to homepage
-            Toast.makeText(this, "Signup button pressed", Toast.LENGTH_SHORT).show();
+            userViewModel.signup(new User(fullName, email, username, password)).observe(this, result -> {
+                if ("Signup Successful".equals(result)) {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();  // Finish SignupActivity so user can't go back to it
 
+                } else {
+                    Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+                }
+                ;
+            });
         });
 
         textViewLogin.setOnClickListener(view -> {
