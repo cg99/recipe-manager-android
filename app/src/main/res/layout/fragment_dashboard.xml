@@ -40,28 +40,76 @@
         <TextView
             android:id="@+id/textViewUserBio"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="31dp"
             android:layout_marginTop="8dp"
-            android:textSize="14sp"
-            android:text="Short bio about the user..."/>
+            android:text="Short bio about the user..."
+            android:textSize="14sp" />
 
-        <!-- Admin Dashboard Link -->
-        <Button
-            android:id="@+id/btnAdminDashboard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Admin Dashboard"
-            android:visibility="gone"/> <!-- Initially hidden -->
+        <LinearLayout
+            android:layout_width="365dp"
+            android:layout_height="303dp"
+            android:orientation="vertical"
+            android:layout_marginTop="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewUserBio">
 
-        <!-- My Recipes for users -->
-        <TextView
-            android:id="@+id/textViewMyRecipes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="My Recipes"
-            />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/myRecipesBtn"
+                style="@android:style/Widget.Button"
+                android:layout_width="match_parent"
+                android:layout_height="63dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/btn_background_1"
+                android:drawableStart="@drawable/ic_2"
+                android:drawablePadding="20dp"
+                android:paddingStart="20dp"
+                android:text="My Recipes"
+                android:textAlignment="viewStart"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/accountSettingsBtn"
+                style="@android:style/Widget.Button"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/btn_background_1"
+                android:drawableStart="@drawable/ic_1"
+                android:drawablePadding="20dp"
+                android:paddingStart="20dp"
+                android:text="Account Settings"
+                android:textAlignment="viewStart"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnAdminDashboard"
+                style="@android:style/Widget.Button"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/btn_background_1"
+                android:drawableStart="@drawable/ic_3"
+                android:drawablePadding="20dp"
+                android:paddingStart="20dp"
+                android:text="Admin Dashboard"
+                android:textAlignment="viewStart"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>
