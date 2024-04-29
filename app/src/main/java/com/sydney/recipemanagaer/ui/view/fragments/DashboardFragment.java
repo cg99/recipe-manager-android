@@ -15,7 +15,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.sydney.recipemanagaer.R;
+import com.sydney.recipemanagaer.model.repository.UserRepository;
 import com.sydney.recipemanagaer.ui.viewmodel.DashboardViewModel;
+import com.sydney.recipemanagaer.ui.viewmodel.factory.DashboardViewModelFactory;
 
 public class DashboardFragment extends Fragment {
 
@@ -31,7 +33,9 @@ public class DashboardFragment extends Fragment {
         TextView userEmail = view.findViewById(R.id.textViewUserEmail);
         TextView userBio = view.findViewById(R.id.textViewUserBio);
 
-        viewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
+        UserRepository userRepository = new UserRepository(getContext());
+        viewModel = new ViewModelProvider(this, new DashboardViewModelFactory(userRepository)).get(DashboardViewModel.class);
+
         viewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 userName.setText(user.getUsername());
@@ -47,11 +51,11 @@ public class DashboardFragment extends Fragment {
         Button btnAdminDashboard = view.findViewById(R.id.btnAdminDashboard);
 
         viewModel.getIsAdminLiveData().observe(getViewLifecycleOwner(), isAdmin -> {
-            if (isAdmin) {
+//            if (isAdmin) {
                 btnAdminDashboard.setVisibility(View.VISIBLE);
-            } else {
-                btnAdminDashboard.setVisibility(View.GONE);
-            }
+//            } else {
+//                btnAdminDashboard.setVisibility(View.GONE);
+//            }
         });
 
         btnAdminDashboard.setOnClickListener(v -> {

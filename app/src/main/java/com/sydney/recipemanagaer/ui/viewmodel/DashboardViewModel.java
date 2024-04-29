@@ -7,14 +7,20 @@ import com.sydney.recipemanagaer.model.User;
 import com.sydney.recipemanagaer.model.repository.UserRepository;
 
 public class DashboardViewModel extends ViewModel {
-    private MutableLiveData<User> userLiveData = new MutableLiveData<>();
     private UserRepository userRepository;
-    private MutableLiveData<Boolean> isAdminLiveData = new MutableLiveData<>();
-
 
     public DashboardViewModel() {
         loadUser();
     }
+
+    public DashboardViewModel(UserRepository repository) {
+        this.userRepository = repository;
+    }
+
+    private MutableLiveData<User> userLiveData = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isAdminLiveData = new MutableLiveData<>();
+
+
 
     private void loadUser() {
         User user = userRepository.getUser();  // Get the user from the repository
