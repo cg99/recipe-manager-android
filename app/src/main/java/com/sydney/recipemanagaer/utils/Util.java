@@ -21,7 +21,7 @@ public class Util {
             args.putString("ingredients", String.join(", ", recipe.getIngredients())); // Joining the list of ingredients into a single string
             args.putString("imageUrl", recipe.getFeaturedImgURL());
             args.putString("instructions", recipe.getInstructions());
-            args.putString("cookingTime", "Time: " + recipe.getCookingTime() + " minutes"); // Pass as int if you want to use it as a number later
+            args.putString("cookingTime", recipe.getCookingTime()+""); // Pass as int if you want to use it as a number later
             detailFragment.setArguments(args);
 
             // Perform the fragment transaction to display the RecipeDetailFragment
