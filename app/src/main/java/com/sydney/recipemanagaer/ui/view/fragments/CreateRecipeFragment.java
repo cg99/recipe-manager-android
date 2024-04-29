@@ -106,6 +106,7 @@ public class CreateRecipeFragment extends Fragment {
             imagePickerLauncher.launch("image/*");  // Open the image picker
         });
 
+        // ingredients add
         autoCompleteTextView.setOnItemClickListener((parent, view1, position, id) -> {
             String selection = parent.getItemAtPosition(position).toString();
             if (selection.startsWith("Add new: ")) {

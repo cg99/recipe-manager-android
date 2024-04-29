@@ -2,12 +2,15 @@ package com.sydney.recipemanagaer.utils;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.bumptech.glide.Glide;
 import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.Recipe;
 import com.sydney.recipemanagaer.ui.view.fragments.RecipeDetailFragment;
+import com.sydney.recipemanagaer.ui.view.fragments.UpdateRecipeFragment;
 
 public class Util {
     public static void handleViewRecipeDetail(Recipe recipe, Activity activity) {
@@ -35,5 +38,13 @@ public class Util {
         }
     }
 
-
+    public static void loadImage(UpdateRecipeFragment context, String imageUrl, ImageView imageViewSelected) {
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Glide.with(context)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.placeholder_image_background)
+                    .error(R.drawable.error_image)
+                    .into(imageViewSelected);
+        }
+    }
 }

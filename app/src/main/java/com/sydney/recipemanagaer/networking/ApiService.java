@@ -48,6 +48,23 @@ public class ApiService {
         networkingClient.getRequestQueue().add(jsonObjectRequest);
     }
 
+    public void updateRecipe(Recipe recipeData, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+        String url = BASE_URL + "/recipe/" + recipeData.getRecipeId();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("title", recipeData.getTitle());
+            jsonObject.put("description", recipeData.getDescription());
+            jsonObject.put("ingredients", new JSONArray(recipeData.getIngredients()));
+            jsonObject.put("instructions", recipeData.getInstructions());
+            jsonObject.put("cookingTime", recipeData.getCookingTime());
+            jsonObject.put("featuredImgURL", recipeData.getFeaturedImgURL());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, url, jsonObject, responseListener, errorListener);
+        networkingClient.getRequestQueue().add(jsonObjectRequest);
+    }
+
     // Method to delete a recipe by ID
     public void deleteRecipe(String recipeId, Response.Listener<String> responseListener, Response.ErrorListener errorListener) {
         String url = BASE_URL + "/recipe/" + recipeId; // Adjust URL to include the recipe ID

@@ -128,6 +128,29 @@ public class RecipeRepository {
         return responseData;
     }
 
+    public LiveData<String> updateRecipe(Recipe recipe) {
+        if (recipe == null) {
+            throw new IllegalArgumentException("Recipe cannot be null");
+        }
+        MutableLiveData<String> result = new MutableLiveData<>();
+
+        apiService.updateRecipe(recipe, response -> {
+            if (response != null) {
+                result.setValue("Recipe updated successfully!");
+            } else {
+                result.setValue("Error updating recipe: null response");
+            }
+        }, error -> {
+            if (error != null) {
+                result.setValue("Error updating recipe: " + error.getMessage());
+            } else {
+                result.setValue("Error updating recipe: unknown error");
+            }
+        });
+
+        return result;
+    }
+
     private List<Recipe> parseRecipes(JSONArray response) {
         if (response == null) {
             return null;

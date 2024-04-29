@@ -25,4 +25,8 @@ public class RecipeViewModel extends ViewModel {
     public LiveData<String> deleteRecipe(String recipeId) {
         return recipeRepository.deleteRecipe(recipeId);
     }
+
+    public LiveData<String> updateRecipe(Recipe recipe) {
+        return recipeRepository.updateRecipe(recipe);
+    }
 }
