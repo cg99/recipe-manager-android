@@ -13,6 +13,8 @@ import com.sydney.recipemanagaer.ui.view.fragments.RecipeDetailFragment;
 import com.sydney.recipemanagaer.ui.view.fragments.UpdateRecipeFragment;
 
 public class Util {
+    public static final String SHARED_PREFS_FILE = "appPreferences";
+    public static final String TOKEN_KEY = "sessionToken";
     public static void handleViewRecipeDetail(Recipe recipe, Activity activity) {
         // Ensure the activity is a FragmentActivity before attempting to use getSupportFragmentManager
         if (activity instanceof FragmentActivity) {

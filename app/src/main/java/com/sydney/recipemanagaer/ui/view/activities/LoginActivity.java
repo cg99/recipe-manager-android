@@ -9,15 +9,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.sydney.recipemanagaer.R;
+import com.sydney.recipemanagaer.model.repository.UserRepository;
+import com.sydney.recipemanagaer.ui.viewmodel.UserViewModel;
+import com.sydney.recipemanagaer.ui.viewmodel.factory.UserViewModelFactory;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private  UserViewModel userViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        UserRepository userRepository = new UserRepository(this);
+        userViewModel = new ViewModelProvider(this, new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+
 
         if (userIsLoggedIn()) {
             navigateToMainActivity();
@@ -31,18 +41,21 @@ public class LoginActivity extends AppCompatActivity {
 
         buttonLogin.setOnClickListener(view -> {
             // Validate input
-            String username = editTextEmail.getText().toString();
+            String email = editTextEmail.getText().toString();
             String password = editTextPassword.getText().toString();
 
             // Perform validation
-            if (isValidCredentials(username, password)) {
-                // If provided credentials are valid then go to homepage
-                Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+            if (isValidCredentials(email, password)) {
+                userViewModel.login(email, password).observe(this, result -> {
+                    Toast.makeText(LoginActivity.this, result, Toast.LENGTH_SHORT).show();
+                    if ("Login successful".equals(result)) {
+                        navigateToMainActivity();
+                    }
+                });
             } else {
                 // If credentials are invalid, show an error message
                 Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
             }
-            navigateToMainActivity();
         });
 
         textViewRegister.setOnClickListener(view -> {
@@ -58,9 +71,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean userIsLoggedIn() {
-        // Check for the existence of a session token or similar
-        // This could involve checking SharedPreferences, a database, or some other form of storage
-        return false; // Return true if a valid session exists, false otherwise
+        return userViewModel.getToken() != null && !userViewModel.getToken().isEmpty();
     }
 
     private void navigateToMainActivity() {

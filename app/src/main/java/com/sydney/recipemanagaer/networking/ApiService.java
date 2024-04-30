@@ -3,9 +3,9 @@ package com.sydney.recipemanagaer.networking;
 
 import android.content.Context;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.sydney.recipemanagaer.model.Recipe;
@@ -74,28 +74,41 @@ public class ApiService {
         networkingClient.getRequestQueue().add(stringRequest);
     }
 
-    public void login(String email, String password) {
-        String url = BASE_URL + "/login";
+    public void login(String email, String password, final LoginResponseListener listener) {
+        String url = BASE_URL + "/user/login";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("email", email);
             jsonObject.put("password", password);
         } catch (JSONException e) {
-            e.printStackTrace();
+            listener.onFailure("Error creating login request: " + e.getMessage());
+            return;
         }
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                // Handle login response
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // Handle login error
-            }
-        });
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
+                response -> {
+                    try {
+                        // Assume the server sends the token in a field called "token"
+                        String token = response.getString("token");
+                        listener.onSuccess(token);
+                    } catch (JSONException e) {
+                        listener.onFailure("Failed to parse token from response: " + e.getMessage());
+                    }
+                },
+                error -> {
+                    // Handle different types of errors here (e.g., network, timeout, etc.)
+                    String errorMsg = "Network error";
+                    if (error instanceof AuthFailureError) {
+                        errorMsg = "Authentication failed";
+                    } else if (error.getMessage() != null) {
+                        errorMsg = error.getMessage();
+                    }
+                    listener.onFailure(errorMsg);
+                });
+
         networkingClient.getRequestQueue().add(jsonObjectRequest);
     }
+
 
     public void register(User user, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
         String url = BASE_URL + "/user/signup";

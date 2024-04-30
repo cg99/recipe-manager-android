@@ -1,22 +1,30 @@
 package com.sydney.recipemanagaer.model.repository;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.sydney.recipemanagaer.model.User;
 import com.sydney.recipemanagaer.networking.ApiService;
+import com.sydney.recipemanagaer.networking.LoginResponseListener;
+import com.sydney.recipemanagaer.utils.Util;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository {
     private final ApiService apiService;
+    private MutableLiveData<String> loginStatus = new MutableLiveData<>();
+    private Context context;
+
     public UserRepository(Context context) {
         if (context == null) {
             throw new IllegalArgumentException("Context cannot be null");
         }
+        this.context = context;
         apiService = new ApiService(context);
     }
 
@@ -69,7 +77,38 @@ public class UserRepository {
         return result;
     }
 
-    public void login(User user) {
-        //
+    public LiveData<String> getLoginStatus() {
+        return loginStatus;
+    }
+
+    public LiveData<String> login(String email, String password) {
+        apiService.login(email, password, new LoginResponseListener() {
+            @Override
+            public void onSuccess(String token) {
+                // Store the token securely, then update LiveData
+                saveToken(token); // Implement this method to save token securely
+                loginStatus.postValue("Login successful");
+            }
+
+            @Override
+            public void onFailure(String error) {
+                loginStatus.postValue("Login failed: " + error);
+            }
+        });
+
+        return loginStatus;
+    }
+
+    private void saveToken(String token) {
+        // Use SharedPreferences or secure storage to save the token
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Util.SHARED_PREFS_FILE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(Util.TOKEN_KEY, token);
+        editor.apply();
+    }
+
+    public String getToken() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Util.SHARED_PREFS_FILE, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(Util.TOKEN_KEY, null);
     }
 }

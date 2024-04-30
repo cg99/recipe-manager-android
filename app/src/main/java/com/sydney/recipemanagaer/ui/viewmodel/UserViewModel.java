@@ -18,8 +18,9 @@ public class UserViewModel extends ViewModel {
     public LiveData<List<User>> getUsers() {
         return userRepository.getUsers();
     }
-    public void login(String username, String password) {
-       // handle logic
+
+    public LiveData<String> login(String email, String password) {
+       return userRepository.login(email, password);
     }
 
     public LiveData<String> signup(User user) {
@@ -36,5 +37,8 @@ public class UserViewModel extends ViewModel {
         // Reload the user list or handle the update UI accordingly
     }
 
+    public String getToken() {
+        return userRepository.getToken();
+    }
 
 }
