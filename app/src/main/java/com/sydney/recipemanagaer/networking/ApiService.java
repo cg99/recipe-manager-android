@@ -90,7 +90,10 @@ public class ApiService {
                     try {
                         // Assume the server sends the token in a field called "token"
                         String token = response.getString("token");
-                        listener.onSuccess(token);
+                        JSONObject userData = response.getJSONObject("data").getJSONObject("user");
+                        // Assuming the user object includes an id and other necessary details
+                        String userId = userData.getString("id");  // or "_id" depending on your backend
+                        listener.onSuccess(token, userId, userData);
                     } catch (JSONException e) {
                         listener.onFailure("Failed to parse token from response: " + e.getMessage());
                     }

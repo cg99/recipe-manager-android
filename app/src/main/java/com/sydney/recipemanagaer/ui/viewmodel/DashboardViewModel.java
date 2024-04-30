@@ -23,7 +23,7 @@ public class DashboardViewModel extends ViewModel {
 
 
     private void loadUser() {
-        User user = userRepository.getUser();  // Get the user from the repository
+        User user = userRepository.getUser(userRepository.getLoggedInUserId()).getValue();  // Get the user from the repository
         userLiveData.setValue(user);
         isAdminLiveData.setValue(user.isAdmin()); // Assume User model has an isAdmin method
     }
@@ -36,7 +36,5 @@ public class DashboardViewModel extends ViewModel {
         return isAdminLiveData;
     }
 
-    public void clearSession() {
-        userRepository.clearSession();
-    }
+
 }

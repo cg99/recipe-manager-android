@@ -13,6 +13,7 @@ import com.sydney.recipemanagaer.networking.ApiService;
 import com.sydney.recipemanagaer.networking.LoginResponseListener;
 import com.sydney.recipemanagaer.utils.Util;
 
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +23,16 @@ public class UserRepository {
     private MutableLiveData<String> loginStatus = new MutableLiveData<>();
     private Context context;
 
+    private SharedPreferences sharedPreferences;
+
+
     public UserRepository(Context context) {
         if (context == null) {
             throw new IllegalArgumentException("Context cannot be null");
         }
         this.context = context;
         apiService = new ApiService(context);
+        sharedPreferences = context.getSharedPreferences(Util.SHARED_PREFS_FILE, MODE_PRIVATE);
     }
 
     public MutableLiveData<List<User>> getUsers() {
@@ -42,11 +47,19 @@ public class UserRepository {
         return liveData;
     }
 
-    public User getUser() {
+    public MutableLiveData<User> getUser(String userId) {
         // Assuming you retrieve a user from a static source, database, or API
         // Here we use a placeholder for demonstration
-        return new User("under", "under@example.com", "under","","wrestler with style","https://picsum.photos/id/253/200.jpg", true);
+        MutableLiveData<User> liveData = new MutableLiveData<>();
 
+        User user = new User("under",
+                "under@example.com",
+                "under","",
+                "wrestler with style",
+                "https://picsum.photos/id/253/200.jpg",
+                true);
+        liveData.setValue(user);
+        return liveData;
     }
 
     public void updateUser(User user) {
@@ -86,9 +99,9 @@ public class UserRepository {
     public LiveData<String> login(String email, String password) {
         apiService.login(email, password, new LoginResponseListener() {
             @Override
-            public void onSuccess(String token) {
+            public void onSuccess(String token, String userId, JSONObject userData) {
                 // Store the token securely, then update LiveData
-                saveToken(token); // Implement this method to save token securely
+                saveToken(token, userId); // Implement this method to save token securely
                 loginStatus.postValue("Login successful");
             }
 
@@ -101,23 +114,26 @@ public class UserRepository {
         return loginStatus;
     }
 
-    private void saveToken(String token) {
+    private void saveToken(String token, String userId) {
         // Use SharedPreferences or secure storage to save the token
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Util.SHARED_PREFS_FILE, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(Util.TOKEN_KEY, token);
+        editor.putString(Util.USER_ID_KEY, userId);
         editor.apply();
     }
 
     public String getToken() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Util.SHARED_PREFS_FILE, MODE_PRIVATE);
         return sharedPreferences.getString(Util.TOKEN_KEY, null);
     }
 
+    public String getLoggedInUserId() {
+        return sharedPreferences.getString(Util.USER_ID_KEY, null);
+    }
+
     public void clearSession() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Util.SHARED_PREFS_FILE, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(Util.TOKEN_KEY);
+        editor.remove(Util.USER_ID_KEY);
         editor.apply();
     }
 }

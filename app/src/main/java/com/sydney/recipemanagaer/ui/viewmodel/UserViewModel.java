@@ -41,5 +41,16 @@ public class UserViewModel extends ViewModel {
         return userRepository.getToken();
     }
 
+    public String getLoggedInUserId() {
+        return userRepository.getLoggedInUserId();
+    }
+
+    public LiveData<User> getUser() {
+        return userRepository.getUser(getLoggedInUserId());
+    }
+
+    public void clearSession() {
+        userRepository.clearSession();
+    }
 
 }
