@@ -35,4 +35,8 @@ public class DashboardViewModel extends ViewModel {
     public LiveData<Boolean> getIsAdminLiveData() {
         return isAdminLiveData;
     }
+
+    public void clearSession() {
+        userRepository.clearSession();
+    }
 }

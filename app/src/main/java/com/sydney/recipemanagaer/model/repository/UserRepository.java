@@ -1,5 +1,7 @@
 package com.sydney.recipemanagaer.model.repository;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -101,14 +103,21 @@ public class UserRepository {
 
     private void saveToken(String token) {
         // Use SharedPreferences or secure storage to save the token
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Util.SHARED_PREFS_FILE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Util.SHARED_PREFS_FILE, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(Util.TOKEN_KEY, token);
         editor.apply();
     }
 
     public String getToken() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Util.SHARED_PREFS_FILE, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Util.SHARED_PREFS_FILE, MODE_PRIVATE);
         return sharedPreferences.getString(Util.TOKEN_KEY, null);
+    }
+
+    public void clearSession() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Util.SHARED_PREFS_FILE, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(Util.TOKEN_KEY);
+        editor.apply();
     }
 }
