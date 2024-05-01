@@ -35,7 +35,7 @@ public class ApiService {
     }
 
     // Method to post a new recipe using POST
-    public void postRecipe(Recipe recipeData, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+    public void postRecipe(Recipe recipeData, String userId, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
         String url = BASE_URL + "/recipe";
         JSONObject jsonObject = new JSONObject();
         try {
@@ -45,6 +45,8 @@ public class ApiService {
             jsonObject.put("instructions", recipeData.getInstructions());
             jsonObject.put("cookingTime", recipeData.getCookingTime());
             jsonObject.put("featuredImgURL", recipeData.getFeaturedImgURL());
+            jsonObject.put("createdBy", userId);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

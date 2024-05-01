@@ -70,6 +70,14 @@ public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRec
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(new GenericRecipeAdapter(recipes, this));
     }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        if (!Util.userIsLoggedIn(getContext())) {
+//            Util.navigateToLoginActivity(getContext());
+//            return; // Stop further execution of this method
+//        }
+//    }
 
     @Override
     public void onRecipeClick(Recipe recipe) {

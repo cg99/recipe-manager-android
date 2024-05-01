@@ -29,11 +29,6 @@ public class LoginActivity extends AppCompatActivity {
         userViewModel = new ViewModelProvider(this, new UserViewModelFactory(userRepository)).get(UserViewModel.class);
 
 
-        if (userIsLoggedIn()) {
-            navigateToMainActivity();
-        }
-
-
         EditText editTextEmail = findViewById(R.id.editTextEmail);
         EditText editTextPassword = findViewById(R.id.editTextPassword);
         Button buttonLogin = findViewById(R.id.buttonLogin);

@@ -1,45 +1,6 @@
 package com.sydney.recipemanagaer.model.repository;
 
 
-//public class RecipeRepository {
-//    public MutableLiveData<List<Recipe>> getRecipes() {
-//        MutableLiveData<List<Recipe>> liveData = new MutableLiveData<>();
-//        List<Recipe> recipes = new ArrayList<>(); // Simulated data fetching
-//        // Example recipes as previously detailed
-//        recipes.add(new Recipe("Chocolate Brownie",
-//                "A rich and fudgy chocolate brownie",
-//                Arrays.asList("Chocolate", "Flour", "Sugar", "Eggs"),
-//                "Mix melted chocolate with flour and sugar, add eggs, and bake for 25 minutes.",
-//                25,
-//                "https://picsum.photos/id/221/200.jpg"));
-//        recipes.add(new Recipe("Chocolate Brownie",
-//                "A rich and fudgy chocolate brownie",
-//                Arrays.asList("Chocolate", "Flour", "Sugar", "Eggs"),
-//                "Mix melted chocolate with flour and sugar, add eggs, and bake for 25 minutes.",
-//                25,
-//                "https://picsum.photos/id/222/200.jpg"));
-//        // Add other recipes similarly...
-//        liveData.setValue(recipes);
-//        return liveData;
-//    }
-//
-//    public MutableLiveData<String> createRecipe(Recipe recipe) {
-//        MutableLiveData<String> responseLiveData = new MutableLiveData<>();
-//
-//        // Simulate network delay using Handler
-//        new Handler().postDelayed(() -> {
-//            // Simulating a successful post request
-//            responseLiveData.setValue("Recipe created successfully!");
-//
-//            // Simulate an error response
-//            // responseLiveData.setValue("Failed to create recipe.");
-//        }, 2000);  // Delay of 2 seconds
-//
-//        return responseLiveData;
-//    }
-//}
-
-
 import android.content.Context;
 import android.util.Log;
 
@@ -58,12 +19,14 @@ import java.util.List;
 
 public class RecipeRepository {
     private final ApiService apiService;
+    UserRepository userRepository;
 
     public RecipeRepository(Context context) {
         if (context == null) {
             throw new IllegalArgumentException("Context cannot be null");
         }
         apiService = new ApiService(context);
+        userRepository = new UserRepository(context);
     }
 
     public LiveData<List<Recipe>> getRecipes() {
@@ -95,8 +58,9 @@ public class RecipeRepository {
             throw new IllegalArgumentException("Recipe cannot be null");
         }
         MutableLiveData<String> result = new MutableLiveData<>();
+        String userId = userRepository.getLoggedInUserId();
 
-        apiService.postRecipe(recipe, response -> {
+        apiService.postRecipe(recipe, userId, response -> {
             if (response != null) {
                 result.setValue("Recipe created successfully!");
             } else {

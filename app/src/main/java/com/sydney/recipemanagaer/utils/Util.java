@@ -1,16 +1,25 @@
 package com.sydney.recipemanagaer.utils;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.bumptech.glide.Glide;
 import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.Recipe;
+import com.sydney.recipemanagaer.ui.view.activities.LoginActivity;
 import com.sydney.recipemanagaer.ui.view.fragments.RecipeDetailFragment;
 import com.sydney.recipemanagaer.ui.view.fragments.UpdateRecipeFragment;
+
+import java.util.Date;
 
 public class Util {
     public static final String SHARED_PREFS_FILE = "appPreferences";
@@ -51,4 +60,31 @@ public class Util {
                     .into(imageViewSelected);
         }
     }
+
+    // Static method to check if user is logged in
+    public static boolean userIsLoggedIn(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS_FILE, Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString(TOKEN_KEY, null);
+        if (token == null || token.isEmpty()) {
+            return false; // No token available
+        }
+
+        try {
+            DecodedJWT decodedJWT = JWT.decode(token); // Decode the token
+            Date expiration = decodedJWT.getExpiresAt(); // Get expiration date
+            return expiration != null && expiration.after(new Date()); // Check if the token is not expired
+        } catch (Exception e) {
+            Log.e("UserCheck", "Error decoding JWT", e); // Log the exception for debugging
+
+            return false; // Assume the token is invalid or expired
+        }
+    }
+
+    // Static method to navigate to the login activity
+    public static void navigateToLoginActivity(Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear stack
+        context.startActivity(intent);
+    }
+
 }

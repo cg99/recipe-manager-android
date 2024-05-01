@@ -2,6 +2,7 @@ package com.sydney.recipemanagaer.ui.view.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +58,8 @@ public class DashboardFragment extends Fragment {
         viewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 updateUI(user);
-                btnAdminDashboard.setVisibility(user.getRole() == "admin" ? View.VISIBLE : View.GONE);
+                Log.d("DashboardFragment", "User role: " + user.getRole());
+                btnAdminDashboard.setVisibility("admin".equals(user.getRole()) ? View.VISIBLE : View.GONE);
             }
         });
     }

@@ -1,12 +1,10 @@
 package com.sydney.recipemanagaer.ui.view.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.sydney.recipemanagaer.R;
@@ -16,7 +14,7 @@ import com.sydney.recipemanagaer.ui.view.fragments.DashboardFragment;
 import com.sydney.recipemanagaer.ui.view.fragments.FavoriteFragment;
 import com.sydney.recipemanagaer.ui.view.fragments.HomeFragment;
 import com.sydney.recipemanagaer.ui.viewmodel.UserViewModel;
-import com.sydney.recipemanagaer.ui.viewmodel.factory.UserViewModelFactory;
+import com.sydney.recipemanagaer.utils.Util;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -27,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!userIsLoggedIn()) {
-            navigateToLoginActivity();
+        if (!Util.userIsLoggedIn(this)) {
+            Util.navigateToLoginActivity(this);
             return; // Stop further execution of this method
         }
 
@@ -71,20 +69,6 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
         }
 
-    }
-
-    private boolean userIsLoggedIn() {
-        userRepository = new UserRepository(this);
-        viewModel = new ViewModelProvider(this, new UserViewModelFactory(userRepository)).get(UserViewModel.class);
-
-        String token = viewModel.getToken();
-        return token != null && !token.isEmpty();
-    }
-
-    private void navigateToLoginActivity() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-        finish();  // Finish MainActivity to remove it from the back stack
     }
 
 
