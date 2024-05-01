@@ -167,9 +167,9 @@ public class RecipeRepository {
                 for (int j = 0; j < ingredientsArray.length(); j++) {
                     ingredients.add(ingredientsArray.getString(j));
                 }
-                String instructions = recipeObject.getString("instructions");
+                String instructions = recipeObject.optString("instructions", "no instructions");
                 int cookingTime = recipeObject.getInt("cookingTime");
-                String featuredImgURL = recipeObject.getString("featuredImgURL");
+                String featuredImgURL = recipeObject.optString("featuredImgURL", "https://images.unsplash.com/photo-1546069901-ba9599a7e63c");
                 Recipe recipe = new Recipe(recipeId, title, description, ingredients, instructions, cookingTime, featuredImgURL);
                 recipes.add(recipe);
             } catch (JSONException e) {

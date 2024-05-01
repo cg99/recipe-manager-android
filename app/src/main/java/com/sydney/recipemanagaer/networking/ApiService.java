@@ -2,6 +2,7 @@ package com.sydney.recipemanagaer.networking;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -14,6 +15,9 @@ import com.sydney.recipemanagaer.model.User;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ApiService {
     private final NetworkingClient networkingClient;
@@ -92,7 +96,7 @@ public class ApiService {
                         String token = response.getString("token");
                         JSONObject userData = response.getJSONObject("data").getJSONObject("user");
                         // Assuming the user object includes an id and other necessary details
-                        String userId = userData.getString("id");  // or "_id" depending on your backend
+                        String userId = userData.getString("_id");  // or "_id" depending on your backend
                         listener.onSuccess(token, userId, userData);
                     } catch (JSONException e) {
                         listener.onFailure("Failed to parse token from response: " + e.getMessage());
@@ -129,11 +133,23 @@ public class ApiService {
         networkingClient.getRequestQueue().add(jsonObjectRequest);
     }
 
-    // Method to get a user's data by ID
-    public void getUserData(String userId, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
-        String url = BASE_URL + "/user/" + userId; // Adjust URL to include the user ID
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, responseListener, errorListener);
-        networkingClient.getRequestQueue().add(jsonObjectRequest);
+    public void getUserById(String userId, String token, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+        if (userId != null) {
+            String url = BASE_URL + "/user/" + userId; // Adjust endpoint as needed based on your API
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, responseListener, errorListener) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + token); // Add the Bearer token here
+                    return headers;
+                }
+            };
+
+            networkingClient.getRequestQueue().add(jsonObjectRequest);
+        } else {
+            Log.e("NO_USER_ID", "No user id provided");
+        }
     }
 
 }

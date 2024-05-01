@@ -1,26 +1,37 @@
 package com.sydney.recipemanagaer.ui.view.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.sydney.recipemanagaer.R;
+import com.sydney.recipemanagaer.model.repository.UserRepository;
 import com.sydney.recipemanagaer.ui.view.fragments.CreateRecipeFragment;
 import com.sydney.recipemanagaer.ui.view.fragments.DashboardFragment;
 import com.sydney.recipemanagaer.ui.view.fragments.FavoriteFragment;
 import com.sydney.recipemanagaer.ui.view.fragments.HomeFragment;
+import com.sydney.recipemanagaer.ui.viewmodel.UserViewModel;
+import com.sydney.recipemanagaer.ui.viewmodel.factory.UserViewModelFactory;
 
 
 public class MainActivity extends AppCompatActivity {
-    private TextView textView;
+    UserRepository userRepository;
+    UserViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!userIsLoggedIn()) {
+            navigateToLoginActivity();
+            return; // Stop further execution of this method
+        }
+
         setContentView(R.layout.activity_main);
 
         BottomNavigationView bottomNav = findViewById(R.id.nav_view);
@@ -60,31 +71,20 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
         }
 
+    }
 
-        // nothing
-//        textView = findViewById(R.id.text_view);
-//        RequestQueue queue = Volley.newRequestQueue(this);
-//
-//
-//        // server
-//        String url = "http://10.0.2.2:3000/recipe"; // Your URL
-////        String url ="https://recipe-manager-server.onrender.com"; // server URL
-//
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        textView.setText("Response is: " + response);
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                System.out.println(error);
-//                textView.setText("That didn't work!");
-//            }
-//        });
-//
-//        queue.add(stringRequest);
+    private boolean userIsLoggedIn() {
+        userRepository = new UserRepository(this);
+        viewModel = new ViewModelProvider(this, new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+
+        String token = viewModel.getToken();
+        return token != null && !token.isEmpty();
+    }
+
+    private void navigateToLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();  // Finish MainActivity to remove it from the back stack
     }
 
 

@@ -25,7 +25,7 @@ public class DashboardViewModel extends ViewModel {
     private void loadUser() {
         User user = userRepository.getUser(userRepository.getLoggedInUserId()).getValue();  // Get the user from the repository
         userLiveData.setValue(user);
-        isAdminLiveData.setValue(user.isAdmin()); // Assume User model has an isAdmin method
+        isAdminLiveData.setValue(user.getRole() == "admin" ? true : false); // Assume User model has an isAdmin method
     }
 
     public LiveData<User> getUserLiveData() {

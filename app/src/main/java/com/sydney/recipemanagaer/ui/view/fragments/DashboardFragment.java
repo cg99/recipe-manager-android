@@ -57,7 +57,7 @@ public class DashboardFragment extends Fragment {
         viewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 updateUI(user);
-                btnAdminDashboard.setVisibility(user.isAdmin() ? View.VISIBLE : View.GONE);
+                btnAdminDashboard.setVisibility(user.getRole() == "admin" ? View.VISIBLE : View.GONE);
             }
         });
     }

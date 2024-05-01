@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -13,6 +14,7 @@ import com.sydney.recipemanagaer.networking.ApiService;
 import com.sydney.recipemanagaer.networking.LoginResponseListener;
 import com.sydney.recipemanagaer.utils.Util;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -40,27 +42,56 @@ public class UserRepository {
         MutableLiveData<List<User>> liveData = new MutableLiveData<>();
         List<User> users = new ArrayList<>();
 
-        users.add(new User( "LohnJoe", "lohn@example.com", "lony","", "fitness influencer",  "https://picsum.photos/id/251/200.jpg",false));
-        users.add(new User("JaneDoe", "jane@example.com", "jany","","youtuber with style","https://picsum.photos/id/252/200.jpg", false));
+        users.add(new User( "LohnJoe", "lohn@example.com", "lony","", "fitness influencer",  "https://picsum.photos/id/251/200.jpg","admin"));
+        users.add(new User("JaneDoe", "jane@example.com", "jany","","youtuber with style","https://picsum.photos/id/252/200.jpg", "admin"));
         // Add more users
         liveData.setValue(users);
         return liveData;
     }
 
     public MutableLiveData<User> getUser(String userId) {
-        // Assuming you retrieve a user from a static source, database, or API
-        // Here we use a placeholder for demonstration
         MutableLiveData<User> liveData = new MutableLiveData<>();
+        String token = getToken();
 
-        User user = new User("under",
-                "under@example.com",
-                "under","",
-                "wrestler with style",
-                "https://picsum.photos/id/253/200.jpg",
-                true);
-        liveData.setValue(user);
+        apiService.getUserById(userId, token, response -> {
+            if (response != null) {
+                try {
+                    JSONObject userObject = response.getJSONObject("data").getJSONObject("user");
+                    User user = parseJsonToUser(userObject);
+                    liveData.postValue(user);  // Use postValue when updating LiveData from a background thread
+                } catch (JSONException e) {
+                    Log.e("API", "Error getting user data from JSON", e);
+                    liveData.postValue(null);  // Post null to indicate an error
+                }
+            } else {
+                liveData.postValue(null);  // Post null if response is unexpectedly null
+            }
+        }, error -> {
+            Log.e("API", "Network error while fetching user", error);
+            liveData.postValue(null);  // Post null to handle network errors gracefully
+        });
+
         return liveData;
     }
+
+
+    private User parseJsonToUser(JSONObject jsonObject) {
+        try {
+            String id = jsonObject.getString("_id");
+            String email = jsonObject.getString("email");
+            String username = jsonObject.optString("username", "nousername");
+            String profilePic = jsonObject.getString("userImage");
+            String bio = jsonObject.optString("bio", "No bio");
+            String role = jsonObject.getString("role");
+
+            return new User(id, email, username, profilePic, bio, profilePic, role);
+        } catch (JSONException e) {
+            Log.e("API", "Error parsing user JSON", e);
+            return null;  // Return null or throw, depending on how you want to handle parsing errors
+        }
+    }
+
+
 
     public void updateUser(User user) {
         // update logic

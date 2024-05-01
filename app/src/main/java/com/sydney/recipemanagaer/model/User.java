@@ -2,7 +2,7 @@ package com.sydney.recipemanagaer.model;
 
 public class User {
     private String fullName, email, username, bio, password, profilePic;
-    private boolean isAdmin;
+    private String role;
 
     public User(String fullName, String email, String username, String password) {
         this.fullName = fullName;
@@ -11,14 +11,14 @@ public class User {
         this.username = username;
     }
 
-    public User(String fullName, String email, String username, String password, String bio, String profilePic, boolean isAdmin) {
+    public User(String fullName, String email, String username, String password, String bio, String profilePic, String role) {
         this.fullName = fullName;
         this.email = email;
         this.password = password;
         this.bio = bio;
         this.profilePic = profilePic;
         this.username = username;
-        this.isAdmin = isAdmin;
+        this.role = role;
     }
 
     public String getFullName() {
@@ -64,7 +64,7 @@ public class User {
         this.profilePic = profilePic;
     }
 
-    public boolean isAdmin() {
-        return isAdmin;
+    public String getRole() {
+        return role;
     }
 }
