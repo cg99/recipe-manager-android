@@ -11,7 +11,16 @@ public class Recipe {
     private String featuredImgURL;
     private String recipeId;
 
-    // Updated constructor to include the list of ingredients
+    public List<String> getFavoritedBy() {
+        return favoritedBy;
+    }
+
+    public void setFavoritedBy(List<String> favoritedBy) {
+        this.favoritedBy = favoritedBy;
+    }
+
+    private List<String> favoritedBy;
+
     public Recipe(String title, String description, List<String> ingredients, String instructions, int cookingTime, String featuredImgURL) {
         this.title = title;
         this.description = description;

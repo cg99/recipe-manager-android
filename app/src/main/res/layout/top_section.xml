@@ -52,19 +52,6 @@
             android:text="Chinese"
             android:layout_marginEnd="8dp"/>
 
-        <!-- Filter icon button -->
-
-        <ImageButton
-            android:id="@+id/button_filter"
-            android:layout_width="wrap_content"
-            android:text="@string/filter"
-            android:layout_height="wrap_content"
-            android:background="@color/primary"
-            android:src="@drawable/ic_filter"
-            android:contentDescription="@string/filter"
-            app:tint="@color/white"
-            android:padding="8dp"
-            />
 
     </LinearLayout>
 </LinearLayout>

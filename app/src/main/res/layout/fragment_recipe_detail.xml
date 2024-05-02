@@ -71,5 +71,13 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:text="Update Recipe" />
+
+        <Button
+            android:id="@+id/buttonMarkFavorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:text="Favorite" />
     </LinearLayout>
 </ScrollView>

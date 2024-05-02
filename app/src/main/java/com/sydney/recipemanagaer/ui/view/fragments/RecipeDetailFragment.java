@@ -23,7 +23,7 @@ public class RecipeDetailFragment extends Fragment {
 
     private TextView textViewTitle, textViewDescription, textViewIngredients, textViewInstructions, textViewCookingTime;
     private ImageView imageViewRecipe;
-    private Button buttonEditRecipe, buttonDeleteRecipe;
+    private Button buttonEditRecipe, buttonDeleteRecipe, favoriteButton;
     private RecipeViewModel viewModel;
 
     @Override
@@ -54,6 +54,8 @@ public class RecipeDetailFragment extends Fragment {
         imageViewRecipe = view.findViewById(R.id.imageViewRecipe);
         buttonEditRecipe = view.findViewById(R.id.buttonUpdateRecipe); // Button for editing
         buttonDeleteRecipe = view.findViewById(R.id.buttonDeleteRecipe); // Initialize the Delete Button
+        favoriteButton = view.findViewById((R.id.buttonMarkFavorite));
+
     }
 
     private void displayRecipeDetails() {
@@ -80,6 +82,8 @@ public class RecipeDetailFragment extends Fragment {
     private void setupButtonListeners() {
         buttonEditRecipe.setOnClickListener(v -> navigateToUpdateFragment());
         buttonDeleteRecipe.setOnClickListener(v -> deleteRecipe());
+
+        favoriteButton.setOnClickListener(v -> markRecipeAsFavorite());
     }
 
     private void navigateToUpdateFragment() {
@@ -111,6 +115,15 @@ public class RecipeDetailFragment extends Fragment {
                     .commit();
             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.nav_view);
             bottomNavigationView.setSelectedItemId(R.id.homeFragment);
+        }
+    }
+
+    public void markRecipeAsFavorite() {
+        {
+            String recipeId = getArguments().getString("recipeId");
+            viewModel.markAsFavorite(recipeId).observe(getViewLifecycleOwner(), result -> {
+                    Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+            });
         }
     }
 }

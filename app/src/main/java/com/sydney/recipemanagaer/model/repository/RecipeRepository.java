@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class RecipeRepository {
@@ -113,6 +114,39 @@ public class RecipeRepository {
         });
 
         return result;
+    }
+
+    public LiveData<String> markAsFavorite(String recipeId)
+    {
+        MutableLiveData<String> result = new MutableLiveData<>();
+        String userId = userRepository.getLoggedInUserId();
+
+        apiService.markRecipeAsFavorite(recipeId, userId, response -> {
+            result.setValue(response.optString("message", "Marked as favorite"));
+        }, error -> {
+            result.setValue("Failed to mark as favorite");
+        });
+        return result;
+    }
+
+    public LiveData<List<Recipe>> getUserFavorites() {
+        MutableLiveData<List<Recipe>> favoritesLiveData = new MutableLiveData<>();
+        String userId = userRepository.getLoggedInUserId();
+
+        apiService.getUserFavorites(userId, response -> {
+            JSONArray recipesArray = null;
+            try {
+                recipesArray = response.getJSONArray("recipes");
+                List<Recipe> favoriteRecipes = parseRecipes(recipesArray);
+                favoritesLiveData.setValue(favoriteRecipes);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }, error -> {
+            // Handle the error appropriately
+            favoritesLiveData.setValue(Collections.emptyList());
+        });
+        return favoritesLiveData;
     }
 
     private List<Recipe> parseRecipes(JSONArray response) {

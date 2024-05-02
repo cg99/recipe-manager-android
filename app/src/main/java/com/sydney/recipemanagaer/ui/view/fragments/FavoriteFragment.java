@@ -7,21 +7,22 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.Recipe;
-import com.sydney.recipemanagaer.utils.Util;
+import com.sydney.recipemanagaer.model.repository.RecipeRepository;
 import com.sydney.recipemanagaer.ui.view.adapters.FavoriteAdapter;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.sydney.recipemanagaer.ui.viewmodel.RecipeViewModel;
+import com.sydney.recipemanagaer.ui.viewmodel.factory.RecipeViewModelFactory;
+import com.sydney.recipemanagaer.utils.Util;
 
 public class FavoriteFragment extends Fragment implements FavoriteAdapter.FavoriteActionsListener {
     private RecyclerView recyclerView;
     private FavoriteAdapter adapter;
+    private RecipeViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,30 +30,22 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.Favori
         recyclerView = view.findViewById(R.id.recyclerViewFavorites);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        List<Recipe> recipes = new ArrayList<>();
-        recipes.add(new Recipe("Chocolate Brownie",
-                "A rich and fudgy chocolate brownie",
-                Arrays.asList("Bread", "Cheese", "Butter"),
-                "Mix melted chocolate with flour and sugar, add eggs, and bake for 25 minutes.",
-                25,
-                "https://picsum.photos/id/221/200.jpg"));
-        recipes.add(new Recipe("Caesar Salad",
-                "Classic Caesar salad with romaine lettuce, parmesan cheese, and croutons",
-                Arrays.asList("Bread", "Cheese", "Butter"),
-                "Toss lettuce with croutons, cheese, and Caesar dressing.",
-                10,
-                "https://picsum.photos/id/222/200.jpg"));
+        RecipeRepository recipeRepository = new RecipeRepository(getContext());
+        viewModel = new ViewModelProvider(this, new RecipeViewModelFactory(recipeRepository)).get(RecipeViewModel.class);
 
-        adapter = new FavoriteAdapter(getContext(), recipes, this);
-        recyclerView.setAdapter(adapter);
+        viewModel.getUserFavorites().observe(getViewLifecycleOwner(), recipes -> {
+            adapter = new FavoriteAdapter(getContext(), recipes, this);
+            recyclerView.setAdapter(adapter);
+        });
 
         return view;
     }
 
     @Override
     public void onRemoveFavorite(Recipe recipe) {
-        Toast.makeText(getContext(), "Removed from Favorites: " + recipe.getTitle(), Toast.LENGTH_SHORT).show();
-        // Optionally update backend or local database
+        viewModel.markAsFavorite(recipe.getRecipeId()).observe(getViewLifecycleOwner(), result -> {
+            Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override

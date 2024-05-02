@@ -154,4 +154,22 @@ public class ApiService {
         }
     }
 
+    public void markRecipeAsFavorite(String recipeId, String userId, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+        String url = BASE_URL + "/recipe/" + recipeId + "/favorite";
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userId", userId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PATCH, url, jsonObject, responseListener, errorListener);
+        networkingClient.getRequestQueue().add(request);
+    }
+
+    public void getUserFavorites(String userId, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+        String url = BASE_URL + "/recipe/favorites/" + userId;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, responseListener, errorListener);
+        networkingClient.getRequestQueue().add(jsonObjectRequest);
+    }
+
 }

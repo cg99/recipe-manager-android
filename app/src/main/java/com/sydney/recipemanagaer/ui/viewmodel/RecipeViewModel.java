@@ -29,4 +29,13 @@ public class RecipeViewModel extends ViewModel {
     public LiveData<String> updateRecipe(Recipe recipe) {
         return recipeRepository.updateRecipe(recipe);
     }
+
+    public LiveData<String> markAsFavorite(String recipeId) {
+       return recipeRepository.markAsFavorite(recipeId);
+    }
+
+    public LiveData<List<Recipe>> getUserFavorites() {
+        return recipeRepository.getUserFavorites();
+    }
+
 }

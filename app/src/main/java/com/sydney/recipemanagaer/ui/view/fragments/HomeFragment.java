@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.SearchView;
@@ -50,7 +49,7 @@ public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRec
         searchResultLabel = view.findViewById(R.id.search_result_label);
 
         recyclerSearchResults = view.findViewById(R.id.search_results_list);
-        recyclerSearchResults.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerSearchResults.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         searchAdapter = new GenericRecipeAdapter(allRecipes, this);
         recyclerSearchResults.setAdapter(searchAdapter);
 
@@ -73,11 +72,6 @@ public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRec
                 handleSearch(newText);
                 return true;
             }
-        });
-
-        ImageButton filterButton = view.findViewById(R.id.button_filter);
-        filterButton.setOnClickListener(v -> {
-            // Handle filter button click action
         });
 
         return view;
