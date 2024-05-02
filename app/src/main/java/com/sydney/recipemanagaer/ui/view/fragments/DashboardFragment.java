@@ -86,5 +86,14 @@ public class DashboardFragment extends Fragment {
                 .addToBackStack(null)
                 .commit();
     }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        if (!Util.userIsLoggedIn(getContext())) {
+//            Util.navigateToLoginActivity(getContext());
+//            return; // Stop further execution of this method
+//        }
+//    }
 }
 

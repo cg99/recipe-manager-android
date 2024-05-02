@@ -40,4 +40,5 @@
     <string name="cooking_time_hint">in minutes\n</string>
     <string name="add_new_recipe">Add New Recipe</string>
     <string name="select_ingredients">Add/Select Ingredients\n</string>
+    <string name="search_result">Search Result</string>
 </resources>

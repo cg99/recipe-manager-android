@@ -87,5 +87,10 @@ public class GenericRecipeAdapter extends RecyclerView.Adapter<GenericRecipeAdap
 //            favoriteIcon = itemView.findViewById(R.id.imageViewFavorite);
         }
     }
+
+    public void updateRecipes(List<Recipe> newRecipes) {
+        this.dataList = newRecipes;
+        notifyDataSetChanged();
+    }
 }
 

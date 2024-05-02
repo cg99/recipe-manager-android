@@ -85,7 +85,24 @@ public class CreateRecipeFragment extends Fragment {
         editTextRecipeDescription = view.findViewById(R.id.editTextRecipeDescription);
 
         // Initialize the list of ingredients and the adapter for AutoCompleteTextView
-        ingredients = new ArrayList<>(Arrays.asList("Flour", "Sugar", "Eggs", "Butter", "Milk", "Salt"));
+        ingredients = new ArrayList<>(Arrays.asList(
+                "Flour", "Sugar", "Eggs", "Butter", "Milk", "Salt", "Tomatoes", "Onions",
+                "Carrots", "Bell peppers", "Garlic", "Broccoli", "Spinach", "Potatoes",
+                "Apples", "Bananas", "Oranges", "Strawberries", "Grapes", "Lemons",
+                "Pineapple", "Chicken", "Beef", "Pork", "Lamb", "Turkey", "Salmon",
+                "Tuna", "Shrimp", "Cod", "Crab", "Lobster", "Cheese", "Yogurt", "Cream",
+                "Rice", "Wheat flour", "Oats", "Quinoa", "Lentils", "Chickpeas",
+                "Black beans", "Almonds", "Walnuts", "Peanuts", "Sunflower seeds",
+                "Flaxseeds", "Basil", "Oregano", "Thyme", "Rosemary", "Cumin", "Paprika",
+                "Black pepper", "Olive oil", "Canola oil", "Coconut oil", "Vegetable oil",
+                "Ghee", "Honey", "Maple syrup", "Molasses", "Kale", "Celery", "Zucchini",
+                "Eggplant", "Peas", "Cauliflower", "Asparagus", "Artichoke", "Mushrooms",
+                "Pomegranate", "Blueberries", "Raspberries", "Mango", "Avocado", "Peach",
+                "Cabbage", "Lettuce", "Cucumber", "Corn", "Radishes", "Mint", "Cilantro",
+                "Parsley", "Fennel", "Chili powder", "Turmeric", "Cinnamon", "Nutmeg",
+                "Cardamom", "Vanilla", "Sesame seeds", "Pistachios", "Hazelnuts", "Pumpkin seeds",
+                "Macadamia nuts"
+        ));
         adapter = new IngredientAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, ingredients);
 
         autoCompleteTextView = view.findViewById(R.id.autoCompleteTextViewIngredients);
