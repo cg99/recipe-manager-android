@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +24,7 @@ public class RecipeDetailFragment extends Fragment {
 
     private TextView textViewTitle, textViewDescription, textViewIngredients, textViewInstructions, textViewCookingTime;
     private ImageView imageViewRecipe;
-    private Button buttonEditRecipe, buttonDeleteRecipe, favoriteButton;
+    private ImageButton buttonEditRecipe, buttonDeleteRecipe, favoriteButton;
     private RecipeViewModel viewModel;
 
     @Override

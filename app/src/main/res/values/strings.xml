@@ -41,4 +41,11 @@
     <string name="add_new_recipe">Add New Recipe</string>
     <string name="select_ingredients">Add/Select Ingredients\n</string>
     <string name="search_result">Search Result</string>
+
+    <string name="details">Details</string>
+    <string name="ingredientsTxt">Ingredients</string>
+    <string name="how_to_prepare">How To Prepare:</string>
+    <string name="favorite">Favorite</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>
