@@ -195,10 +195,6 @@ public class CreateRecipeFragment extends Fragment {
                 Toast.makeText(getContext(), "Failed to create recipe.", Toast.LENGTH_LONG).show();
             }
         });
-
-        // Optionally, clear the form or navigate away
-        clearRecipeForm();
-        navigateToHome();
     }
 
     private void clearRecipeForm() {
