@@ -64,14 +64,13 @@ public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRec
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchAdapter.updateRecipes(filterRecipes(query));
+                handleSearch(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // Perform live filtering action
-                searchAdapter.updateRecipes(filterRecipes(newText));
+                handleSearch(newText);
                 return true;
             }
         });
@@ -96,7 +95,7 @@ public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRec
     }
 
     private List<Recipe> filterRecipes(String query) {
-        if (allRecipes == null) {
+        if (allRecipes == null || query.isEmpty()) {
             // Handle the case where allRecipes is null, e.g., show a message to the user
             Log.e("FilterRecipe", "No recipes");
             return null;
@@ -110,8 +109,16 @@ public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRec
                                 ingredient.toLowerCase().contains(lowerCaseQuery)))
                 .collect(Collectors.toList());
 
-        searchResultLabel.setVisibility(!filteredRecipes.isEmpty() ? View.VISIBLE : View.GONE);
-
         return filteredRecipes;
+    }
+
+    public void handleSearch (String value) {
+        if (value.isEmpty()) {
+            searchAdapter.updateRecipes(new ArrayList<>());
+            searchResultLabel.setVisibility(View.GONE);
+        } else {
+            searchAdapter.updateRecipes(filterRecipes(value));
+            searchResultLabel.setVisibility(View.VISIBLE);
+        }
     }
 }
