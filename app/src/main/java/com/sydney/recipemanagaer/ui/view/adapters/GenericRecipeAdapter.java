@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.Recipe;
+import com.sydney.recipemanagaer.utils.Util;
 
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class GenericRecipeAdapter extends RecyclerView.Adapter<GenericRecipeAdap
 
             // Use Glide to load the image asynchronously
             Glide.with(holder.itemView.getContext())
-                    .load(recipe.getFeaturedImgURL())
+                    .load(Util.getBaseURL() + "recipe/images/" + recipe.getFeaturedImgURL())
                     .placeholder(R.drawable.placeholder_image_foreground) // A placeholder image to show until the real image is loaded
                     .error(R.drawable.error_image) // An error image to show if the real image fails to load
                     .into(holder.featuredImageView); // The target ImageView to load the image into

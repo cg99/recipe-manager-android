@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +18,7 @@ import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.repository.RecipeRepository;
 import com.sydney.recipemanagaer.ui.viewmodel.RecipeViewModel;
 import com.sydney.recipemanagaer.ui.viewmodel.factory.RecipeViewModelFactory;
+import com.sydney.recipemanagaer.utils.Util;
 
 public class RecipeDetailFragment extends Fragment {
 
@@ -72,7 +72,7 @@ public class RecipeDetailFragment extends Fragment {
             String imageUrl = args.getString("imageUrl");
             if (imageUrl != null && !imageUrl.isEmpty()) {
                 Glide.with(this)
-                        .load(imageUrl)
+                        .load(Util.getBaseURL() + "recipe/images/" + imageUrl)
                         .placeholder(R.drawable.placeholder_image_background)
                         .error(R.drawable.error_image)
                         .into(imageViewRecipe);

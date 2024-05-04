@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.sydney.recipemanagaer.model.Recipe;
 import com.sydney.recipemanagaer.networking.ApiService;
+import com.sydney.recipemanagaer.networking.retrofit.RetrofitService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,8 +19,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+
 public class RecipeRepository {
     private final ApiService apiService;
+    private final RetrofitService retrofitService;
     UserRepository userRepository;
 
     public RecipeRepository(Context context) {
@@ -28,6 +33,7 @@ public class RecipeRepository {
         }
         apiService = new ApiService(context);
         userRepository = new UserRepository(context);
+        retrofitService = new RetrofitService();
     }
 
     public LiveData<List<Recipe>> getRecipes() {
@@ -61,22 +67,32 @@ public class RecipeRepository {
         MutableLiveData<String> result = new MutableLiveData<>();
         String userId = userRepository.getLoggedInUserId();
 
-        apiService.postRecipe(recipe, userId, response -> {
-            if (response != null) {
-                result.setValue("Recipe created successfully!");
-            } else {
-                result.setValue("Error creating recipe: null response");
+
+        retrofitService.postRecipe(recipe, userId, new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+                if (response.isSuccessful()) {
+                    // Handle success
+                    result.postValue("Recipe created successfully!");
+                } else {
+                    // Handle response error
+                    result.postValue("Error creating recipe: " + response.message());
+                }
             }
-        }, error -> {
-            if (error != null) {
-                result.setValue("Error creating recipe: " + error.getMessage());
-            } else {
-                result.setValue("Error creating recipe: unknown error");
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // Handle network failure
+                result.postValue("Error creating recipe: " + t.getMessage());
             }
         });
 
+
         return result;
     }
+
+
+
 
     // Deletes a recipe and returns LiveData indicating the result
     public LiveData<String> deleteRecipe(String recipeId) {
@@ -99,17 +115,22 @@ public class RecipeRepository {
         }
         MutableLiveData<String> result = new MutableLiveData<>();
 
-        apiService.updateRecipe(recipe, response -> {
-            if (response != null) {
-                result.setValue("Recipe updated successfully!");
-            } else {
-                result.setValue("Error updating recipe: null response");
+        retrofitService.updateRecipe(recipe, new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+                if (response.isSuccessful()) {
+                    // Handle success
+                    result.postValue("Recipe updated successfully!");
+                } else {
+                    // Handle response error
+                    result.postValue("Error updating recipe: " + response.message());
+                }
             }
-        }, error -> {
-            if (error != null) {
-                result.setValue("Error updating recipe: " + error.getMessage());
-            } else {
-                result.setValue("Error updating recipe: unknown error");
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // Handle network failure
+                result.postValue("Error updating recipe: " + t.getMessage());
             }
         });
 
@@ -167,8 +188,18 @@ public class RecipeRepository {
                 }
                 String instructions = recipeObject.optString("instructions", "no instructions");
                 int cookingTime = recipeObject.getInt("cookingTime");
-                String featuredImgURL = recipeObject.optString("featuredImgURL", "https://images.unsplash.com/photo-1546069901-ba9599a7e63c");
-                Recipe recipe = new Recipe(recipeId, title, description, ingredients, instructions, cookingTime, featuredImgURL);
+                String featuredImgURL = recipeObject.getString("featuredImgURL");
+
+                ArrayList<String> imagesURL = new ArrayList<>();
+                JSONArray imagesURLArray = recipeObject.getJSONArray("imagesURL");
+                for (int j = 0; j < imagesURLArray.length(); j++) {
+                    imagesURL.add(imagesURLArray.getString(j));
+                }
+                Recipe recipe = new Recipe(recipeId, title, description, ingredients, instructions, cookingTime);
+
+                recipe.setFeaturedImgURL(featuredImgURL);
+                recipe.setImages(imagesURL);
+
                 recipes.add(recipe);
             } catch (JSONException e) {
                 e.printStackTrace();

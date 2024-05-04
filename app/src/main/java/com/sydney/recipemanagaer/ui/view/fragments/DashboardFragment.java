@@ -69,7 +69,11 @@ public class DashboardFragment extends Fragment {
         userName.setText(user.getUsername());
         userEmail.setText(user.getEmail());
         userBio.setText(user.getBio());
-        Glide.with(this).load(user.getProfilePic()).into(userProfile);
+        Glide.with(this)
+                .load(user.getProfilePic())
+                .error(R.drawable.icon_account_circle) // An error image to show if the real image fails to load
+                .into(userProfile);
+
     }
 
     private void logoutUser() {

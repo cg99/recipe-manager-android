@@ -1,5 +1,6 @@
 package com.sydney.recipemanagaer.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Recipe {
@@ -11,33 +12,27 @@ public class Recipe {
     private String featuredImgURL;
     private String recipeId;
 
-    public List<String> getFavoritedBy() {
-        return favoritedBy;
-    }
-
-    public void setFavoritedBy(List<String> favoritedBy) {
-        this.favoritedBy = favoritedBy;
-    }
-
     private List<String> favoritedBy;
+    private String featuredImage;
 
-    public Recipe(String title, String description, List<String> ingredients, String instructions, int cookingTime, String featuredImgURL) {
+    private ArrayList<String> images;
+
+
+    public Recipe(String title, String description, List<String> ingredients, String instructions, int cookingTime) {
         this.title = title;
         this.description = description;
         this.ingredients = ingredients;
         this.instructions = instructions;
         this.cookingTime = cookingTime;
-        this.featuredImgURL = featuredImgURL;
     }
 
-    public Recipe(String recipeId, String title, String description, List<String> ingredients, String instructions, int cookingTime, String featuredImgURL) {
+    public Recipe(String recipeId, String title, String description, List<String> ingredients, String instructions, int cookingTime) {
         this.recipeId = recipeId;
         this.title = title;
         this.description = description;
         this.ingredients = ingredients;
         this.instructions = instructions;
         this.cookingTime = cookingTime;
-        this.featuredImgURL = featuredImgURL;
     }
 
     // Getter for the name
@@ -70,7 +65,35 @@ public class Recipe {
         return featuredImgURL;
     }
 
-    public String getRecipeId(){
+    public void setFeaturedImgURL(String featuredImgURL) {
+        this.featuredImgURL = featuredImgURL;
+    }
+
+    public String getRecipeId() {
         return recipeId;
+    }
+
+    public List<String> getFavoritedBy() {
+        return favoritedBy;
+    }
+
+    public void setFavoritedBy(List<String> favoritedBy) {
+        this.favoritedBy = favoritedBy;
+    }
+
+    public void setFeaturedImage(String imageUri) {
+        this.featuredImage = imageUri;
+    }
+
+    public String getFeaturedImage() {
+        return this.featuredImage;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(ArrayList<String> images) {
+        this.images = images;
     }
 }
