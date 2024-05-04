@@ -13,12 +13,20 @@
         android:padding="16dp"
         android:gravity="center_horizontal">
 
+        <!-- Logout Button at the top -->
+        <Button
+            android:id="@+id/buttonLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:layout_gravity="end"/>
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageViewUserProfile"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/placeholder_image_foreground"
-        android:scaleType="centerCrop"/>
+            android:src="@drawable/user"
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/textViewUserName"
@@ -109,13 +117,6 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="gone" />
-
-            <Button
-                android:id="@+id/buttonLogout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Logout" />
         </LinearLayout>
-
     </LinearLayout>
 </ScrollView>
