@@ -1,5 +1,9 @@
 package com.sydney.recipemanagaer.model;
 
+import android.net.Uri;
+
+import java.util.List;
+
 public class User {
     private String fullName, email, username, bio, password, profilePic;
     private String role;

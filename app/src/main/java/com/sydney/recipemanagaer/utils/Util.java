@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -19,6 +23,10 @@ import com.sydney.recipemanagaer.ui.view.activities.LoginActivity;
 import com.sydney.recipemanagaer.ui.view.fragments.RecipeDetailFragment;
 import com.sydney.recipemanagaer.ui.view.fragments.UpdateRecipeFragment;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 
 public class Util {
@@ -34,10 +42,11 @@ public class Util {
             args.putString("recipeId", recipe.getRecipeId());
             args.putString("title", recipe.getTitle());
             args.putString("description", recipe.getDescription());
-            args.putString("ingredients", String.join(", ", recipe.getIngredients())); // Joining the list of ingredients into a single string
+            args.putString("ingredients", recipe.getIngredients().toString()); // Joining the list of ingredients into a single string
             args.putString("imageUrl", recipe.getFeaturedImgURL());
+            args.putString("imagesUrl", recipe.getImages().toString());
             args.putString("instructions", recipe.getInstructions());
-            args.putString("cookingTime", recipe.getCookingTime()+""); // Pass as int if you want to use it as a number later
+            args.putString("cookingTime", recipe.getCookingTime() + ""); // Pass as int if you want to use it as a number later
             detailFragment.setArguments(args);
 
             // Perform the fragment transaction to display the RecipeDetailFragment
@@ -85,6 +94,66 @@ public class Util {
         Intent intent = new Intent(context, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear stack
         context.startActivity(intent);
+    }
+
+
+    public static String getPath(Context context, Uri uri) {
+        if (uri == null) {
+            Log.e("ImagePath", "URI is null");
+            return null;
+        }
+
+        Log.i("ImagePath", "URI: " + uri.toString());
+        String filePath = null;
+
+        // Try to retrieve the file path by copying content to a temp file
+        try {
+            filePath = copyContentToTempFile(context, uri);
+        } catch (Exception e) {
+            Log.e("ImagePath", "Error getting full file path", e);
+        }
+
+        Log.i("ImagePath", "Full File Path: " + filePath);
+        return filePath;
+    }
+
+    // Copy content to a temporary file to get its path
+    private static String copyContentToTempFile(Context context, Uri uri) {
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        String displayName = null;
+
+        if (cursor != null) {
+            int nameIndex = cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME);
+            if (cursor.moveToFirst()) {
+                displayName = cursor.getString(nameIndex);
+            }
+            cursor.close();
+        }
+
+        if (displayName == null) {
+            Log.e("ImagePath", "Unable to retrieve file name");
+            return null;
+        }
+
+        File tempFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), displayName);
+
+        try (InputStream inputStream = context.getContentResolver().openInputStream(uri);
+             OutputStream outputStream = new FileOutputStream(tempFile)) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+        } catch (Exception e) {
+            Log.e("ImagePath", "Error copying file to temp location", e);
+            return null;
+        }
+
+        return tempFile.getAbsolutePath();
+    }
+
+    public static String getBaseURL() {
+        return "http://10.0.2.2:8000/api/v1/";
     }
 
 }

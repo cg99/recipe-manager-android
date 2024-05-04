@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,8 +24,12 @@ public class ApiService {
     private final NetworkingClient networkingClient;
     private static final String BASE_URL = "http://10.0.2.2:8000/api/v1";
 
+    private Context apiContext;
+
     public ApiService(Context context) {
         networkingClient = NetworkingClient.getInstance(context);
+        this.apiContext = context;
+
     }
 
     // Method to fetch recipes using GET
@@ -37,22 +42,35 @@ public class ApiService {
     // Method to post a new recipe using POST
     public void postRecipe(Recipe recipeData, String userId, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
         String url = BASE_URL + "/recipe";
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("title", recipeData.getTitle());
-            jsonObject.put("description", recipeData.getDescription());
-            jsonObject.put("ingredients", new JSONArray(recipeData.getIngredients()));
-            jsonObject.put("instructions", recipeData.getInstructions());
-            jsonObject.put("cookingTime", recipeData.getCookingTime());
-            jsonObject.put("featuredImgURL", recipeData.getFeaturedImgURL());
-            jsonObject.put("createdBy", userId);
+        Map<String, String> params = new HashMap<>();
+        params.put("title", recipeData.getTitle());
+        params.put("description", recipeData.getDescription());
+        params.put("ingredients", new JSONArray(recipeData.getIngredients()).toString());
+        params.put("instructions", recipeData.getInstructions());
+        params.put("cookingTime", Integer.toString(recipeData.getCookingTime()));
+        params.put("featuredImgURL", recipeData.getFeaturedImgURL());
+        params.put("createdBy", userId);
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+        Map<String, File> fileParams = new HashMap<>();
+
+        File featuredImageFile = new File(recipeData.getFeaturedImage());
+        if (featuredImageFile.exists()) {
+            Log.e("ImagePath", "File made for featuredImage");
+            fileParams.put("featuredImage", featuredImageFile);
         }
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, responseListener, errorListener);
-        networkingClient.getRequestQueue().add(jsonObjectRequest);
+
+        for (int i = 0; i < recipeData.getImages().size(); i++) {
+            File imageFile = new File(recipeData.getImages().get(i));
+            if (imageFile.exists()) {
+                Log.e("ImagePath", "File made for image " + i);
+                fileParams.put("images" + i, imageFile);
+            }
+        }
+
+        MultipartRequest request = new MultipartRequest(url, params, fileParams, responseListener, errorListener);
+        networkingClient.getRequestQueue().add(request);
     }
+
 
     public void updateRecipe(Recipe recipeData, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
         String url = BASE_URL + "/recipe/" + recipeData.getRecipeId();

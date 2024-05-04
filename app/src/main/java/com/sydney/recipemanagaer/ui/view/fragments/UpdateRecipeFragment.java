@@ -1,5 +1,6 @@
 package com.sydney.recipemanagaer.ui.view.fragments;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,18 +9,22 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.Recipe;
 import com.sydney.recipemanagaer.model.repository.RecipeRepository;
+import com.sydney.recipemanagaer.ui.view.adapters.ImageAdapter;
 import com.sydney.recipemanagaer.ui.view.adapters.IngredientAdapter;
 import com.sydney.recipemanagaer.ui.viewmodel.RecipeViewModel;
 import com.sydney.recipemanagaer.ui.viewmodel.factory.RecipeViewModelFactory;
@@ -32,17 +37,20 @@ import java.util.List;
 public class UpdateRecipeFragment extends Fragment {
     private EditText editTextRecipeName, editTextRecipeDescription, editTextInstructions, editTextCookingTime;
     private ImageView imageViewSelected;
-    private TextView textUpdateRecipeLabel;
-    private ActivityResultLauncher<String> imagePickerLauncher;
-    private Button buttonUpdateRecipe;
+    private ActivityResultLauncher<String> imagePickerLauncherForFeaturedImage;
+    private ActivityResultLauncher<String> imagePickerLauncherForImages;
+    private Button buttonUpdateRecipe, addImageButton, addFeaturedImage;
     private AutoCompleteTextView autoCompleteTextView;
     private ChipGroup chipGroup;
     private RecipeViewModel viewModel;
-    //    private Recipe currentRecipe;
     private List<String> ingredients;
     private IngredientAdapter adapter;
-    private String recipeId;
+    private String recipeId, featuredImagePath;
+    private ArrayList<Uri> images = new ArrayList<>();
+    private ArrayList<String> imagesPaths = new ArrayList<>();
+    private ImageAdapter imgAdapter;
 
+    private RecyclerView imagesRecyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,7 +66,6 @@ public class UpdateRecipeFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        textUpdateRecipeLabel = view.findViewById(R.id.textLayoutLabel);
         editTextRecipeName = view.findViewById(R.id.editTextRecipeName);
         editTextRecipeDescription = view.findViewById(R.id.editTextRecipeDescription);
         editTextInstructions = view.findViewById(R.id.editTextInstructions);
@@ -69,12 +76,35 @@ public class UpdateRecipeFragment extends Fragment {
         chipGroup = view.findViewById(R.id.chipGroupSelectedIngredients);
 
         // Initialize the list of ingredients and the adapter for AutoCompleteTextView
-        ingredients = new ArrayList<>(Arrays.asList("Flour", "Sugar", "Eggs", "Butter", "Milk", "Salt"));
+        ingredients = new ArrayList<>(Arrays.asList(
+                "Flour", "Sugar", "Eggs", "Butter", "Milk", "Salt", "Tomatoes", "Onions",
+                "Carrots", "Bell peppers", "Garlic", "Broccoli", "Spinach", "Potatoes",
+                "Apples", "Bananas", "Oranges", "Strawberries", "Grapes", "Lemons",
+                "Pineapple", "Chicken", "Beef", "Pork", "Lamb", "Turkey", "Salmon",
+                "Tuna", "Shrimp", "Cod", "Crab", "Lobster", "Cheese", "Yogurt", "Cream",
+                "Rice", "Wheat flour", "Oats", "Quinoa", "Lentils", "Chickpeas",
+                "Black beans", "Almonds", "Walnuts", "Peanuts", "Sunflower seeds",
+                "Flaxseeds", "Basil", "Oregano", "Thyme", "Rosemary", "Cumin", "Paprika",
+                "Black pepper", "Olive oil", "Canola oil", "Coconut oil", "Vegetable oil",
+                "Ghee", "Honey", "Maple syrup", "Molasses", "Kale", "Celery", "Zucchini",
+                "Eggplant", "Peas", "Cauliflower", "Asparagus", "Artichoke", "Mushrooms",
+                "Pomegranate", "Blueberries", "Raspberries", "Mango", "Avocado", "Peach",
+                "Cabbage", "Lettuce", "Cucumber", "Corn", "Radishes", "Mint", "Cilantro",
+                "Parsley", "Fennel", "Chili powder", "Turmeric", "Cinnamon", "Nutmeg",
+                "Cardamom", "Vanilla", "Sesame seeds", "Pistachios", "Hazelnuts", "Pumpkin seeds",
+                "Macadamia nuts"
+        ));
+
         adapter = new IngredientAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, ingredients);
         autoCompleteTextView.setAdapter(adapter);
 
-        textUpdateRecipeLabel.setText("Update Recipe");
-        buttonUpdateRecipe.setText("Update Recipe");
+        addFeaturedImage = view.findViewById(R.id.buttonSelectImage);
+        addImageButton = view.findViewById(R.id.addImageButton);
+
+        imagesRecyclerView = view.findViewById(R.id.imagesRecyclerView);
+        imgAdapter = new ImageAdapter(images);
+        imagesRecyclerView.setAdapter(imgAdapter);
+        imagesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     }
 
     private void populateFields() {
@@ -85,7 +115,11 @@ public class UpdateRecipeFragment extends Fragment {
             editTextRecipeDescription.setText(args.getString("description"));
             editTextInstructions.setText(args.getString("instructions"));
             editTextCookingTime.setText(args.getString("cookingTime"));
-            Util.loadImage(this, args.getString("imageUrl"), imageViewSelected);
+            Glide.with(this)
+                    .load(Util.getBaseURL() + "recipe/images/" + args.getString("imageUrl"))
+                    .placeholder(R.drawable.placeholder_image_background)
+                    .error(R.drawable.error_image)
+                    .into(imageViewSelected);
 
             // Split the ingredients string into an array and load as chips
             String ingredients = args.getString("ingredients");
@@ -112,25 +146,43 @@ public class UpdateRecipeFragment extends Fragment {
     }
 
     private void setListeners(View view) {
-        view.findViewById(R.id.buttonSelectImage).setOnClickListener(v -> {
-            imagePickerLauncher.launch("image/*");  // Open the image picker
+        addFeaturedImage.setOnClickListener(v -> {
+            imagePickerLauncherForFeaturedImage.launch("image/*");
         });
 
-        // ingredients add
+        addImageButton.setOnClickListener(v -> {
+            imagePickerLauncherForImages.launch("image/*");
+        });
+
+        // Setup the image picker for featured image
+        imagePickerLauncherForFeaturedImage = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    featuredImagePath = Util.getPath(getContext(), uri);
+                    imageViewSelected.setImageURI(uri);
+                }
+        );
+
+        // Setup the image picker for images
+        imagePickerLauncherForImages = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    imagesPaths.add(Util.getPath(getContext(), uri));
+                    if (images.size() < 5) {
+                        images.add(uri);
+                        imgAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(getContext(), "You can only upload up to 5 images.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
         autoCompleteTextView.setOnItemClickListener((parent, view1, position, id) -> {
             String selection = parent.getItemAtPosition(position).toString();
-            if (selection.startsWith("Add new: ")) {
-                String ingredient = selection.substring(9);
-                if (!ingredients.contains(ingredient)) {
-                    ingredients.add(ingredient);
-                }
-                selection = ingredient;
-            }
             addChipToGroup(selection);
             autoCompleteTextView.setText("");
         });
 
-        // update recipe
         buttonUpdateRecipe.setOnClickListener(v -> updateRecipe());
     }
 
@@ -152,7 +204,10 @@ public class UpdateRecipeFragment extends Fragment {
             return;
         }
 
-        Recipe updatedRecipe = new Recipe(recipeId, title, description, ingredients, instructions, cookingTime, "https://picsum.photos/id/236/200.jpg");
+        Recipe updatedRecipe = new Recipe(recipeId, title, description, ingredients, instructions, cookingTime);
+
+        updatedRecipe.setFeaturedImage(featuredImagePath);
+        updatedRecipe.setImages(imagesPaths);
 
         viewModel.updateRecipe(updatedRecipe).observe(getViewLifecycleOwner(), result -> {
             Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();

@@ -2,6 +2,7 @@ package com.sydney.recipemanagaer.ui.view.fragments;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
@@ -22,9 +25,11 @@ import com.google.android.material.chip.ChipGroup;
 import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.Recipe;
 import com.sydney.recipemanagaer.model.repository.RecipeRepository;
+import com.sydney.recipemanagaer.ui.view.adapters.ImageAdapter;
 import com.sydney.recipemanagaer.ui.view.adapters.IngredientAdapter;
 import com.sydney.recipemanagaer.ui.viewmodel.RecipeViewModel;
 import com.sydney.recipemanagaer.ui.viewmodel.factory.RecipeViewModelFactory;
+import com.sydney.recipemanagaer.utils.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,30 +46,29 @@ public class CreateRecipeFragment extends Fragment {
     private Button buttonSubmitRecipe;
 
     // Stores the URI of the selected image
-    private Uri imageUri;
+    private Uri featuredImageUri;
+    String featuredImagePath;
 
     // Launcher for image selection from the gallery
-    private ActivityResultLauncher<String> imagePickerLauncher;
+    private ActivityResultLauncher<String> imagePickerLauncherForFeaturedImage;
+    private ActivityResultLauncher<String> imagePickerLauncherForImages;
 
     // AutoCompleteTextView for ingredient input and ChipGroup for displaying selected ingredients
     private AutoCompleteTextView autoCompleteTextView;
     private ChipGroup chipGroup;
     private List<String> ingredients;
+    private ArrayList<String> imagesPaths = new ArrayList<>(); // Declare a variable for the list of images
+    private ArrayList<Uri> images = new ArrayList<>(); // Declare a variable for the list of images
+    private Button addImageButton;
+    private Button addFeaturedImage;
     private IngredientAdapter adapter;
+    private ImageAdapter imgAdapter;
     private RecipeViewModel viewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Setup the image picker with a callback for when an image is selected
-        imagePickerLauncher = registerForActivityResult(
-                new ActivityResultContracts.GetContent(),
-                uri -> {
-                    imageUri = uri;  // Store the selected image URI
-                    imageViewSelected.setImageURI(uri);  // Display the selected image
-                }
-        );
         RecipeRepository recipeRepository = new RecipeRepository(getContext());
         viewModel = new ViewModelProvider(this, new RecipeViewModelFactory(recipeRepository)).get(RecipeViewModel.class);
     }
@@ -113,15 +117,56 @@ public class CreateRecipeFragment extends Fragment {
         editTextCookingTime = view.findViewById(R.id.editTextCookingTime);
         imageViewSelected = view.findViewById(R.id.imageViewSelected);
         buttonSubmitRecipe = view.findViewById(R.id.buttonSubmitRecipe);
+
+        addFeaturedImage = view.findViewById(R.id.buttonSelectImage);
+
+        RecyclerView imagesRecyclerView = view.findViewById(R.id.imagesRecyclerView);
+        imgAdapter = new ImageAdapter(images);
+        imagesRecyclerView.setAdapter(imgAdapter);
+        imagesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        // Add a button to add new images
+        addImageButton = view.findViewById(R.id.addImageButton);
+
     }
 
     /**
      * Sets up listeners for various interactive components like buttons and AutoCompleteTextView.
      */
     private void setListeners(View view) {
-        view.findViewById(R.id.buttonSelectImage).setOnClickListener(v -> {
-            imagePickerLauncher.launch("image/*");  // Open the image picker
+        addFeaturedImage.setOnClickListener(v -> {
+            imagePickerLauncherForFeaturedImage.launch("image/*");  // Open the image picker for featured image
         });
+
+        addImageButton.setOnClickListener(v -> {
+            imagePickerLauncherForImages.launch("image/*");  // Open the image picker for images
+        });
+
+        // Setup the image picker for featured image
+        imagePickerLauncherForFeaturedImage = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    featuredImagePath = Util.getPath(getContext(), uri);
+                    if(featuredImagePath == null) {
+                        Log.i("ImagePath", "No image");
+                    }
+                    featuredImageUri = uri;  // Store the selected image URI
+                    imageViewSelected.setImageURI(uri);  // Display the selected image
+                }
+        );
+
+        // Setup the image picker for images
+        imagePickerLauncherForImages = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    imagesPaths.add(Util.getPath(getContext(), uri));
+                    if (images.size() < 5) {
+                        images.add(uri);
+                        imgAdapter.notifyDataSetChanged();  // Update the RecyclerView
+                    } else {
+                        Toast.makeText(getContext(), "You can only upload up to 5 images.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
 
         // ingredients add
         autoCompleteTextView.setOnItemClickListener((parent, view1, position, id) -> {
@@ -161,6 +206,12 @@ public class CreateRecipeFragment extends Fragment {
         String instructions = editTextInstructions.getText().toString().trim();
         String cookingTimeStr = editTextCookingTime.getText().toString().trim();
 
+        if (featuredImagePath == null) {
+            // Show an error message or toast notification to the user
+            Toast.makeText(getContext(), "Please select a featured image.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         List<String> ingredients = new ArrayList<>();
         for (int i = 0; i < chipGroup.getChildCount(); i++) {
             Chip chip = (Chip) chipGroup.getChildAt(i);
@@ -182,15 +233,20 @@ public class CreateRecipeFragment extends Fragment {
             return;
         }
 
-        // If all validations are passed, proceed to use the data
-        viewModel.createRecipe(new Recipe(
+        Recipe recipe = new Recipe(
                 title, description, ingredients,
-                instructions, cookingTime, "https://picsum.photos/id/236/200.jpg"
-        )).observe(getViewLifecycleOwner(), result -> {
+                instructions, cookingTime
+        );
+
+        recipe.setFeaturedImage(featuredImagePath);
+        recipe.setImages(imagesPaths);
+
+        // If all validations are passed, proceed to use the data
+        viewModel.createRecipe(recipe).observe(getViewLifecycleOwner(), result -> {
             if ("Recipe created successfully!".equals(result)) {
                 Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
-                clearRecipeForm();
-                navigateToHome();  // Navigate to the HomeFragment after submission
+//                clearRecipeForm();
+//                navigateToHome();  // Navigate to the HomeFragment after submission
             } else {
                 Toast.makeText(getContext(), "Failed to create recipe.", Toast.LENGTH_LONG).show();
             }
@@ -205,7 +261,7 @@ public class CreateRecipeFragment extends Fragment {
         autoCompleteTextView.setText("");
         chipGroup.removeAllViews();  // Remove all chips from the ChipGroup
         imageViewSelected.setImageResource(android.R.color.transparent);  // Reset or remove the image
-        imageUri = null;  // Clear the stored URI
+        featuredImageUri = null;  // Clear the stored URI
     }
 
     private void navigateToHome() {
