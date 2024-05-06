@@ -28,7 +28,8 @@ public class RetrofitService {
         // Prepare text parameters
         RequestBody titleBody = RequestBody.create(recipeData.getTitle(), MediaType.parse("text/plain"));
         RequestBody descriptionBody = RequestBody.create(recipeData.getDescription(), MediaType.parse("text/plain"));
-        RequestBody ingredientsBody = RequestBody.create(new JSONArray(recipeData.getIngredients()).toString(), MediaType.parse("application/json"));
+        JSONArray jsonArray = new JSONArray(recipeData.getIngredients());
+        RequestBody ingredientsBody = RequestBody.create(jsonArray.toString(), MediaType.parse("application/json"));
         RequestBody instructionsBody = RequestBody.create(recipeData.getInstructions(), MediaType.parse("text/plain"));
         RequestBody cookingTimeBody = RequestBody.create(Integer.toString(recipeData.getCookingTime()), MediaType.parse("text/plain"));
         RequestBody createdByBody = RequestBody.create(userId, MediaType.parse("text/plain"));

@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Util {
@@ -42,9 +43,10 @@ public class Util {
             args.putString("recipeId", recipe.getRecipeId());
             args.putString("title", recipe.getTitle());
             args.putString("description", recipe.getDescription());
-            args.putString("ingredients", recipe.getIngredients().toString()); // Joining the list of ingredients into a single string
+            args.putString("ingredients", String.join(", ", recipe.getIngredients())); // Joining the list of ingredients into a single string
             args.putString("imageUrl", recipe.getFeaturedImgURL());
             args.putString("imagesUrl", recipe.getImages().toString());
+            args.putStringArrayList("imagesUrl", (ArrayList<String>) recipe.getImages());
             args.putString("instructions", recipe.getInstructions());
             args.putString("cookingTime", recipe.getCookingTime() + ""); // Pass as int if you want to use it as a number later
             detailFragment.setArguments(args);
