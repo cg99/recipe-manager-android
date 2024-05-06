@@ -186,6 +186,8 @@ public class RecipeRepository {
                 for (int j = 0; j < ingredientsArray.length(); j++) {
                     ingredients.add(ingredientsArray.getString(j));
                 }
+
+//                Log.i("Ingredient", ingredientsArray.toString());
                 String instructions = recipeObject.optString("instructions", "no instructions");
                 int cookingTime = recipeObject.getInt("cookingTime");
                 String featuredImgURL = recipeObject.getString("featuredImgURL");

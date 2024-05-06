@@ -217,6 +217,8 @@ public class CreateRecipeFragment extends Fragment {
             Chip chip = (Chip) chipGroup.getChildAt(i);
             ingredients.add(chip.getText().toString());
         }
+
+        Log.i("Ingredient", ingredients.toString());
         // Basic validation to check if any field is empty
         if (title.isEmpty() || description.isEmpty() || ingredients.isEmpty() || instructions.isEmpty() || cookingTimeStr.isEmpty()) {
             // Show an error message or toast notification to the user

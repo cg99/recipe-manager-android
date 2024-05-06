@@ -9,6 +9,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -66,6 +67,9 @@ public class UpdateRecipeFragment extends Fragment {
     }
 
     private void initViews(View view) {
+        TextView label = view.findViewById(R.id.textLayoutLabel);
+        label.setText("Update Recipe");
+
         editTextRecipeName = view.findViewById(R.id.editTextRecipeName);
         editTextRecipeDescription = view.findViewById(R.id.editTextRecipeDescription);
         editTextInstructions = view.findViewById(R.id.editTextInstructions);
@@ -127,6 +131,10 @@ public class UpdateRecipeFragment extends Fragment {
                 String[] ingredientArray = ingredients.split(", ");
                 loadIngredientsAsChips(Arrays.asList(ingredientArray));
             }
+
+            List<String> imageURLs = args.getStringArrayList("imagesUrl");
+
+
         }
     }
 
