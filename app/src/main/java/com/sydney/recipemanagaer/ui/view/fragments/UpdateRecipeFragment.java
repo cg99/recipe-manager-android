@@ -134,7 +134,6 @@ public class UpdateRecipeFragment extends Fragment {
 
             List<String> imageURLs = args.getStringArrayList("imagesUrl");
 
-
         }
     }
 

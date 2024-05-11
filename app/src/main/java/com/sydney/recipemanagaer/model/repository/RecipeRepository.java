@@ -15,12 +15,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RecipeRepository {
     private final ApiService apiService;
@@ -33,28 +36,36 @@ public class RecipeRepository {
         }
         apiService = new ApiService(context);
         userRepository = new UserRepository(context);
-        retrofitService = new RetrofitService();
+        retrofitService = new RetrofitService(context);
     }
 
     public LiveData<List<Recipe>> getRecipes() {
         MutableLiveData<List<Recipe>> result = new MutableLiveData<>();
 
-        apiService.getRecipes(response -> {
-            if (response != null) {
-                try {
-                    JSONArray recipesArray = response.getJSONArray("recipes");
-                    List<Recipe> recipes = parseRecipes(recipesArray);
-                    result.setValue(recipes);
-                } catch (JSONException e) {
-                    Log.e("Get Recipe", "Error parsing JSON", e);
+        retrofitService.getRecipes(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        JSONArray recipesArray = jsonObject.getJSONArray("recipes");
+                        Log.d("retro", recipesArray + " " + response);
+                        List<Recipe> recipes = parseRecipes(recipesArray);
+                        result.setValue(recipes);
+                    } catch (JSONException | IOException e) {
+                        Log.e("retro", "Error parsing response", e);
+                        result.setValue(null);
+                    }
+                } else {
                     result.setValue(null);
                 }
-            } else {
-                result.setValue(null);
             }
-        }, error -> {
-            result.setValue(null);
-            Log.e("Get Recipe", "Error fetching recipes: " + error.getMessage());
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                result.setValue(null);
+                Log.e("Get Recipe", "Error fetching recipes: " + t.getMessage());
+            }
         });
 
         return result;
