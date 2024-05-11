@@ -247,8 +247,8 @@ public class CreateRecipeFragment extends Fragment {
         viewModel.createRecipe(recipe).observe(getViewLifecycleOwner(), result -> {
             if ("Recipe created successfully!".equals(result)) {
                 Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
-//                clearRecipeForm();
-//                navigateToHome();  // Navigate to the HomeFragment after submission
+                clearRecipeForm();
+                navigateToHome();  // Navigate to the HomeFragment after submission
             } else {
                 Toast.makeText(getContext(), "Failed to create recipe.", Toast.LENGTH_LONG).show();
             }

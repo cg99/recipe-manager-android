@@ -1,5 +1,6 @@
 package com.sydney.recipemanagaer.networking.retrofit;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.sydney.recipemanagaer.model.Recipe;
@@ -13,6 +14,7 @@ import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,8 +22,32 @@ import retrofit2.Response;
 public class RetrofitService {
     private final ApiService apiService;
 
-    public RetrofitService() {
-        this.apiService = RetrofitClient.getApiService();
+    public RetrofitService(Context context) {
+        this.apiService = RetrofitClient.getApiService(context);
+    }
+
+    public void getRecipes(Callback<ResponseBody> retrofitCallback) {
+        // Make API call
+        Call<ResponseBody> call = apiService.getRecipes();
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.i("RetrofitService", "Recipes fetched successfully.");
+                    retrofitCallback.onResponse(call, response);
+                } else {
+                    Log.e("RetrofitService", "Error in response: " + response.message());
+                    retrofitCallback.onFailure(call, new Throwable("Response Error: " + response.message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("RetrofitService", "Failed to fetch recipes: " + t.getMessage());
+                retrofitCallback.onFailure(call, t);
+            }
+        });
     }
 
     public void postRecipe(Recipe recipeData, String userId, retrofit2.Callback<Void> retrofitCallback) {
