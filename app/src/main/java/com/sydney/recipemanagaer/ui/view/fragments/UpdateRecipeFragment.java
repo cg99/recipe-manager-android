@@ -1,6 +1,5 @@
 package com.sydney.recipemanagaer.ui.view.fragments;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +46,7 @@ public class UpdateRecipeFragment extends Fragment {
     private List<String> ingredients;
     private IngredientAdapter adapter;
     private String recipeId, featuredImagePath;
-    private ArrayList<Uri> images = new ArrayList<>();
+    private ArrayList<Object> images = new ArrayList<>();
     private ArrayList<String> imagesPaths = new ArrayList<>();
     private ImageAdapter imgAdapter;
 
@@ -109,6 +108,7 @@ public class UpdateRecipeFragment extends Fragment {
         imgAdapter = new ImageAdapter(images);
         imagesRecyclerView.setAdapter(imgAdapter);
         imagesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
     }
 
     private void populateFields() {
@@ -131,8 +131,16 @@ public class UpdateRecipeFragment extends Fragment {
                 String[] ingredientArray = ingredients.split(", ");
                 loadIngredientsAsChips(Arrays.asList(ingredientArray));
             }
-
+            // Load existing images
             List<String> imageURLs = args.getStringArrayList("imagesUrl");
+            if (imageURLs != null && !imageURLs.isEmpty()) {
+                for (String url : imageURLs) {
+                    images.add(url);
+                }
+                imgAdapter.notifyDataSetChanged();
+
+            }
+
 
         }
     }

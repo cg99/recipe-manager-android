@@ -10,14 +10,16 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.sydney.recipemanagaer.R;
+import com.sydney.recipemanagaer.utils.Util;
 
 import java.util.ArrayList;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
-    private ArrayList<Uri> images;
+    private final ArrayList<Object> images;
 
-    public ImageAdapter(ArrayList<Uri> images) {
+    public ImageAdapter(ArrayList<Object> images) {
         this.images = images;
     }
 
@@ -30,8 +32,21 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Uri imageUri = images.get(position);
-        holder.imageView.setImageURI(imageUri);
+        Object image = images.get(position);
+        if (image instanceof String) {
+            String imageName = (String) image;
+
+            // Load image from local storage or server for createRecipe
+            Glide.with(holder.imageView.getContext())
+                    .load(Util.getBaseURL() + "recipe/images/" + imageName)
+                    .placeholder(R.drawable.placeholder_image_background)
+                    .error(R.drawable.error_image)
+                    .into(holder.imageView);
+
+        } else if (image instanceof Uri) {
+            Uri imageUri = (Uri) image;
+            holder.imageView.setImageURI(imageUri);
+        }
     }
 
     @Override
