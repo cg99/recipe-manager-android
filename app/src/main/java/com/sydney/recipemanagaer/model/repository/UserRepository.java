@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.sydney.recipemanagaer.model.User;
 import com.sydney.recipemanagaer.networking.ApiService;
 import com.sydney.recipemanagaer.networking.LoginResponseListener;
+import com.sydney.recipemanagaer.networking.retrofit.RetrofitService;
 import com.sydney.recipemanagaer.utils.Util;
 
 import org.json.JSONException;
@@ -20,11 +21,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class UserRepository {
     private final ApiService apiService;
     private MutableLiveData<String> loginStatus = new MutableLiveData<>();
     private Context context;
-
+    private final RetrofitService retrofitService;
     private SharedPreferences sharedPreferences;
 
 
@@ -35,6 +41,7 @@ public class UserRepository {
         this.context = context;
         apiService = new ApiService(context);
         sharedPreferences = context.getSharedPreferences(Util.SHARED_PREFS_FILE, MODE_PRIVATE);
+        retrofitService = new RetrofitService(context);
     }
 
     public MutableLiveData<List<User>> getUsers() {
@@ -42,8 +49,9 @@ public class UserRepository {
         MutableLiveData<List<User>> liveData = new MutableLiveData<>();
         List<User> users = new ArrayList<>();
 
-        users.add(new User( "LohnJoe", "lohn@example.com", "lony","", "fitness influencer",  "https://picsum.photos/id/251/200.jpg","admin"));
-        users.add(new User("JaneDoe", "jane@example.com", "jany","","youtuber with style","https://picsum.photos/id/252/200.jpg", "admin"));
+
+        // get user from server
+
         // Add more users
         liveData.setValue(users);
         return liveData;
@@ -79,12 +87,13 @@ public class UserRepository {
         try {
             String id = jsonObject.getString("_id");
             String email = jsonObject.getString("email");
-            String username = jsonObject.optString("username", "nousername");
+            String username = jsonObject.optString("username", "");
+            String fullName = jsonObject.optString("fullname", "");
             String profilePic = jsonObject.getString("userImage");
-            String bio = jsonObject.optString("bio", "No bio");
+            String bio = jsonObject.optString("bio", "");
             String role = jsonObject.getString("role");
 
-            return new User(id, email, username, profilePic, bio, profilePic, role);
+            return new User(id, fullName, email, username, bio, profilePic, role);
         } catch (JSONException e) {
             Log.e("API", "Error parsing user JSON", e);
             return null;  // Return null or throw, depending on how you want to handle parsing errors
@@ -103,23 +112,24 @@ public class UserRepository {
 
     public LiveData<String> signup(User user) {
         if (user == null) {
-            throw new IllegalArgumentException("Recipe cannot be null");
+            throw new IllegalArgumentException("User cannot be null");
         }
         MutableLiveData<String> result = new MutableLiveData<>();
-        apiService.register(user, response -> {
-            if (response != null) {
-                result.setValue("Signup Successful");
-            } else {
-                result.setValue(null);
+        retrofitService.register(user, new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    result.setValue("Signup Successful");
+                } else {
+                    result.setValue("Error creating user: " + response.message());
+                }
             }
-        }, error -> {
-            if (error != null) {
-                result.setValue("Error creating user: " + error);
-            } else {
-                result.setValue(null);
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                result.setValue("Error creating user: " + t.getMessage());
             }
         });
-
         return result;
     }
 
