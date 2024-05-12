@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel;
 import com.sydney.recipemanagaer.model.User;
 import com.sydney.recipemanagaer.model.repository.UserRepository;
 
+import org.json.JSONException;
+
 import java.util.List;
 
 public class UserViewModel extends ViewModel {
@@ -19,7 +21,7 @@ public class UserViewModel extends ViewModel {
         return userRepository.getUsers();
     }
 
-    public LiveData<String> login(String email, String password) {
+    public LiveData<String> login(String email, String password) throws JSONException {
        return userRepository.login(email, password);
     }
 

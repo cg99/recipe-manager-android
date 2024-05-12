@@ -16,6 +16,8 @@ import com.sydney.recipemanagaer.model.repository.UserRepository;
 import com.sydney.recipemanagaer.ui.viewmodel.UserViewModel;
 import com.sydney.recipemanagaer.ui.viewmodel.factory.UserViewModelFactory;
 
+import org.json.JSONException;
+
 public class LoginActivity extends AppCompatActivity {
 
     private  UserViewModel userViewModel;
@@ -41,12 +43,16 @@ public class LoginActivity extends AppCompatActivity {
 
             // Perform validation
             if (isValidCredentials(email, password)) {
-                userViewModel.login(email, password).observe(this, result -> {
-                    Toast.makeText(LoginActivity.this, result, Toast.LENGTH_SHORT).show();
-                    if ("Login successful".equals(result)) {
-                        navigateToMainActivity();
-                    }
-                });
+                try {
+                    userViewModel.login(email, password).observe(this, result -> {
+                        Toast.makeText(LoginActivity.this, result, Toast.LENGTH_SHORT).show();
+                        if ("Login successful".equals(result)) {
+                            navigateToMainActivity();
+                        }
+                    });
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
             } else {
                 // If credentials are invalid, show an error message
                 Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();

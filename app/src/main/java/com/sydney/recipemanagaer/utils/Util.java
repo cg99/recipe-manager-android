@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import androidx.fragment.app.FragmentActivity;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.bumptech.glide.Glide;
 import com.sydney.recipemanagaer.R;
@@ -77,18 +78,23 @@ public class Util {
     public static boolean userIsLoggedIn(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS_FILE, Context.MODE_PRIVATE);
         String token = sharedPreferences.getString(TOKEN_KEY, null);
+
+        // Return false if no token is available
         if (token == null || token.isEmpty()) {
-            return false; // No token available
+            return false;
         }
 
         try {
-            DecodedJWT decodedJWT = JWT.decode(token); // Decode the token
-            Date expiration = decodedJWT.getExpiresAt(); // Get expiration date
-            return expiration != null && expiration.after(new Date()); // Check if the token is not expired
-        } catch (Exception e) {
-            Log.e("UserCheck", "Error decoding JWT", e); // Log the exception for debugging
+            // Use a more specific exception type instead of general Exception
+            DecodedJWT decodedJWT = JWT.decode(token);
+            Date expiration = decodedJWT.getExpiresAt();
 
-            return false; // Assume the token is invalid or expired
+            // Return true if the token is not expired, false otherwise
+            return expiration != null && expiration.after(new Date());
+        } catch (JWTDecodeException e) {
+            // Log the exception with a more descriptive message
+            Log.e("UserCheck", "Error decoding JWT: " + e.getMessage(), e);
+            return false;
         }
     }
 
