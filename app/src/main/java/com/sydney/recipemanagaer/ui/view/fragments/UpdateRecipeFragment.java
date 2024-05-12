@@ -35,7 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class UpdateRecipeFragment extends Fragment {
-    private EditText editTextRecipeName, editTextRecipeDescription, editTextInstructions, editTextCookingTime;
+    private EditText editTextRecipeName, editTextFoodType, editTextRecipeDescription, editTextInstructions, editTextCookingTime;
     private ImageView imageViewSelected;
     private ActivityResultLauncher<String> imagePickerLauncherForFeaturedImage;
     private ActivityResultLauncher<String> imagePickerLauncherForImages;
@@ -68,6 +68,8 @@ public class UpdateRecipeFragment extends Fragment {
     private void initViews(View view) {
         TextView label = view.findViewById(R.id.textLayoutLabel);
         label.setText("Update Recipe");
+
+        editTextFoodType = view.findViewById(R.id.editTextRecipeType);
 
         editTextRecipeName = view.findViewById(R.id.editTextRecipeName);
         editTextRecipeDescription = view.findViewById(R.id.editTextRecipeDescription);
@@ -119,6 +121,8 @@ public class UpdateRecipeFragment extends Fragment {
             editTextRecipeDescription.setText(args.getString("description"));
             editTextInstructions.setText(args.getString("instructions"));
             editTextCookingTime.setText(args.getString("cookingTime"));
+            editTextFoodType.setText(args.getString("foodType"));
+
             Glide.with(this)
                     .load(Util.getBaseURL() + "recipe/images/" + args.getString("imageUrl"))
                     .placeholder(R.drawable.placeholder_image_background)
@@ -206,6 +210,8 @@ public class UpdateRecipeFragment extends Fragment {
         String description = editTextRecipeDescription.getText().toString();
         String instructions = editTextInstructions.getText().toString();
         String cookingTimeStr = editTextCookingTime.getText().toString();
+        String foodType = editTextFoodType.getText().toString();
+
         List<String> ingredients = new ArrayList<>();
         for (int i = 0; i < chipGroup.getChildCount(); i++) {
             Chip chip = (Chip) chipGroup.getChildAt(i);
@@ -223,6 +229,9 @@ public class UpdateRecipeFragment extends Fragment {
 
         updatedRecipe.setFeaturedImage(featuredImagePath);
         updatedRecipe.setImages(imagesPaths);
+
+        updatedRecipe.setFoodType(foodType);
+
 
         viewModel.updateRecipe(updatedRecipe).observe(getViewLifecycleOwner(), result -> {
             Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();

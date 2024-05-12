@@ -102,6 +102,22 @@
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/textFoodType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="@string/recipe_type"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewFoodType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:textSize="16sp" />
+
+            <TextView
                 android:id="@+id/textInstructions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

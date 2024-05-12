@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Recipe {
-    private String title;
-    private String description;
-    private List<String> ingredients;
-    private String instructions;
-    private int cookingTime;
+    private final String title;
+    private final String description;
+    private final List<String> ingredients;
+    private final String instructions;
+    private final int cookingTime;
     private String featuredImgURL;
     private String recipeId;
 
@@ -16,7 +16,7 @@ public class Recipe {
     private String featuredImage;
 
     private ArrayList<String> images;
-
+    private String foodType;
 
     public Recipe(String title, String description, List<String> ingredients, String instructions, int cookingTime) {
         this.title = title;
@@ -33,6 +33,14 @@ public class Recipe {
         this.ingredients = ingredients;
         this.instructions = instructions;
         this.cookingTime = cookingTime;
+    }
+
+    public String getFoodType() {
+        return foodType;
+    }
+
+    public void setFoodType(String foodType) {
+        this.foodType = foodType;
     }
 
     // Getter for the name
@@ -81,12 +89,12 @@ public class Recipe {
         this.favoritedBy = favoritedBy;
     }
 
-    public void setFeaturedImage(String imageUri) {
-        this.featuredImage = imageUri;
-    }
-
     public String getFeaturedImage() {
         return this.featuredImage;
+    }
+
+    public void setFeaturedImage(String imageUri) {
+        this.featuredImage = imageUri;
     }
 
     public List<String> getImages() {

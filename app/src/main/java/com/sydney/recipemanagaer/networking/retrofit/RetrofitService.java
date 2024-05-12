@@ -60,6 +60,8 @@ public class RetrofitService {
         RequestBody instructionsBody = RequestBody.create(recipeData.getInstructions(), MediaType.parse("text/plain"));
         RequestBody cookingTimeBody = RequestBody.create(Integer.toString(recipeData.getCookingTime()), MediaType.parse("text/plain"));
         RequestBody createdByBody = RequestBody.create(userId, MediaType.parse("text/plain"));
+        RequestBody foodTypeBody = RequestBody.create(recipeData.getFoodType(), MediaType.parse("text/plain"));
+
 
         // Prepare file parameters
         MultipartBody.Part featuredImagePart = null;
@@ -82,7 +84,7 @@ public class RetrofitService {
         // Make API call
         Call<Void> call = apiService.postRecipe(
                 titleBody, descriptionBody, ingredientsBody, instructionsBody,
-                cookingTimeBody, createdByBody, featuredImagePart, imageParts
+                cookingTimeBody, createdByBody, featuredImagePart, imageParts, foodTypeBody
         );
 
         call.enqueue(new Callback<Void>() {
@@ -112,6 +114,7 @@ public class RetrofitService {
         RequestBody ingredientsBody = RequestBody.create(new JSONArray(recipeData.getIngredients()).toString(), MediaType.parse("application/json"));
         RequestBody instructionsBody = RequestBody.create(recipeData.getInstructions(), MediaType.parse("text/plain"));
         RequestBody cookingTimeBody = RequestBody.create(Integer.toString(recipeData.getCookingTime()), MediaType.parse("text/plain"));
+        RequestBody foodTypeBody = RequestBody.create(recipeData.getFoodType(), MediaType.parse("text/plain"));
 
         // Prepare file parameters (Handle null or empty paths)
         MultipartBody.Part featuredImagePart = null;
@@ -139,7 +142,7 @@ public class RetrofitService {
         // Make API call
         Call<Void> call = apiService.updateRecipe(
                 recipeData.getRecipeId(), titleBody, descriptionBody, ingredientsBody,
-                instructionsBody, cookingTimeBody, featuredImagePart, imageParts
+                instructionsBody, cookingTimeBody, featuredImagePart, imageParts, foodTypeBody
         );
 
         call.enqueue(new Callback<Void>() {
@@ -161,13 +164,13 @@ public class RetrofitService {
 
     public void register(User user, retrofit2.Callback<ResponseBody> retrofitCallback) {
         // Prepare text parameters
-        RequestBody fullNameBody = RequestBody.create(user.getFullName(), MediaType.parse("text/plain"));
+        RequestBody fullnameBody = RequestBody.create(user.getFullName(), MediaType.parse("text/plain"));
         RequestBody emailBody = RequestBody.create(user.getEmail(), MediaType.parse("text/plain"));
         RequestBody passwordBody = RequestBody.create(user.getPassword(), MediaType.parse("text/plain"));
         RequestBody confirmPassword = RequestBody.create(user.getConfirmPassword(), MediaType.parse("text/plain"));
 
         // Make API call
-        Call<ResponseBody> call = apiService.register(fullNameBody, emailBody, passwordBody, confirmPassword);
+        Call<ResponseBody> call = apiService.register(fullnameBody, emailBody, passwordBody, confirmPassword);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

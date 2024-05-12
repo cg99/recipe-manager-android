@@ -25,7 +25,9 @@ public interface ApiService {
             @Part("cookingTime") RequestBody cookingTime,
             @Part("createdBy") RequestBody createdBy,
             @Part MultipartBody.Part featuredImage,
-            @Part List<MultipartBody.Part> images
+            @Part List<MultipartBody.Part> images,
+            @Part("foodType") RequestBody foodType
+
     );
 
     @Multipart
@@ -38,7 +40,8 @@ public interface ApiService {
             @Part("instructions") RequestBody instructions,
             @Part("cookingTime") RequestBody cookingTime,
             @Part MultipartBody.Part featuredImage,
-            @Part List<MultipartBody.Part> images
+            @Part List<MultipartBody.Part> images,
+            @Part("foodType") RequestBody foodType
     );
 
     @GET("recipe")

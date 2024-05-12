@@ -87,6 +87,22 @@
             app:chipSpacing="8dp"
             app:singleSelection="false" />
 
+        <!-- Recipe Name -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/recipe_type">
+
+            <EditText
+                android:id="@+id/editTextRecipeType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:padding="8dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
         <!-- Instructions -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
