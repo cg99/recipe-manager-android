@@ -48,6 +48,7 @@ public interface ApiService {
     Call<ResponseBody> getRecipes();
 
     @POST("user/signup")
+    @Multipart
     Call<ResponseBody> register(
             @Part("fullname") RequestBody fullname,
             @Part("email") RequestBody email,
