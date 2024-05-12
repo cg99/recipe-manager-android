@@ -226,6 +226,7 @@ public class UpdateRecipeFragment extends Fragment {
 
         viewModel.updateRecipe(updatedRecipe).observe(getViewLifecycleOwner(), result -> {
             Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+            Util.navigateToMainActivity(getContext());
         });
     }
 }

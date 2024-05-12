@@ -11,14 +11,20 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.repository.RecipeRepository;
+import com.sydney.recipemanagaer.ui.view.adapters.ImageAdapter;
 import com.sydney.recipemanagaer.ui.viewmodel.RecipeViewModel;
 import com.sydney.recipemanagaer.ui.viewmodel.factory.RecipeViewModelFactory;
 import com.sydney.recipemanagaer.utils.Util;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeDetailFragment extends Fragment {
 
@@ -26,6 +32,12 @@ public class RecipeDetailFragment extends Fragment {
     private ImageView imageViewRecipe;
     private ImageButton buttonEditRecipe, buttonDeleteRecipe, favoriteButton;
     private RecipeViewModel viewModel;
+
+    private RecyclerView imageRecyclerView;
+    private ArrayList<Object> images = new ArrayList<>();
+    private ImageAdapter imageAdapter;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,6 +69,12 @@ public class RecipeDetailFragment extends Fragment {
         buttonDeleteRecipe = view.findViewById(R.id.buttonDeleteRecipe); // Initialize the Delete Button
         favoriteButton = view.findViewById((R.id.buttonMarkFavorite));
 
+        imageRecyclerView = view.findViewById(R.id.recipeImagesRecyclerView);
+        imageRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        imageAdapter = new ImageAdapter(images); // Assuming 'images' is the list of images
+        imageRecyclerView.setAdapter(imageAdapter);
+
     }
 
     private void displayRecipeDetails() {
@@ -77,6 +95,16 @@ public class RecipeDetailFragment extends Fragment {
                         .error(R.drawable.error_image)
                         .into(imageViewRecipe);
             }
+
+            // Load existing images
+            List<String> imageURLs = args.getStringArrayList("imagesUrl");
+            if (imageURLs != null && !imageURLs.isEmpty()) {
+                for (String url : imageURLs) {
+                    images.add(url);
+                }
+                imageAdapter.notifyDataSetChanged();
+            }
+
         }
     }
 
