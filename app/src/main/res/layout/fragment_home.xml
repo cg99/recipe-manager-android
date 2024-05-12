@@ -48,6 +48,14 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <!-- Making RecyclerView height wrap_content and not scrollable -->
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="8dp"
+                android:background="?android:attr/listDivider"
+                android:backgroundTint="#F44336" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_recent_recipes"
                 android:layout_width="match_parent"
@@ -56,11 +64,20 @@
                 android:nestedScrollingEnabled="false" />
 
             <!-- Popular Posts Section -->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/popular_posts"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="8dp"
+                android:background="?android:attr/listDivider"
+                android:backgroundTint="#F44336" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_popular_posts"

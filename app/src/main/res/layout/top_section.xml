@@ -12,13 +12,12 @@
         android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:queryHint="search recipe"
-        app:iconifiedByDefault="false"
+        android:background="@drawable/round_corner"
         android:focusedByDefault="false"
-        android:background="@color/light_gray"
-        app:searchIcon="@drawable/ic_search"
+        android:queryHint="search recipe"
         app:closeIcon="@drawable/ic_clear"
-        />
+        app:iconifiedByDefault="false"
+        app:searchIcon="@drawable/ic_search" />
 
     <!-- Container for filter buttons -->
     <LinearLayout
