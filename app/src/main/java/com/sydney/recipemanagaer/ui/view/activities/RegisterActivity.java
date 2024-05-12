@@ -21,7 +21,6 @@ import com.sydney.recipemanagaer.ui.viewmodel.factory.UserViewModelFactory;
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText fullNameEditText;
-    private EditText usernameEditText;
     private EditText emailEditText;
     private EditText passwordEditText;
     private EditText confirmPasswordEditText;
@@ -37,7 +36,6 @@ public class RegisterActivity extends AppCompatActivity {
         TextView textViewLogin = findViewById(R.id.textViewLogin);
 
         fullNameEditText = findViewById(R.id.textFullName);
-        usernameEditText = findViewById(R.id.textUsername);
         emailEditText = findViewById(R.id.textEmail);
         passwordEditText = findViewById(R.id.textPassword);
         confirmPasswordEditText = findViewById(R.id.textConfirmPassword);
@@ -51,14 +49,12 @@ public class RegisterActivity extends AppCompatActivity {
 
             // Retrieve input from EditText fields
             String fullName = fullNameEditText.getText().toString();
-            String username = usernameEditText.getText().toString();
             String email = emailEditText.getText().toString();
             String password = passwordEditText.getText().toString();
             String confirmPassword = confirmPasswordEditText.getText().toString();
 
             // if conditions to check the empty fields
-            if (TextUtils.isEmpty(fullName) || TextUtils.isEmpty(username) ||
-                    TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
+            if (TextUtils.isEmpty(fullName) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
                 Toast.makeText(RegisterActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -74,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
-            userViewModel.signup(new User(fullName, email, username, password)).observe(this, result -> {
+            userViewModel.signup(new User(fullName, email, password, confirmPassword)).observe(this, result -> {
                 if ("Signup Successful".equals(result)) {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);

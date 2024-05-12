@@ -1,9 +1,12 @@
 package com.sydney.recipemanagaer.networking.retrofit;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
-import com.sydney.recipemanagaer.model.repository.UserRepository;
+import com.sydney.recipemanagaer.utils.Util;
 
 import java.io.IOException;
 
@@ -21,12 +24,13 @@ public class RetrofitClient {
     private static Context applicationContext; // Rename to applicationContext for clarity
 
 
-
     public static Retrofit getRetrofitInstance() {
+
         if (retrofit == null) {
             OkHttpClient client;
-            UserRepository userRepository = new UserRepository(applicationContext);
-            token = userRepository.getToken();
+            sharedPreferences = applicationContext.getSharedPreferences(Util.SHARED_PREFS_FILE, MODE_PRIVATE);
+            token = sharedPreferences.getString(Util.TOKEN_KEY, null);
+            Log.i("Usertoken", token);
 
             if (token != null) {
                 client = new OkHttpClient.Builder()

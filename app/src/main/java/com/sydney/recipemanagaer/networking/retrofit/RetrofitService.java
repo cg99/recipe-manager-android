@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.sydney.recipemanagaer.model.Recipe;
+import com.sydney.recipemanagaer.model.User;
 
 import org.json.JSONArray;
 
@@ -157,5 +158,36 @@ public class RetrofitService {
             }
         });
     }
+
+    public void register(User user, retrofit2.Callback<ResponseBody> retrofitCallback) {
+        // Prepare text parameters
+        RequestBody fullNameBody = RequestBody.create(user.getFullName(), MediaType.parse("text/plain"));
+        RequestBody emailBody = RequestBody.create(user.getEmail(), MediaType.parse("text/plain"));
+        RequestBody passwordBody = RequestBody.create(user.getPassword(), MediaType.parse("text/plain"));
+        RequestBody confirmPassword = RequestBody.create(user.getConfirmPassword(), MediaType.parse("text/plain"));
+
+        // Make API call
+        Call<ResponseBody> call = apiService.register(fullNameBody, emailBody, passwordBody, confirmPassword);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.i("RetrofitService", "User registered successfully.");
+                    retrofitCallback.onResponse(call, response);
+                } else {
+                    Log.e("RetrofitService", "Error in response: " + response.message());
+                    retrofitCallback.onFailure(call, new Throwable("Response Error: " + response.message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("RetrofitService", "Failed to register user: " + t.getMessage());
+                retrofitCallback.onFailure(call, t);
+            }
+        });
+    }
+
 
 }

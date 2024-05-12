@@ -44,5 +44,13 @@ public interface ApiService {
     @GET("recipe")
     Call<ResponseBody> getRecipes();
 
+    @POST("user/signup")
+    Call<ResponseBody> register(
+            @Part("fullname") RequestBody fullname,
+            @Part("email") RequestBody email,
+            @Part("password") RequestBody password,
+            @Part("confirmPassword") RequestBody confirmPassword
+
+    );
 
 }
