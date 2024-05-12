@@ -7,6 +7,8 @@ import com.sydney.recipemanagaer.model.Recipe;
 import com.sydney.recipemanagaer.model.User;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -191,6 +193,38 @@ public class RetrofitService {
             }
         });
     }
+
+    public void login(String email, String password,  retrofit2.Callback<ResponseBody> retrofitCallback) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("email", email);
+        jsonObject.put("password", password);
+
+        // Convert the JSONObject to a RequestBody
+        RequestBody requestBody = RequestBody.create(jsonObject.toString(), MediaType.parse("application/json"));
+
+
+        Call<ResponseBody> call = apiService.login(requestBody);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.i("RetrofitService", "Login Successful");
+                    retrofitCallback.onResponse(call, response);
+                } else {
+                    Log.e("RetrofitService", "Error in response: " + response.message());
+                    retrofitCallback.onFailure(call, new Throwable("Response Error: " + response.message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("RetrofitService", "Failed to login: " + t.getMessage());
+                retrofitCallback.onFailure(call, t);
+            }
+        });
+    }
+
 
 
 }

@@ -11,7 +11,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.sydney.recipemanagaer.model.User;
 import com.sydney.recipemanagaer.networking.ApiService;
-import com.sydney.recipemanagaer.networking.LoginResponseListener;
 import com.sydney.recipemanagaer.networking.retrofit.RetrofitClient;
 import com.sydney.recipemanagaer.networking.retrofit.RetrofitService;
 import com.sydney.recipemanagaer.utils.Util;
@@ -19,6 +18,7 @@ import com.sydney.recipemanagaer.utils.Util;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -138,18 +138,32 @@ public class UserRepository {
         return loginStatus;
     }
 
-    public LiveData<String> login(String email, String password) {
-        apiService.login(email, password, new LoginResponseListener() {
+    public LiveData<String> login(String email, String password) throws JSONException {
+        retrofitService.login(email, password, new retrofit2.Callback<ResponseBody>() {
             @Override
-            public void onSuccess(String token, String userId, JSONObject userData) {
-                // Store the token securely, then update LiveData
-                saveToken(token, userId); // Implement this method to save token securely
-                loginStatus.postValue("Login successful");
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        String responseBody = response.body().string();
+                        JSONObject jsonObject = new JSONObject(responseBody);
+                        String token = jsonObject.getString("token");
+                        JSONObject userData = jsonObject.getJSONObject("data").getJSONObject("user");
+                        String userId = userData.getString("_id");  // or "_id" depending on your backend
+
+                        // Store the token securely, then update LiveData
+                        saveToken(token, userId); // Implement this method to save token securely
+                        loginStatus.postValue("Login successful");
+                    } catch (JSONException | IOException e) {
+                        loginStatus.postValue("Failed to parse response: " + e.getMessage());
+                    }
+                } else {
+                    loginStatus.postValue("Response Error: " + response.message());
+                }
             }
 
             @Override
-            public void onFailure(String error) {
-                loginStatus.postValue("Login failed: " + error);
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                loginStatus.postValue("Failed to login: " + t.getMessage());
             }
         });
 
