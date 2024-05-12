@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class ApiService {
     private final NetworkingClient networkingClient;
-    private static final String BASE_URL = "http://10.0.2.2:8000/api/v1";
+    private static final String BASE_URL = "http://10.0.0.133:8000/api/v1";
 
     private Context apiContext;
 
