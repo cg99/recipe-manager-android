@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.sydney.recipemanagaer.model.User;
 import com.sydney.recipemanagaer.networking.ApiService;
 import com.sydney.recipemanagaer.networking.LoginResponseListener;
+import com.sydney.recipemanagaer.networking.retrofit.RetrofitClient;
 import com.sydney.recipemanagaer.networking.retrofit.RetrofitService;
 import com.sydney.recipemanagaer.utils.Util;
 
@@ -173,8 +174,12 @@ public class UserRepository {
 
     public void clearSession() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(Util.TOKEN_KEY);
-        editor.remove(Util.USER_ID_KEY);
+//        editor.remove(Util.TOKEN_KEY);
+//        editor.remove(Util.USER_ID_KEY);
+        editor.clear();
         editor.apply();
+
+        // Update Retrofit client
+        RetrofitClient.clearRetrofitInstance(); // Clear the existing client
     }
 }

@@ -21,6 +21,7 @@ import com.sydney.recipemanagaer.model.repository.UserRepository;
 import com.sydney.recipemanagaer.ui.view.activities.LoginActivity;
 import com.sydney.recipemanagaer.ui.viewmodel.UserViewModel;
 import com.sydney.recipemanagaer.ui.viewmodel.factory.UserViewModelFactory;
+import com.sydney.recipemanagaer.utils.Util;
 
 public class DashboardFragment extends Fragment {
 
@@ -93,13 +94,13 @@ public class DashboardFragment extends Fragment {
                 .commit();
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        if (!Util.userIsLoggedIn(getContext())) {
-//            Util.navigateToLoginActivity(getContext());
-//            return; // Stop further execution of this method
-//        }
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!Util.userIsLoggedIn(getContext())) {
+            Util.navigateToLoginActivity(getContext());
+            return; // Stop further execution of this method
+        }
+    }
 }
 

@@ -71,5 +71,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!Util.userIsLoggedIn(getApplicationContext())) {
+            Util.navigateToLoginActivity(getApplicationContext());
+            return; // Stop further execution of this method
+        }
+    }
 
 }

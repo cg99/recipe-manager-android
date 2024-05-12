@@ -4,7 +4,6 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.sydney.recipemanagaer.utils.Util;
 
@@ -23,14 +22,18 @@ public class RetrofitClient {
     private static SharedPreferences sharedPreferences;
     private static Context applicationContext; // Rename to applicationContext for clarity
 
-
+    public static void clearRetrofitInstance() {
+        retrofit = null;
+    }
     public static Retrofit getRetrofitInstance() {
 
         if (retrofit == null) {
             OkHttpClient client;
-            sharedPreferences = applicationContext.getSharedPreferences(Util.SHARED_PREFS_FILE, MODE_PRIVATE);
-            token = sharedPreferences.getString(Util.TOKEN_KEY, null);
-            Log.i("Usertoken", token);
+
+            if(Util.userIsLoggedIn(applicationContext)) {
+                sharedPreferences = applicationContext.getSharedPreferences(Util.SHARED_PREFS_FILE, MODE_PRIVATE);
+                token = sharedPreferences.getString(Util.TOKEN_KEY, null);
+            }
 
             if (token != null) {
                 client = new OkHttpClient.Builder()

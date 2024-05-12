@@ -64,6 +64,7 @@ public class CreateRecipeFragment extends Fragment {
     private IngredientAdapter adapter;
     private ImageAdapter imgAdapter;
     private RecipeViewModel viewModel;
+    private EditText editTextFoodType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +113,8 @@ public class CreateRecipeFragment extends Fragment {
         autoCompleteTextView = view.findViewById(R.id.autoCompleteTextViewIngredients);
         chipGroup = view.findViewById(R.id.chipGroupSelectedIngredients);
         autoCompleteTextView.setAdapter(adapter);
+
+        editTextFoodType = view.findViewById(R.id.editTextRecipeType);
 
         editTextInstructions = view.findViewById(R.id.editTextInstructions);
         editTextCookingTime = view.findViewById(R.id.editTextCookingTime);
@@ -205,6 +208,8 @@ public class CreateRecipeFragment extends Fragment {
         String description = editTextRecipeDescription.getText().toString().trim();
         String instructions = editTextInstructions.getText().toString().trim();
         String cookingTimeStr = editTextCookingTime.getText().toString().trim();
+        String foodType = editTextFoodType.getText().toString().trim();
+
 
         if (featuredImagePath == null) {
             // Show an error message or toast notification to the user
@@ -243,6 +248,10 @@ public class CreateRecipeFragment extends Fragment {
         recipe.setFeaturedImage(featuredImagePath);
         recipe.setImages(imagesPaths);
 
+        if(!foodType.isEmpty()) {
+            recipe.setFoodType(foodType);
+        }
+
         // If all validations are passed, proceed to use the data
         viewModel.createRecipe(recipe).observe(getViewLifecycleOwner(), result -> {
             if ("Recipe created successfully!".equals(result)) {
@@ -261,6 +270,7 @@ public class CreateRecipeFragment extends Fragment {
         editTextInstructions.setText("");
         editTextCookingTime.setText("");
         autoCompleteTextView.setText("");
+        editTextFoodType.setText("");
         chipGroup.removeAllViews();  // Remove all chips from the ChipGroup
         imageViewSelected.setImageResource(android.R.color.transparent);  // Reset or remove the image
         featuredImageUri = null;  // Clear the stored URI

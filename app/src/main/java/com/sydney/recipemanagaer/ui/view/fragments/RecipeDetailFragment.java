@@ -28,7 +28,7 @@ import java.util.List;
 
 public class RecipeDetailFragment extends Fragment {
 
-    private TextView textViewTitle, textViewDescription, textViewIngredients, textViewInstructions, textViewCookingTime;
+    private TextView textViewTitle, textViewFoodType, textViewDescription, textViewIngredients, textViewInstructions, textViewCookingTime;
     private ImageView imageViewRecipe;
     private ImageButton buttonEditRecipe, buttonDeleteRecipe, favoriteButton;
     private RecipeViewModel viewModel;
@@ -67,8 +67,8 @@ public class RecipeDetailFragment extends Fragment {
         imageViewRecipe = view.findViewById(R.id.imageViewRecipe);
         buttonEditRecipe = view.findViewById(R.id.buttonUpdateRecipe); // Button for editing
         buttonDeleteRecipe = view.findViewById(R.id.buttonDeleteRecipe); // Initialize the Delete Button
-        favoriteButton = view.findViewById((R.id.buttonMarkFavorite));
-
+        favoriteButton = view.findViewById(R.id.buttonMarkFavorite);
+        textViewFoodType = view.findViewById(R.id.textViewFoodType);
         imageRecyclerView = view.findViewById(R.id.recipeImagesRecyclerView);
         imageRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
@@ -83,6 +83,7 @@ public class RecipeDetailFragment extends Fragment {
             textViewTitle.setText(args.getString("title"));
             textViewDescription.setText(args.getString("description"));
             textViewIngredients.setText(args.getString("ingredients"));
+            textViewFoodType.setText(args.getString("foodType"));
             textViewInstructions.setText(args.getString("instructions"));
             textViewCookingTime.setText("Time: " + args.getString("cookingTime") + " minutes");
 
