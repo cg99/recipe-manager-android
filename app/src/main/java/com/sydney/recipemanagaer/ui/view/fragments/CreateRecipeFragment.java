@@ -58,7 +58,7 @@ public class CreateRecipeFragment extends Fragment {
     private ChipGroup chipGroup;
     private List<String> ingredients;
     private ArrayList<String> imagesPaths = new ArrayList<>(); // Declare a variable for the list of images
-    private ArrayList<Uri> images = new ArrayList<>(); // Declare a variable for the list of images
+    private ArrayList<Object> images = new ArrayList<>(); // Declare a variable for the list of images
     private Button addImageButton;
     private Button addFeaturedImage;
     private IngredientAdapter adapter;
