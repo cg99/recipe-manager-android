@@ -34,8 +34,14 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.Favori
         viewModel = new ViewModelProvider(this, new RecipeViewModelFactory(recipeRepository)).get(RecipeViewModel.class);
 
         viewModel.getUserFavorites().observe(getViewLifecycleOwner(), recipes -> {
-            adapter = new FavoriteAdapter(getContext(), recipes, this);
-            recyclerView.setAdapter(adapter);
+            if(!recipes.isEmpty()){
+                view.findViewById(R.id.empty_view).setVisibility(View.GONE);
+                adapter = new FavoriteAdapter(getContext(), recipes, this);
+                recyclerView.setAdapter(adapter);
+            }else{
+                view.findViewById(R.id.empty_view).setVisibility(View.VISIBLE);
+            }
+
         });
 
         return view;
