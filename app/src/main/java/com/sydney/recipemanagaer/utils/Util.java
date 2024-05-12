@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.Recipe;
 import com.sydney.recipemanagaer.ui.view.activities.LoginActivity;
+import com.sydney.recipemanagaer.ui.view.activities.MainActivity;
 import com.sydney.recipemanagaer.ui.view.fragments.RecipeDetailFragment;
 import com.sydney.recipemanagaer.ui.view.fragments.UpdateRecipeFragment;
 
@@ -158,4 +159,9 @@ public class Util {
         return "http://10.0.2.2:8000/api/v1/";
     }
 
+    public static void navigateToMainActivity(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear stack
+        context.startActivity(intent);
+    }
 }
