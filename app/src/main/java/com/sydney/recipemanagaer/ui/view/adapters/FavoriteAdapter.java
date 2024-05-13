@@ -15,6 +15,8 @@ import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.Recipe;
 import com.sydney.recipemanagaer.utils.Util;
 
+import org.json.JSONException;
+
 import java.util.List;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHolder> {
@@ -23,7 +25,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
     private FavoriteActionsListener listener;
 
     public interface FavoriteActionsListener {
-        void onRemoveFavorite(Recipe recipe);
+        void onRemoveFavorite(Recipe recipe) throws JSONException;
         void onFavoriteRecipeClick(Recipe recipe);
     }
 
@@ -55,10 +57,15 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
 
 
         holder.favoriteIcon.setOnClickListener(v -> {
-            listener.onRemoveFavorite(recipe);
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, recipes.size());
-            recipes.remove(position); // Remove the item from the list
+            try {
+                listener.onRemoveFavorite(recipe);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, recipes.size());
+                recipes.remove(position); // Remove the item from the list
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
         });
 
         holder.itemView.setOnClickListener(e -> {

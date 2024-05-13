@@ -7,6 +7,7 @@ import com.sydney.recipemanagaer.utils.Util;
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -32,13 +33,21 @@ public class RetrofitClient {
     public static Retrofit getRetrofitInstance() {
         Boolean isLoggedIn = Util.userIsLoggedIn(applicationContext);
 
+
+        HttpLoggingInterceptor interceptRequest = new HttpLoggingInterceptor();
+        interceptRequest.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+
         if (retrofit == null) {
             if(isLoggedIn) {
                 okHttpClient = new OkHttpClient.Builder()
                         .addInterceptor(new AuthInterceptor(applicationContext))
+                        .addInterceptor(interceptRequest)
                         .build();
             } else {
-                okHttpClient = new OkHttpClient.Builder().build();
+                okHttpClient = new OkHttpClient.Builder()
+                        .addInterceptor(interceptRequest)
+                        .build();
             }
 
             retrofit = new Retrofit.Builder()

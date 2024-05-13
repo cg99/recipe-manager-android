@@ -64,22 +64,38 @@ public class UserRepository {
         MutableLiveData<User> liveData = new MutableLiveData<>();
         String token = getToken();
 
-        apiService.getUserById(userId, token, response -> {
-            if (response != null) {
-                try {
-                    JSONObject userObject = response.getJSONObject("data").getJSONObject("user");
-                    User user = parseJsonToUser(userObject);
-                    liveData.postValue(user);  // Use postValue when updating LiveData from a background thread
-                } catch (JSONException e) {
-                    Log.e("API", "Error getting user data from JSON", e);
-                    liveData.postValue(null);  // Post null to indicate an error
+        retrofitService.getUserById(userId, token, new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.body() != null) {
+                    try {
+                        String responseBody = response.body().string();
+                        JSONObject jsonObject = new JSONObject(responseBody);
+                        if (jsonObject.has("data") && jsonObject.getJSONObject("data").has("user")) {
+                            JSONObject userObject = jsonObject.getJSONObject("data").getJSONObject("user");
+                            User user = parseJsonToUser(userObject);
+                            liveData.postValue(user);
+                        } else {
+                            Log.e("API", "No user data found in response" + jsonObject);
+                            liveData.postValue(null);
+                        }
+                    } catch (JSONException e) {
+                        Log.e("API", "Error getting user data from JSON", e);
+                        liveData.postValue(null);
+                    } catch (IOException e) {
+                        Log.e("API", "Error reading response body", e);
+                        liveData.postValue(null);
+                    }
+                } else {
+                    liveData.postValue(null);
                 }
-            } else {
-                liveData.postValue(null);  // Post null if response is unexpectedly null
             }
-        }, error -> {
-            Log.e("API", "Network error while fetching user", error);
-            liveData.postValue(null);  // Post null to handle network errors gracefully
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("API", "Network error while fetching user", t);
+                liveData.postValue(null);
+            }
         });
 
         return liveData;

@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel;
 import com.sydney.recipemanagaer.model.Recipe;
 import com.sydney.recipemanagaer.model.repository.RecipeRepository;
 
+import org.json.JSONException;
+
 import java.util.List;
 
 public class RecipeViewModel extends ViewModel {
@@ -30,7 +32,7 @@ public class RecipeViewModel extends ViewModel {
         return recipeRepository.updateRecipe(recipe);
     }
 
-    public LiveData<String> markAsFavorite(String recipeId) {
+    public LiveData<String> markAsFavorite(String recipeId) throws JSONException {
        return recipeRepository.markAsFavorite(recipeId);
     }
 

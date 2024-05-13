@@ -108,12 +108,23 @@ public class RecipeRepository {
     public LiveData<String> deleteRecipe(String recipeId) {
         MutableLiveData<String> responseData = new MutableLiveData<>();
 
-        apiService.deleteRecipe(recipeId, response -> {
-            // Assuming the server sends back a success message
-            responseData.setValue("Deleted successfully");
-        }, error -> {
-            // Handle the error appropriately
-            responseData.setValue("Failed to delete recipe: " + error.toString());
+        retrofitService.deleteRecipe(recipeId, new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                if (response.isSuccessful()) {
+                    // Handle success
+                    responseData.postValue("Deleted successfully");
+                } else {
+                    // Handle response error
+                    responseData.postValue("Error deleting recipe: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                // Handle network failure
+                responseData.postValue("Error deleting recipe: " + t.getMessage());
+            }
         });
 
         return responseData;
@@ -147,15 +158,27 @@ public class RecipeRepository {
         return result;
     }
 
-    public LiveData<String> markAsFavorite(String recipeId)
-    {
+    public LiveData<String> markAsFavorite(String recipeId) throws JSONException {
         MutableLiveData<String> result = new MutableLiveData<>();
         String userId = userRepository.getLoggedInUserId();
 
-        apiService.markRecipeAsFavorite(recipeId, userId, response -> {
-            result.setValue(response.optString("message", "Marked as favorite"));
-        }, error -> {
-            result.setValue("Failed to mark as favorite");
+        retrofitService.markRecipeAsFavorite(recipeId, userId, new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    String responseBody = response.body().string();
+                    JSONObject jsonObject = new JSONObject(responseBody);
+                    result.setValue(jsonObject.optString("message", "Marked as favorite"));
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                    result.setValue("Failed to mark as favorite");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                result.setValue("Failed to mark as favorite");
+            }
         });
         return result;
     }
