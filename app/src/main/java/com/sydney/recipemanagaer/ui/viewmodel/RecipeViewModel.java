@@ -38,4 +38,8 @@ public class RecipeViewModel extends ViewModel {
         return recipeRepository.getUserFavorites();
     }
 
+    public LiveData<List<Recipe>> getUserRecipes() {
+        return recipeRepository.getUserRecipes();
+    }
+
 }
