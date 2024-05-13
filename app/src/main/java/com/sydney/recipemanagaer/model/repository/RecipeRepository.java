@@ -17,7 +17,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -165,18 +164,30 @@ public class RecipeRepository {
         MutableLiveData<List<Recipe>> favoritesLiveData = new MutableLiveData<>();
         String userId = userRepository.getLoggedInUserId();
 
-        apiService.getUserFavorites(userId, response -> {
-            JSONArray recipesArray = null;
-            try {
-                recipesArray = response.getJSONArray("recipes");
-                List<Recipe> favoriteRecipes = parseRecipes(recipesArray);
-                favoritesLiveData.setValue(favoriteRecipes);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
+        retrofitService.getUserFavorites(userId, new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        JSONArray recipesArray = jsonObject.getJSONArray("recipes");
+//                        Log.d("retro", recipesArray + " " + response);
+                        List<Recipe> recipes = parseRecipes(recipesArray);
+                        favoritesLiveData.setValue(recipes);
+                    } catch (JSONException | IOException e) {
+                        Log.e("retro", "Error parsing response", e);
+                        favoritesLiveData.setValue(null);
+                    }
+                } else {
+                    favoritesLiveData.setValue(null);
+                }
             }
-        }, error -> {
-            // Handle the error appropriately
-            favoritesLiveData.setValue(Collections.emptyList());
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                favoritesLiveData.setValue(null);
+                Log.e("Get Recipe", "Error fetching recipes: " + t.getMessage());
+            }
         });
         return favoritesLiveData;
     }
@@ -222,5 +233,38 @@ public class RecipeRepository {
             }
         }
         return recipes;
+    }
+
+
+    public LiveData<List<Recipe>> getUserRecipes() {
+        MutableLiveData<List<Recipe>> userRecipesLiveData = new MutableLiveData<>();
+        String userId = userRepository.getLoggedInUserId();
+
+        retrofitService.getUserRecipes(userId, new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        JSONArray recipesArray = jsonObject.getJSONArray("recipes");
+//                        Log.d("retro", recipesArray + " " + response);
+                        List<Recipe> recipes = parseRecipes(recipesArray);
+                        userRecipesLiveData.setValue(recipes);
+                    } catch (JSONException | IOException e) {
+                        Log.e("retro", "Error parsing response", e);
+                        userRecipesLiveData.setValue(null);
+                    }
+                } else {
+                    userRecipesLiveData.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                userRecipesLiveData.setValue(null);
+                Log.e("Get Recipe", "Error fetching recipes: " + t.getMessage());
+            }
+        });
+        return userRecipesLiveData;
     }
 }

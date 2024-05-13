@@ -226,5 +226,51 @@ public class RetrofitService {
     }
 
 
+    public void getUserFavorites(String userId, retrofit2.Callback<ResponseBody> retrofitCallback) {
+        Call<ResponseBody> call = apiService.getUserFavorites(userId);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.i("RetrofitService", "Get User Favorites Successful");
+                    retrofitCallback.onResponse(call, response);
+                } else {
+                    Log.e("RetrofitService", "Error in response: " + response.message());
+                    retrofitCallback.onFailure(call, new Throwable("Response Error: " + response.message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("RetrofitService", "Failed to get user favorites: " + t.getMessage());
+                retrofitCallback.onFailure(call, t);
+            }
+        });
+    }
+
+    public void getUserRecipes(String userId, retrofit2.Callback<ResponseBody> retrofitCallback) {
+        Call<ResponseBody> call = apiService.getUserRecipes(userId);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.i("RetrofitService", "Get User Recipes Successful");
+                    retrofitCallback.onResponse(call, response);
+                } else {
+                    Log.e("RetrofitService", "Error in response: " + response.message());
+                    retrofitCallback.onFailure(call, new Throwable("Response Error: " + response.message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("RetrofitService", "Failed to get user recipes: " + t.getMessage());
+                retrofitCallback.onFailure(call, t);
+            }
+        });
+    }
+
 
 }

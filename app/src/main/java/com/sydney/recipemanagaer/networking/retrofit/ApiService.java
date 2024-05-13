@@ -62,4 +62,10 @@ public interface ApiService {
             @Body RequestBody requestBody
     );
 
+    @GET("recipe/favorites/{userId}")
+    Call<ResponseBody> getUserFavorites(@Path("userId") String userId);
+
+    @GET("recipe/myrecipe/{userId}")
+    Call<ResponseBody> getUserRecipes(@Path("userId") String userId);
+
 }
