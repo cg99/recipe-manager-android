@@ -2,6 +2,8 @@ package com.sydney.recipemanagaer.model.repository;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import static java.util.ResourceBundle.clearCache;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -195,5 +197,8 @@ public class UserRepository {
 
         // Update Retrofit client
         RetrofitClient.clearRetrofitInstance(); // Clear the existing client
+
+        // Additional steps to ensure a complete cleanup
+        clearCache();
     }
 }

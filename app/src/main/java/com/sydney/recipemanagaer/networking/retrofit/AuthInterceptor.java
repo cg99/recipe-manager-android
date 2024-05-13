@@ -4,7 +4,6 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.sydney.recipemanagaer.utils.Util;
 
@@ -27,7 +26,6 @@ public class AuthInterceptor implements Interceptor {
         Request request = chain.request();
 
         if (token != null && !token.isEmpty()) {
-            Log.d("intercepting", token);
 
             Request newRequest = request.newBuilder()
                     .addHeader("Authorization", "Bearer " + token)
