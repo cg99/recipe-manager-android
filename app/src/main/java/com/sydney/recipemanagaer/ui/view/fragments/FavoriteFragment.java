@@ -19,6 +19,8 @@ import com.sydney.recipemanagaer.ui.viewmodel.RecipeViewModel;
 import com.sydney.recipemanagaer.ui.viewmodel.factory.RecipeViewModelFactory;
 import com.sydney.recipemanagaer.utils.Util;
 
+import org.json.JSONException;
+
 public class FavoriteFragment extends Fragment implements FavoriteAdapter.FavoriteActionsListener {
     private RecyclerView recyclerView;
     private FavoriteAdapter adapter;
@@ -42,7 +44,7 @@ public class FavoriteFragment extends Fragment implements FavoriteAdapter.Favori
     }
 
     @Override
-    public void onRemoveFavorite(Recipe recipe) {
+    public void onRemoveFavorite(Recipe recipe) throws JSONException {
         viewModel.markAsFavorite(recipe.getRecipeId()).observe(getViewLifecycleOwner(), result -> {
             Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
         });

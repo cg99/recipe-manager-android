@@ -273,4 +273,79 @@ public class RetrofitService {
     }
 
 
+    public void deleteRecipe(String recipeId, retrofit2.Callback<String> retrofitCallback) {
+        Call<String> call = apiService.deleteRecipe(recipeId);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) {
+//                    Log.i("RetrofitService", "Recipe Delete Successful");
+                    retrofitCallback.onResponse(call, response);
+                } else {
+                    Log.e("RetrofitService", "Error in response: " + response.message());
+                    retrofitCallback.onFailure(call, new Throwable("Response Error: " + response.message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                // Handle error
+                retrofitCallback.onFailure(call, t);
+            }
+        });
+    }
+
+    public void getUserById(String userId, String token, retrofit2.Callback<ResponseBody> retrofitCallback) {
+        if (userId != null) {
+            Call<ResponseBody> call = apiService.getUserById(userId, "Bearer " + token);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body() != null) {
+                            retrofitCallback.onResponse(call, response);
+                        } else {
+                            Log.e("RetrofitService", "Response body is null");
+                            retrofitCallback.onFailure(call, new Throwable("Response body is null"));
+                        }
+                    } else {
+                        Log.e("RetrofitService", "Error in response: " + response.message());
+                        retrofitCallback.onFailure(call, new Throwable("Response Error: " + response.message()));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e("RetrofitService", "Error calling API", t);
+                    retrofitCallback.onFailure(call, t);
+                }
+            });
+        } else {
+            Log.e("NO_USER_ID", "No user id provided");
+        }
+    }
+
+    public void markRecipeAsFavorite(String recipeId, String userId, retrofit2.Callback<ResponseBody> retrofitCallback) throws JSONException {
+             Call<ResponseBody> call = apiService.markRecipeAsFavorite(recipeId, userId);
+
+             Log.d("whatarewe", recipeId + " and " + userId);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    retrofitCallback.onResponse(call, response);
+                } else {
+                    Log.e("RetrofitService", "Error in response: " + response.message());
+                    retrofitCallback.onFailure(call, new Throwable("Response Error: " + response.message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("RetrofitService", "Error: " + t.getMessage());
+                retrofitCallback.onFailure(call, t);
+            }
+        });
+    }
 }

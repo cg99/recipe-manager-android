@@ -23,6 +23,8 @@ import com.sydney.recipemanagaer.ui.viewmodel.RecipeViewModel;
 import com.sydney.recipemanagaer.ui.viewmodel.factory.RecipeViewModelFactory;
 import com.sydney.recipemanagaer.utils.Util;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,7 +115,13 @@ public class RecipeDetailFragment extends Fragment {
         buttonEditRecipe.setOnClickListener(v -> navigateToUpdateFragment());
         buttonDeleteRecipe.setOnClickListener(v -> deleteRecipe());
 
-        favoriteButton.setOnClickListener(v -> markRecipeAsFavorite());
+        favoriteButton.setOnClickListener(v -> {
+            try {
+                markRecipeAsFavorite();
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private void navigateToUpdateFragment() {
@@ -148,7 +156,7 @@ public class RecipeDetailFragment extends Fragment {
         }
     }
 
-    public void markRecipeAsFavorite() {
+    public void markRecipeAsFavorite() throws JSONException {
         {
             String recipeId = getArguments().getString("recipeId");
             viewModel.markAsFavorite(recipeId).observe(getViewLifecycleOwner(), result -> {
