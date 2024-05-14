@@ -21,13 +21,14 @@ import com.sydney.recipemanagaer.model.repository.UserRepository;
 import com.sydney.recipemanagaer.ui.view.activities.LoginActivity;
 import com.sydney.recipemanagaer.ui.viewmodel.UserViewModel;
 import com.sydney.recipemanagaer.ui.viewmodel.factory.UserViewModelFactory;
+import com.sydney.recipemanagaer.utils.Util;
 
 public class DashboardFragment extends Fragment {
 
     private UserViewModel viewModel;
     ImageView userProfile;
     TextView userName, userEmail, userBio;
-    Button logoutButton, btnAdminDashboard;
+    Button logoutButton, btnAdminDashboard, myRecipesBtn, accountSettingsBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,13 +111,7 @@ public class DashboardFragment extends Fragment {
             return; // Stop further execution of this method
         }
     }
-    private void navigateToMyRecipes() {
-        Fragment myRecipesFragment = new MyRecipesFragment();
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, myRecipesFragment)
-                .addToBackStack(null)
-                .commit();
-    }
+
     private void navigateToAccountSetting() {
         Fragment accountSettingFragment = new AccountSettingFragment();
         getActivity().getSupportFragmentManager().beginTransaction()
@@ -125,13 +120,5 @@ public class DashboardFragment extends Fragment {
                 .commit();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (!Util.userIsLoggedIn(getContext())) {
-            Util.navigateToLoginActivity(getContext());
-            return; // Stop further execution of this method
-        }
-    }
 }
 
