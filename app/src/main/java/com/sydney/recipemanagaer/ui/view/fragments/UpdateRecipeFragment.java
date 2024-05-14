@@ -88,16 +88,27 @@ public class UpdateRecipeFragment extends Fragment {
                 "Pineapple", "Chicken", "Beef", "Pork", "Lamb", "Turkey", "Salmon",
                 "Tuna", "Shrimp", "Cod", "Crab", "Lobster", "Cheese", "Yogurt", "Cream",
                 "Rice", "Wheat flour", "Oats", "Quinoa", "Lentils", "Chickpeas",
-                "Black beans", "Almonds", "Walnuts", "Peanuts", "Sunflower seeds",
+                "Black Beans", "Almonds", "Walnuts", "Peanuts", "Sunflower seeds",
                 "Flaxseeds", "Basil", "Oregano", "Thyme", "Rosemary", "Cumin", "Paprika",
-                "Black pepper", "Olive oil", "Canola oil", "Coconut oil", "Vegetable oil",
+                "Black pepper", "Olive Oil", "Canola Oil", "Coconut oil", "Vegetable oil",
                 "Ghee", "Honey", "Maple syrup", "Molasses", "Kale", "Celery", "Zucchini",
                 "Eggplant", "Peas", "Cauliflower", "Asparagus", "Artichoke", "Mushrooms",
                 "Pomegranate", "Blueberries", "Raspberries", "Mango", "Avocado", "Peach",
                 "Cabbage", "Lettuce", "Cucumber", "Corn", "Radishes", "Mint", "Cilantro",
                 "Parsley", "Fennel", "Chili powder", "Turmeric", "Cinnamon", "Nutmeg",
                 "Cardamom", "Vanilla", "Sesame seeds", "Pistachios", "Hazelnuts", "Pumpkin seeds",
-                "Macadamia nuts"
+                "Macadamia nuts", "Brown Sugar", "Baking Soda", "Baking Powder", "White Vinegar",
+                "Mustard Seeds", "Brussels sprouts", "Green beans", "Leeks", "Beets", "Parsnips",
+                "Turnips", "Sweet potatoes", "Butternut squash", "Acorn squash", "Spaghetti squash",
+                "Coconut milk", "Dill", "Tarragon", "Sage", "Chives", "Red wine vinegar",
+                "Apple cider vinegar", "Balsamic vinegar", "Sriracha", "Soy sauce", "Fish sauce",
+                "Worcestershire sauce", "Tahini", "Nutritional yeast", "Capers", "Olives", "Pickles",
+                "Sun-dried tomatoes", "Bread crumbs", "Cornmeal", "Couscous", "Polenta",
+                "Barley", "Millet", "Cloves", "Miso", "Hoisin sauce", "Garbanzo beans", "Paneer",
+                "Ricotta", "Feta cheese", "Prosciutto", "Salami", "Bacon", "Sausage", "Duck",
+                "Venison", "Swordfish", "Mackerel", "Trout", "Scallops", "Oysters", "Anchovies",
+                "Caviar", "Seaweed", "Edamame", "Wasabi", "Kimchi", "Sauerkraut", "Cranberries",
+                "Fig", "Date", "Passion fruit", "Guava", "Starfruit", "Kiwi"
         ));
 
         adapter = new IngredientAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, ingredients);
