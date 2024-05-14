@@ -24,9 +24,9 @@ public class User {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
+        this.username = username;
         this.bio = bio;
         this.profilePic = profilePic;
-        this.username = username;
         this.role = role;
     }
 
@@ -62,9 +62,7 @@ public class User {
         this.email = email;
     }
 
-    public String getUsername() {
-        return username;
-    }
+    public String getUsername() {return username;}
 
     public String getBio() {
         return bio;

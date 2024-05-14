@@ -28,7 +28,7 @@ public class DashboardFragment extends Fragment {
     private UserViewModel viewModel;
     ImageView userProfile;
     TextView userName, userEmail, userBio;
-    Button logoutButton, btnAdminDashboard, myRecipesBtn;
+    Button logoutButton, btnAdminDashboard, myRecipesBtn, accountSettingsBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,10 +47,12 @@ public class DashboardFragment extends Fragment {
         logoutButton = view.findViewById(R.id.buttonLogout);
         btnAdminDashboard = view.findViewById(R.id.btnAdminDashboard);
         myRecipesBtn = view.findViewById(R.id.myRecipesBtn);
+        accountSettingsBtn = view.findViewById(R.id.accountSettingsBtn);
 
         logoutButton.setOnClickListener(v -> logoutUser());
         btnAdminDashboard.setOnClickListener(v -> navigateToAdminDashboard());
         myRecipesBtn.setOnClickListener(v -> navigateToMyRecipes());
+        accountSettingsBtn.setOnClickListener(v -> navigateToAccountSetting());
 
     }
 
@@ -101,6 +103,13 @@ public class DashboardFragment extends Fragment {
         Fragment myRecipesFragment = new MyRecipesFragment();
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, myRecipesFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+    private void navigateToAccountSetting() {
+        Fragment accountSettingFragment = new AccountSettingFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, accountSettingFragment)
                 .addToBackStack(null)
                 .commit();
     }
