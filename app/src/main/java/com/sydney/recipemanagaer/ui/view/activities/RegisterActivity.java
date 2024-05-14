@@ -18,6 +18,8 @@ import com.sydney.recipemanagaer.model.repository.UserRepository;
 import com.sydney.recipemanagaer.ui.viewmodel.UserViewModel;
 import com.sydney.recipemanagaer.ui.viewmodel.factory.UserViewModelFactory;
 
+import org.json.JSONException;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText fullNameEditText;
@@ -70,24 +72,28 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
-            userViewModel.signup(new User(fullName, email, password, confirmPassword)).observe(this, result -> {
-                if ("Signup Successful".equals(result)) {
-                    Intent intent = new Intent(this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();  // Finish SignupActivity so user can't go back to it
+            try {
+                userViewModel.signup(new User(fullName, email, password, confirmPassword)).observe(this, result -> {
+                    if ("Signup Successful".equals(result)) {
+                        Intent intent = new Intent(this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();  // Finish SignupActivity so user can't go back to it
 
-                } else {
-                    Toast.makeText(this, result, Toast.LENGTH_LONG).show();
-                }
-                ;
-            });
+                    } else {
+                        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+                    }
+                    ;
+                });
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         });
 
-        textViewLogin.setOnClickListener(view -> {
-            // Navigate to the RegisterActivity
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        });
+//        textViewLogin.setOnClickListener(view -> {
+//            // Navigate to the RegisterActivity
+//            Intent intent = new Intent(this, LoginActivity.class);
+//            startActivity(intent);
+//        });
     }
 
     // Method to check format of email

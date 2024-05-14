@@ -26,6 +26,7 @@ import com.sydney.recipemanagaer.utils.Util;
 public class DashboardFragment extends Fragment {
 
     private UserViewModel viewModel;
+    private User userDetails;
     ImageView userProfile;
     TextView userName, userEmail, userBio;
     Button logoutButton, btnAdminDashboard, myRecipesBtn, accountSettingsBtn;
@@ -64,6 +65,7 @@ public class DashboardFragment extends Fragment {
     private void observeViewModel() {
         viewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
+                userDetails = user;
                 updateUI(user);
                 Log.d("DashboardFragment", "User role: " + user.getRole());
                 btnAdminDashboard.setVisibility("admin".equals(user.getRole()) ? View.VISIBLE : View.GONE);
@@ -75,11 +77,12 @@ public class DashboardFragment extends Fragment {
         userName.setText(user.getUsername());
         userEmail.setText(user.getEmail());
         userBio.setText(user.getBio());
-        Glide.with(this)
-                .load(user.getProfilePic())
-                .error(R.drawable.icon_account_circle) // An error image to show if the real image fails to load
-                .into(userProfile);
 
+        Glide.with(this)
+                .load(Util.getBaseURL() + "user/images/" + user.getProfilePic())
+                .placeholder(R.drawable.placeholder_image_background)
+                .error(R.drawable.error_image)
+                .into(userProfile);
     }
 
     private void logoutUser() {
@@ -106,13 +109,6 @@ public class DashboardFragment extends Fragment {
                 .addToBackStack(null)
                 .commit();
     }
-    private void navigateToAccountSetting() {
-        Fragment accountSettingFragment = new AccountSettingFragment();
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, accountSettingFragment)
-                .addToBackStack(null)
-                .commit();
-    }
 
     @Override
     public void onResume() {
@@ -122,5 +118,26 @@ public class DashboardFragment extends Fragment {
             return; // Stop further execution of this method
         }
     }
+
+    private void navigateToAccountSetting() {
+        Bundle args = new Bundle();
+        args.putString("userId", userDetails.getId());
+        args.putString("username", userDetails.getUsername());
+        args.putString("fullname", userDetails.getFullName());
+        args.putString("email", userDetails.getEmail());
+        args.putString("bio", userDetails.getBio());
+        args.putString("password", userDetails.getPassword()); // Be cautious with handling passwords
+        args.putString("userImage", userDetails.getProfilePic());
+        args.putString("role", userDetails.getRole());
+
+        Fragment accountSettingFragment = new AccountSettingFragment();
+        accountSettingFragment.setArguments(args);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, accountSettingFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
 }
 

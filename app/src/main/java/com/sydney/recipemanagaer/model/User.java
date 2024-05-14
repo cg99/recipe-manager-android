@@ -24,10 +24,21 @@ public class User {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
-        this.username = username;
         this.bio = bio;
         this.profilePic = profilePic;
+        this.username = username;
         this.role = role;
+    }
+
+    public User(String id, String fullName, String email, String username, String bio, String profilePic, String role, String password) {
+        this.id = id;
+        this.fullName = fullName;
+        this.email = email;
+        this.bio = bio;
+        this.profilePic = profilePic;
+        this.username = username;
+        this.role = role;
+        this.password = password;
     }
 
     public String getId() {
@@ -62,7 +73,9 @@ public class User {
         this.email = email;
     }
 
-    public String getUsername() {return username;}
+    public String getUsername() {
+        return username;
+    }
 
     public String getBio() {
         return bio;

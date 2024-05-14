@@ -53,16 +53,25 @@ public interface ApiService {
 
     @POST("user/signup")
     Call<ResponseBody> register(
-            @Part("fullname") RequestBody fullname,
-            @Part("email") RequestBody email,
-            @Part("password") RequestBody password,
-            @Part("confirmPassword") RequestBody confirmPassword
-
+            @Body RequestBody requestBody
     );
 
     @POST("user/login")
     Call<ResponseBody> login(
             @Body RequestBody requestBody
+    );
+
+    @Multipart
+    @PATCH("user/updateMe")
+    Call<ResponseBody> updateUser(
+            @Part("userId") RequestBody userId,
+            @Part("username") RequestBody username,
+            @Part("name") RequestBody name,
+            @Part("email") RequestBody email,
+            @Part("bio") RequestBody bio,
+//            @Part("password") RequestBody password,
+            @Part MultipartBody.Part userImage,
+            @Part("role") RequestBody role
     );
 
     @GET("recipe/favorites/{userId}")

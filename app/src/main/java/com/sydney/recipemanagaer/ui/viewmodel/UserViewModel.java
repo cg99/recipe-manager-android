@@ -25,7 +25,7 @@ public class UserViewModel extends ViewModel {
        return userRepository.login(email, password);
     }
 
-    public LiveData<String> signup(User user) {
+    public LiveData<String> signup(User user) throws JSONException {
         return userRepository.signup(user);
     }
 
@@ -34,9 +34,8 @@ public class UserViewModel extends ViewModel {
         // Reload the user list or handle the update UI accordingly
     }
 
-    public void updateUser(User user) {
-        userRepository.updateUser(user);
-        // Reload the user list or handle the update UI accordingly
+    public LiveData<String> updateUser(User user) {
+        return userRepository.updateUser(user);
     }
 
     public String getToken() {
