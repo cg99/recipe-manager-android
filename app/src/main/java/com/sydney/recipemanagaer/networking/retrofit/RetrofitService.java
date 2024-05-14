@@ -164,15 +164,25 @@ public class RetrofitService {
         });
     }
 
-    public void register(User user, retrofit2.Callback<ResponseBody> retrofitCallback) {
+    public void register(User user, retrofit2.Callback<ResponseBody> retrofitCallback) throws JSONException {
         // Prepare text parameters
-        RequestBody fullnameBody = RequestBody.create(user.getFullName(), MediaType.parse("text/plain"));
-        RequestBody emailBody = RequestBody.create(user.getEmail(), MediaType.parse("text/plain"));
-        RequestBody passwordBody = RequestBody.create(user.getPassword(), MediaType.parse("text/plain"));
-        RequestBody confirmPassword = RequestBody.create(user.getConfirmPassword(), MediaType.parse("text/plain"));
+//        RequestBody fullnameBody = RequestBody.create(user.getFullName(), MediaType.parse("text/plain"));
+//        RequestBody emailBody = RequestBody.create(user.getEmail(), MediaType.parse("text/plain"));
+//        RequestBody passwordBody = RequestBody.create(user.getPassword(), MediaType.parse("text/plain"));
+//        RequestBody confirmPassword = RequestBody.create(user.getConfirmPassword(), MediaType.parse("text/plain"));
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", user.getFullName());
+        jsonObject.put("email", user.getEmail());
+        jsonObject.put("password", user.getPassword());
+        jsonObject.put("confirmPassword", user.getConfirmPassword());
+
+
+        // Convert the JSONObject to a RequestBody
+        RequestBody requestBody = RequestBody.create(jsonObject.toString(), MediaType.parse("application/json"));
 
         // Make API call
-        Call<ResponseBody> call = apiService.register(fullnameBody, emailBody, passwordBody, confirmPassword);
+        Call<ResponseBody> call = apiService.register(requestBody);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -328,7 +338,48 @@ public class RetrofitService {
     public void markRecipeAsFavorite(String recipeId, String userId, retrofit2.Callback<ResponseBody> retrofitCallback) throws JSONException {
              Call<ResponseBody> call = apiService.markRecipeAsFavorite(recipeId, userId);
 
-             Log.d("whatarewe", recipeId + " and " + userId);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    retrofitCallback.onResponse(call, response);
+                } else {
+                    Log.e("RetrofitService", "Error in response: " + response.message());
+                    retrofitCallback.onFailure(call, new Throwable("Response Error: " + response.message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("RetrofitService", "Error: " + t.getMessage());
+                retrofitCallback.onFailure(call, t);
+            }
+        });
+    }
+
+
+    public void updateUser(User user, retrofit2.Callback<ResponseBody> retrofitCallback) {
+        // Prepare text parameters
+        RequestBody userIdBody = RequestBody.create(user.getId(), MediaType.parse("text/plain"));
+        RequestBody usernameBody = RequestBody.create(user.getUsername(), MediaType.parse("text/plain"));
+        RequestBody fullnameBody = RequestBody.create(user.getFullName(), MediaType.parse("text/plain"));
+        RequestBody emailBody = RequestBody.create(user.getEmail(), MediaType.parse("text/plain"));
+        RequestBody bioBody = RequestBody.create(user.getBio(), MediaType.parse("text/plain"));
+        RequestBody roleBody = RequestBody.create(user.getRole(), MediaType.parse("text/plain"));
+
+        // Prepare file parameter for user image (Handle null or empty path)
+        MultipartBody.Part userImagePart = null;
+        String userImagePath = user.getProfilePic();
+        if (userImagePath != null && !userImagePath.isEmpty()) {
+            File userImageFile = new File(userImagePath);
+            if (userImageFile.exists()) {
+                RequestBody fileBody = RequestBody.create(userImageFile, MediaType.parse("image/*"));
+                userImagePart = MultipartBody.Part.createFormData("userImage", userImageFile.getName(), fileBody);
+            }
+        }
+
+        // Make API call
+        Call<ResponseBody> call = apiService.updateUser(userIdBody, usernameBody, fullnameBody, emailBody, bioBody, userImagePart, roleBody);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

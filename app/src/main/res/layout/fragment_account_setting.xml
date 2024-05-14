@@ -35,15 +35,30 @@
             android:layout_marginBottom="20dp"
             android:src="@drawable/placeholder_image_background"/>
 
+        <Button
+            android:id="@+id/btnChangeProfilePic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Change Picture" />
+
         <EditText
-            android:id="@+id/editTextUserName"
+            android:id="@+id/editTextUserFullName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
-            android:hint="name"
+            android:hint="Full Name"
             android:inputType="text"
             android:textSize="16sp"
             android:layout_marginBottom="10dp" />
+
+        <EditText
+            android:id="@+id/editTextUserUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Username"
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/editTextUserEmail"
@@ -60,7 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
-            android:hint="bio"
+            android:hint="Bio"
             android:inputType="text"
             android:textSize="16sp"
             android:layout_marginBottom="10dp" />
@@ -74,6 +89,16 @@
             android:inputType="textPassword"
             android:textSize="16sp"
             android:layout_marginBottom="16dp" />
+
+<!--        <EditText-->
+<!--            android:id="@+id/editTextRole"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:minHeight="48dp"-->
+<!--            android:hint="Role"-->
+<!--            android:inputType="text"-->
+<!--            android:textSize="16sp"-->
+<!--            android:layout_marginBottom="10dp" />-->
 
         <Button
             android:id="@+id/btnUpdateUser"

@@ -107,7 +107,7 @@ public class UserRepository {
             String id = jsonObject.getString("_id");
             String email = jsonObject.getString("email");
             String username = jsonObject.optString("username", "");
-            String fullName = jsonObject.optString("fullname", "");
+            String fullName = jsonObject.optString("name", "");
             String profilePic = jsonObject.getString("userImage");
             String bio = jsonObject.optString("bio", "");
             String role = jsonObject.getString("role");
@@ -121,15 +121,36 @@ public class UserRepository {
 
 
 
-    public void updateUser(User user) {
+    public LiveData<String> updateUser(User user) {
         // update logic
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        MutableLiveData<String> result = new MutableLiveData<>();
+        retrofitService.updateUser(user, new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    result.setValue("Update Successful");
+                } else {
+                    result.setValue("Error updating user: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                result.setValue("Error updating user: " + t.getMessage());
+            }
+        });
+
+        return result;
     }
 
     public void deleteUser(String id) {
         // delete logic
     }
 
-    public LiveData<String> signup(User user) {
+    public LiveData<String> signup(User user) throws JSONException {
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
