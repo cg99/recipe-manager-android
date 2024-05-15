@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.sydney.recipemanagaer.model.Recipe;
-import com.sydney.recipemanagaer.networking.ApiService;
 import com.sydney.recipemanagaer.networking.retrofit.RetrofitService;
 
 import org.json.JSONArray;
@@ -25,7 +24,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RecipeRepository {
-    private final ApiService apiService;
     private final RetrofitService retrofitService;
     UserRepository userRepository;
 
@@ -33,7 +31,6 @@ public class RecipeRepository {
         if (context == null) {
             throw new IllegalArgumentException("Context cannot be null");
         }
-        apiService = new ApiService(context);
         userRepository = new UserRepository(context);
         retrofitService = new RetrofitService(context);
     }

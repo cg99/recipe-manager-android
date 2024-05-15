@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.User;
 import com.sydney.recipemanagaer.model.repository.UserRepository;
@@ -72,11 +73,13 @@ public class AccountSettingFragment extends Fragment {
             userRole = args.getString("role");
 
 
-            Glide.with(this)
-                    .load(Util.getBaseURL() + "user/images/" + args.getString("userImage"))
-                    .placeholder(R.drawable.placeholder_image_background)
-                    .error(R.drawable.error_image)
-                    .into(imageViewSelected);
+
+                Glide.with(this)
+                        .load(Util.getBaseURL() + "user/images/" + args.getString("userImage"))
+                        .placeholder(R.drawable.placeholder_image_background)
+                        .error(R.drawable.error_image)
+                        .into(imageViewSelected);
+
         } else {
             Toast.makeText(getContext(), "No user data found!", Toast.LENGTH_SHORT).show();
         }
@@ -95,6 +98,11 @@ public class AccountSettingFragment extends Fragment {
                 uri -> {
                     userImagePath = Util.getPath(getContext(), uri);
                     imageViewSelected.setImageURI(uri);
+                    Glide.with(this)
+                            .load(uri)
+                            .placeholder(R.drawable.placeholder_image_background)
+                            .error(R.drawable.error_image)
+                            .into(imageViewSelected);
                 }
         );
     }
@@ -106,17 +114,28 @@ public class AccountSettingFragment extends Fragment {
         String email = editTextUserEmail.getText().toString();
         String password = editTextUserPassword.getText().toString();
 
-
         User updatedUser = new User(userId, name, email, username, bio, userImagePath, userRole);
 
         viewModel.updateUser(updatedUser).observe(getViewLifecycleOwner(), result -> {
             if(result.equals("Update Successful")) {
                 Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
-                Util.navigateToMainActivity(getContext());
+                //Util.navigateToMainActivity(getContext());
+                navigateToDashboard();
+
             } else {
                 Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
             }
 
         });
+    }
+
+    private void navigateToDashboard() {
+        if (isAdded() && getActivity() != null) {
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new DashboardFragment())
+                    .commit();
+            BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.nav_view);
+            bottomNavigationView.setSelectedItemId(R.id.dashboardFragment);
+        }
     }
 }

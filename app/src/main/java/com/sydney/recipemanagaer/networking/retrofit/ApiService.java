@@ -71,7 +71,8 @@ public interface ApiService {
             @Part("bio") RequestBody bio,
 //            @Part("password") RequestBody password,
             @Part MultipartBody.Part userImage,
-            @Part("role") RequestBody role
+            @Part("role") RequestBody role,
+            @Header("Authorization") String token
     );
 
     @GET("recipe/favorites/{userId}")
@@ -88,4 +89,11 @@ public interface ApiService {
 
     @PATCH("recipe/{recipeId}/favorite")
     Call<ResponseBody> markRecipeAsFavorite(@Path("recipeId") String recipeId, @Query("userId") String userId);
+
+    @GET("user")
+    Call<ResponseBody> getUsers(@Header("Authorization") String token);
+
+    @DELETE("user/{userId}")
+    Call<ResponseBody> deleteUser(@Path("userId") String userId, @Header("Authorization") String token);
+
 }

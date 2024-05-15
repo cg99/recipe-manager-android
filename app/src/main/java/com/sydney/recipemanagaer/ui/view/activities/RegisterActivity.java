@@ -75,6 +75,8 @@ public class RegisterActivity extends AppCompatActivity {
             try {
                 userViewModel.signup(new User(fullName, email, password, confirmPassword)).observe(this, result -> {
                     if ("Signup Successful".equals(result)) {
+                        Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+
                         Intent intent = new Intent(this, LoginActivity.class);
                         startActivity(intent);
                         finish();  // Finish SignupActivity so user can't go back to it
@@ -89,11 +91,11 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-//        textViewLogin.setOnClickListener(view -> {
-//            // Navigate to the RegisterActivity
-//            Intent intent = new Intent(this, LoginActivity.class);
-//            startActivity(intent);
-//        });
+        textViewLogin.setOnClickListener(view -> {
+            // Navigate to the RegisterActivity
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        });
     }
 
     // Method to check format of email

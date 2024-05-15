@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.User;
+import com.sydney.recipemanagaer.utils.Util;
 
 import java.util.List;
 
@@ -39,12 +40,26 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         User user = userList.get(position);
         holder.nameTextView.setText(user.getFullName());
         holder.emailTextView.setText(user.getEmail());
-        holder.usernameTextView.setText(user.getUsername());
-        holder.bioTextView.setText(user.getBio());
+        holder.roleTextView.setText("Role: "+ user.getRole());
+//        holder.bioTextView.setText(user.getBio());
         Glide.with(holder.itemView.getContext()).load(user.getProfilePic()).into(holder.profileImageView);
 
-        holder.editButton.setOnClickListener(v -> onUserListener.onEditUser(user));
-        holder.deleteButton.setOnClickListener(v -> onUserListener.onDeleteUser(user.getEmail()));
+        Glide.with(holder.itemView.getContext())
+                .load(Util.getBaseURL() + "user/images/" + user.getProfilePic())
+                .placeholder(R.drawable.placeholder_image_background)
+                .error(R.drawable.error_image)
+                .into(holder.profileImageView);
+
+        holder.editButton.setOnClickListener(v -> {
+            if (onUserListener != null) {
+                onUserListener.onEditUser(user);
+            }
+        });
+        holder.deleteButton.setOnClickListener(v -> {
+            if (onUserListener != null) {
+                onUserListener.onDeleteUser(user.getId());
+            }
+        });
     }
 
     @Override
@@ -53,7 +68,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     public static class UserViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView, emailTextView, usernameTextView, bioTextView;
+        TextView nameTextView, emailTextView, roleTextView, bioTextView;
         ImageView profileImageView;
         Button editButton, deleteButton;
 
@@ -61,8 +76,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             super(itemView);
             nameTextView = itemView.findViewById(R.id.nameTextView);
             emailTextView = itemView.findViewById(R.id.emailTextView);
-            usernameTextView = itemView.findViewById(R.id.usernameTextView);
-            bioTextView = itemView.findViewById(R.id.bioTextView);
+            roleTextView = itemView.findViewById(R.id.roleTextView);
+//            bioTextView = itemView.findViewById(R.id.bioTextView);
             profileImageView = itemView.findViewById(R.id.profileImageView);
             editButton = itemView.findViewById(R.id.btnEditUser);
             deleteButton = itemView.findViewById(R.id.btnDeleteUser);

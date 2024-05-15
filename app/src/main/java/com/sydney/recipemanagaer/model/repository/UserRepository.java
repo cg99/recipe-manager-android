@@ -1,7 +1,6 @@
 package com.sydney.recipemanagaer.model.repository;
 
 import static android.content.Context.MODE_PRIVATE;
-
 import static java.util.ResourceBundle.clearCache;
 
 import android.content.Context;
@@ -12,11 +11,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.sydney.recipemanagaer.model.User;
-import com.sydney.recipemanagaer.networking.ApiService;
 import com.sydney.recipemanagaer.networking.retrofit.RetrofitClient;
 import com.sydney.recipemanagaer.networking.retrofit.RetrofitService;
 import com.sydney.recipemanagaer.utils.Util;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,7 +29,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UserRepository {
-    private final ApiService apiService;
     private MutableLiveData<String> loginStatus = new MutableLiveData<>();
     private Context context;
     private final RetrofitService retrofitService;
@@ -42,7 +40,6 @@ public class UserRepository {
             throw new IllegalArgumentException("Context cannot be null");
         }
         this.context = context;
-        apiService = new ApiService(context);
         sharedPreferences = context.getSharedPreferences(Util.SHARED_PREFS_FILE, MODE_PRIVATE);
         retrofitService = new RetrofitService(context);
     }
@@ -51,9 +48,41 @@ public class UserRepository {
         // This should be replaced with actual data fetching logic
         MutableLiveData<List<User>> liveData = new MutableLiveData<>();
         List<User> users = new ArrayList<>();
+        String token = getToken();
 
+        retrofitService.getUsers(token, new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.body() != null) {
+                    try {
+                        String responseBody = response.body().string();
+                        JSONObject jsonObject = new JSONObject(responseBody);
+                        if (jsonObject.has("data") && jsonObject.getJSONObject("data").has("users")) {
+                            JSONArray userArray = jsonObject.getJSONObject("data").getJSONArray("users");
+                            List<User> users = parseJsonToUsers(userArray);
+                            liveData.postValue(users);
+                        } else {
+                            Log.e("API", "No user data found in response" + jsonObject);
+                            liveData.postValue(null);
+                        }
+                    } catch (JSONException e) {
+                        Log.e("API", "Error getting user data from JSON", e);
+                        liveData.postValue(null);
+                    } catch (IOException e) {
+                        Log.e("API", "Error reading response body", e);
+                        liveData.postValue(null);
+                    }
+                } else {
+                    liveData.postValue(null);
+                }
+            }
 
-        // get user from server
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("API", "Network error while fetching user", t);
+                liveData.postValue(null);
+            }
+        });
 
         // Add more users
         liveData.setValue(users);
@@ -102,6 +131,19 @@ public class UserRepository {
     }
 
 
+    private List<User> parseJsonToUsers(JSONArray jsonArray) {
+        List<User> users = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                User user = parseJsonToUser(jsonObject);
+                users.add(user);
+            } catch (JSONException e) {
+                Log.e("API", "Error parsing user JSON", e);
+            }
+        }
+        return users;
+    }
     private User parseJsonToUser(JSONObject jsonObject) {
         try {
             String id = jsonObject.getString("_id");
@@ -126,8 +168,10 @@ public class UserRepository {
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
+
+        String token = getToken();
         MutableLiveData<String> result = new MutableLiveData<>();
-        retrofitService.updateUser(user, new Callback<ResponseBody>() {
+        retrofitService.updateUser(user, token, new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -146,8 +190,30 @@ public class UserRepository {
         return result;
     }
 
-    public void deleteUser(String id) {
-        // delete logic
+    public LiveData<String> deleteUser(String id) {
+        MutableLiveData<String> responseData = new MutableLiveData<>();
+
+        String token = getToken();
+        retrofitService.deleteUser(id, token, new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // Handle success
+                    responseData.setValue("Deleted successfully");
+                } else {
+                    // Handle response error
+                    responseData.setValue("Error deleting user: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Handle network failure
+                responseData.setValue("Error deleting user: " + t.getMessage());
+            }
+        });
+
+        return responseData;
     }
 
     public LiveData<String> signup(User user) throws JSONException {
