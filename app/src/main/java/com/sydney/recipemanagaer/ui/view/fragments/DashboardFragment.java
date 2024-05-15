@@ -29,7 +29,7 @@ public class DashboardFragment extends Fragment {
     private User userDetails;
     ImageView userProfile;
     TextView userName, userEmail, userBio;
-    Button logoutButton, btnAdminDashboard, myRecipesBtn, accountSettingsBtn;
+    Button logoutButton, btnAdminDashboard, myRecipesBtn, accountSettingsBtn, btnManageRecipeCategory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,11 +47,13 @@ public class DashboardFragment extends Fragment {
         userBio = view.findViewById(R.id.textViewUserBio);
         logoutButton = view.findViewById(R.id.buttonLogout);
         btnAdminDashboard = view.findViewById(R.id.btnAdminDashboard);
+        btnManageRecipeCategory = view.findViewById(R.id.btnManageRecipeCategory);
         myRecipesBtn = view.findViewById(R.id.myRecipesBtn);
         accountSettingsBtn = view.findViewById(R.id.accountSettingsBtn);
 
         logoutButton.setOnClickListener(v -> logoutUser());
         btnAdminDashboard.setOnClickListener(v -> navigateToAdminDashboard());
+        btnManageRecipeCategory.setOnClickListener(v -> navigateToAdminDashboard());
         myRecipesBtn.setOnClickListener(v -> navigateToMyRecipes());
         accountSettingsBtn.setOnClickListener(v -> navigateToAccountSetting());
 
@@ -69,6 +71,7 @@ public class DashboardFragment extends Fragment {
                 updateUI(user);
                 Log.d("DashboardFragment", "User role: " + user.getRole());
                 btnAdminDashboard.setVisibility("admin".equals(user.getRole()) ? View.VISIBLE : View.GONE);
+                btnManageRecipeCategory.setVisibility("admin".equals(user.getRole()) ? View.VISIBLE : View.GONE);
             }
         });
     }

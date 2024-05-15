@@ -48,5 +48,6 @@
     <string name="favorite">Favorite</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-    <string name="recipe_type">Food Type\n</string>
+    <string name="recipe_type">Recipe Category\n</string>
+
 </resources>

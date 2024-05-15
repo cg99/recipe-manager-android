@@ -17,7 +17,7 @@
             android:id="@+id/textLayoutLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Account Details"
+            android:text="User Details"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textStyle="bold"
             android:layout_marginTop="15dp"

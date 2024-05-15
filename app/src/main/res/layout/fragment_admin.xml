@@ -3,6 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <!-- Title TextView -->
+    <TextView
+        android:id="@+id/manageUsersTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Manage Users"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="16dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/usersRecyclerView"
@@ -22,7 +34,7 @@
             android:id="@+id/addUserButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sdd User"
+            android:text="Add User"
             android:layout_marginEnd="16dp"/>
 
     </LinearLayout>
