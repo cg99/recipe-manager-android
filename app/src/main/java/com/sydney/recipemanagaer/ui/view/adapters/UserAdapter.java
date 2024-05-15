@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.User;
+import com.sydney.recipemanagaer.utils.Util;
 
 import java.util.List;
 
@@ -43,8 +44,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         holder.bioTextView.setText(user.getBio());
         Glide.with(holder.itemView.getContext()).load(user.getProfilePic()).into(holder.profileImageView);
 
-        holder.editButton.setOnClickListener(v -> onUserListener.onEditUser(user));
-        holder.deleteButton.setOnClickListener(v -> onUserListener.onDeleteUser(user.getEmail()));
+        Glide.with(holder.itemView.getContext())
+                .load(Util.getBaseURL() + "user/images/" + user.getProfilePic())
+                .placeholder(R.drawable.placeholder_image_background)
+                .error(R.drawable.error_image)
+                .into(holder.profileImageView);
+
+        holder.editButton.setOnClickListener(v -> {
+            if (onUserListener != null) {
+                onUserListener.onEditUser(user);
+            }
+        });
+        holder.deleteButton.setOnClickListener(v -> {
+            if (onUserListener != null) {
+                onUserListener.onDeleteUser(user.getId());
+            }
+        });
     }
 
     @Override

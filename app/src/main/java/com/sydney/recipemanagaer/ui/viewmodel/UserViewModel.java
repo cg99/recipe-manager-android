@@ -29,9 +29,8 @@ public class UserViewModel extends ViewModel {
         return userRepository.signup(user);
     }
 
-    public void deleteUser(String userId) {
-        userRepository.deleteUser(userId);
-        // Reload the user list or handle the update UI accordingly
+    public LiveData<String>  deleteUser(String userId) {
+        return userRepository.deleteUser(userId);
     }
 
     public LiveData<String> updateUser(User user) {

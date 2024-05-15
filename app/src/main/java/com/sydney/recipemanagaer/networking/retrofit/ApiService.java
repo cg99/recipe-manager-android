@@ -88,4 +88,11 @@ public interface ApiService {
 
     @PATCH("recipe/{recipeId}/favorite")
     Call<ResponseBody> markRecipeAsFavorite(@Path("recipeId") String recipeId, @Query("userId") String userId);
+
+    @GET("user")
+    Call<ResponseBody> getUsers(@Header("Authorization") String token);
+
+    @DELETE("user/{userId}")
+    Call<ResponseBody> deleteUser(@Path("userId") String userId, @Header("Authorization") String token);
+
 }
