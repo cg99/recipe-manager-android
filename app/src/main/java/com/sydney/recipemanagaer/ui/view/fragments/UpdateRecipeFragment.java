@@ -179,6 +179,11 @@ public class UpdateRecipeFragment extends Fragment {
                 uri -> {
                     featuredImagePath = Util.getPath(getContext(), uri);
                     imageViewSelected.setImageURI(uri);
+                    Glide.with(this)
+                            .load(uri)
+                            .placeholder(R.drawable.placeholder_image_background)
+                            .error(R.drawable.error_image)
+                            .into(imageViewSelected);
                 }
         );
 

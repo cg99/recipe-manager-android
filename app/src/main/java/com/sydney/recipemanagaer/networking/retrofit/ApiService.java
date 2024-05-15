@@ -71,7 +71,8 @@ public interface ApiService {
             @Part("bio") RequestBody bio,
 //            @Part("password") RequestBody password,
             @Part MultipartBody.Part userImage,
-            @Part("role") RequestBody role
+            @Part("role") RequestBody role,
+            @Header("Authorization") String token
     );
 
     @GET("recipe/favorites/{userId}")

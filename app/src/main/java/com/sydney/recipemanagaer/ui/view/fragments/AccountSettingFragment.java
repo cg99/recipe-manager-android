@@ -72,11 +72,13 @@ public class AccountSettingFragment extends Fragment {
             userRole = args.getString("role");
 
 
-            Glide.with(this)
-                    .load(Util.getBaseURL() + "user/images/" + args.getString("userImage"))
-                    .placeholder(R.drawable.placeholder_image_background)
-                    .error(R.drawable.error_image)
-                    .into(imageViewSelected);
+
+                Glide.with(this)
+                        .load(Util.getBaseURL() + "user/images/" + args.getString("userImage"))
+                        .placeholder(R.drawable.placeholder_image_background)
+                        .error(R.drawable.error_image)
+                        .into(imageViewSelected);
+
         } else {
             Toast.makeText(getContext(), "No user data found!", Toast.LENGTH_SHORT).show();
         }
@@ -95,6 +97,11 @@ public class AccountSettingFragment extends Fragment {
                 uri -> {
                     userImagePath = Util.getPath(getContext(), uri);
                     imageViewSelected.setImageURI(uri);
+                    Glide.with(this)
+                            .load(uri)
+                            .placeholder(R.drawable.placeholder_image_background)
+                            .error(R.drawable.error_image)
+                            .into(imageViewSelected);
                 }
         );
     }

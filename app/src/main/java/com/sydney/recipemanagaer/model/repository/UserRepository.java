@@ -168,8 +168,10 @@ public class UserRepository {
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
+
+        String token = getToken();
         MutableLiveData<String> result = new MutableLiveData<>();
-        retrofitService.updateUser(user, new Callback<ResponseBody>() {
+        retrofitService.updateUser(user, token, new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {

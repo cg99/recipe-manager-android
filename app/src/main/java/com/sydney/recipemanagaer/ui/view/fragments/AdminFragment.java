@@ -66,7 +66,7 @@ public class AdminFragment extends Fragment implements UserAdapter.OnUserListene
     public void onDeleteUser(String userId) {
         viewModel.deleteUser(userId).observe(getViewLifecycleOwner(), result -> {
             if ("Deleted successfully".equals(result)) {
-                Toast.makeText(getContext(), "Recipe deleted.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "User deleted.", Toast.LENGTH_SHORT).show();
                 Util.navigateToMainActivity(getContext());
             } else {
                 Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
