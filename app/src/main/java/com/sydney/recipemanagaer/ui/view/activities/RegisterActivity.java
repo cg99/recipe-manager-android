@@ -91,11 +91,11 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-//        textViewLogin.setOnClickListener(view -> {
-//            // Navigate to the RegisterActivity
-//            Intent intent = new Intent(this, LoginActivity.class);
-//            startActivity(intent);
-//        });
+        textViewLogin.setOnClickListener(view -> {
+            // Navigate to the RegisterActivity
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        });
     }
 
     // Method to check format of email
