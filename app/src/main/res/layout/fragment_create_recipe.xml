@@ -13,6 +13,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- Title -->
         <TextView
             android:id="@+id/textLayoutLabel"
             android:layout_width="match_parent"
@@ -22,7 +23,6 @@
             android:textStyle="bold"
             android:layout_marginBottom="10dp"/>
 
-        <!-- Each TextInputLayout contains a label and an EditText with a clear outlined style -->
         <!-- Recipe Name -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -56,7 +56,7 @@
                 android:padding="8dp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Input field for ingredient selection -->
+        <!-- Ingredient Selection -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                 android:textSize="16dp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- ChipGroup for displaying selected ingredients as chips -->
+        <!-- Selected Ingredients -->
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroupSelectedIngredients"
             android:layout_width="match_parent"
@@ -87,7 +87,7 @@
             app:chipSpacing="8dp"
             app:singleSelection="false" />
 
-        <!-- Recipe Name -->
+        <!-- Recipe Type -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
                 android:padding="8dp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Image Selection and Preview -->
+        <!-- Image Selection -->
         <Button
             android:id="@+id/buttonSelectImage"
             android:layout_width="wrap_content"
@@ -151,16 +151,18 @@
             android:scaleType="center"
             android:layout_marginBottom="16dp"/>
 
+        <!-- Image List -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/imagesRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <!-- Add Image Button -->
         <Button
             android:id="@+id/addImageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Image" />
+            android:text="@string/add_image" />
 
         <!-- Submit Button -->
         <Button

@@ -32,6 +32,7 @@
     <string name="submit">Submit</string>
     <string name="create_recipe">Create Recipe</string>
     <string name="select_image">Upload Image</string>
+    <string name="add_image">Add Image</string>
     <string name="cooking_time">Cooking Time (minutes)</string>
     <string name="toggle_favorite">Toggle Favorite</string>
     <string name="recipe_name_hint">name\n</string>
@@ -48,6 +49,8 @@
     <string name="favorite">Favorite</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="share">Share</string>
+    <string name="review_recipe">Review Recipe</string>
     <string name="recipe_type">Recipe Category\n</string>
 
 </resources>

@@ -131,7 +131,7 @@
                 android:drawableStart="@drawable/ic_recipe_category"
                 android:drawablePadding="20dp"
                 android:paddingStart="20dp"
-                android:text="Manage Food Category"
+                android:text="Recipe Category"
                 android:textAlignment="viewStart"
                 android:textSize="18sp"
                 android:textStyle="bold"

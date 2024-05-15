@@ -8,7 +8,7 @@
         android:id="@+id/manageUsersTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Manage Users"
+        android:text="Users"
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"

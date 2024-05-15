@@ -39,7 +39,7 @@ public class GenericRecipeAdapter extends RecyclerView.Adapter<GenericRecipeAdap
         if (dataList != null && !dataList.isEmpty()) {
             Recipe recipe = dataList.get(position);
             holder.nameTextView.setText(recipe.getTitle());
-            holder.descriptionTextView.setText(recipe.getDescription());
+            holder.descriptionTextView.setText(limitDescriptionLength(recipe.getDescription()));
 
 
             // Use Glide to load the image asynchronously
@@ -64,6 +64,15 @@ public class GenericRecipeAdapter extends RecyclerView.Adapter<GenericRecipeAdap
             holder.featuredImageView.setImageResource(R.drawable.placeholder_image_foreground);
 
             Log.e("Adapter", "No data");
+        }
+    }
+
+    private String limitDescriptionLength(String description) {
+        int maxLength = 160; // Set your desired maximum length
+        if (description.length() > maxLength) {
+            return description.substring(0, maxLength) + "...";
+        } else {
+            return description;
         }
     }
 

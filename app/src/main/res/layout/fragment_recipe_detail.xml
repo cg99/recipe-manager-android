@@ -65,6 +65,26 @@
                     android:contentDescription="@string/delete"
                     app:tooltipText="@string/delete"
                     android:background="?android:selectableItemBackgroundBorderless"/>
+
+                <ImageButton
+                    android:id="@+id/buttonReviewRecipe"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_review"
+                    android:contentDescription="@string/review_recipe"
+                    app:tooltipText="@string/review_recipe"
+                    android:background="?android:selectableItemBackgroundBorderless"/>
+
+                <ImageButton
+                    android:id="@+id/buttonShareRecipe"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_share"
+                    android:contentDescription="@string/share"
+                    app:tooltipText="@string/share"
+                    android:background="?android:selectableItemBackgroundBorderless"/>
             </LinearLayout>
 
             <TextView
@@ -75,14 +95,16 @@
                 android:paddingBottom="8dp"
                 android:text="@string/details"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                />
 
             <TextView
                 android:id="@+id/textViewRecipeDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:justificationMode="inter_word" />
 
             <TextView
                 android:id="@+id/textIngredients"
@@ -132,7 +154,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:justificationMode="inter_word"/>
 
             <TextView
                 android:id="@+id/textViewRecipeCookingTime"
