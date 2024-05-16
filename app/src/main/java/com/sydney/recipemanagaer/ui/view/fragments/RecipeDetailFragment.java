@@ -1,5 +1,7 @@
 package com.sydney.recipemanagaer.ui.view.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +34,7 @@ public class RecipeDetailFragment extends Fragment {
 
     private TextView textViewTitle, textViewFoodType, textViewDescription, textViewIngredients, textViewInstructions, textViewCookingTime;
     private ImageView imageViewRecipe;
-    private ImageButton buttonEditRecipe, buttonDeleteRecipe, favoriteButton;
+    private ImageButton buttonEditRecipe, buttonDeleteRecipe, favoriteButton, buttonShareRecipe;
     private RecipeViewModel viewModel;
 
     private RecyclerView imageRecyclerView;
@@ -53,6 +55,9 @@ public class RecipeDetailFragment extends Fragment {
 
         // Retrieve and display recipe details
         displayRecipeDetails();
+
+        // Initialize the share button
+        buttonShareRecipe = view.findViewById(R.id.buttonShareRecipe);
 
         // Setup button listeners
         setupButtonListeners();
@@ -122,6 +127,9 @@ public class RecipeDetailFragment extends Fragment {
                 throw new RuntimeException(e);
             }
         });
+
+        // Share button listener
+        buttonShareRecipe.setOnClickListener(v -> shareRecipeDetails());
     }
 
     private void navigateToUpdateFragment() {
@@ -164,4 +172,33 @@ public class RecipeDetailFragment extends Fragment {
             });
         }
     }
+    private void shareRecipeDetails() {
+        String recipeTitle = textViewTitle.getText().toString();
+        String recipeDescription = textViewDescription.getText().toString();
+        String recipeIngredients = textViewIngredients.getText().toString();
+        String recipeInstructions = textViewInstructions.getText().toString();
+
+        // Get the URI of the recipe image
+        Uri recipeImageUri = getRecipeImageUri();
+
+        // Create the share intent
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("image/*");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, recipeTitle);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "Title: " + recipeTitle + "\n\nDescription: " + recipeDescription + "\n\nIngredients: " + recipeIngredients + "\n\nInstructions: " + recipeInstructions);
+//        if (recipeImageUri != null) {
+//            shareIntent.putExtra(Intent.EXTRA_STREAM, recipeImageUri);
+//            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//        }
+
+        // Start the activity with the share intent
+        startActivity(Intent.createChooser(shareIntent, "Share Recipe"));
+    }
+
+    private Uri getRecipeImageUri() {
+        Bundle args = getArguments();
+        String imageUrl = args.getString("imageUrl");
+        return Uri.parse(Util.getBaseURL() + "recipe/images/" + imageUrl);
+    }
+
 }

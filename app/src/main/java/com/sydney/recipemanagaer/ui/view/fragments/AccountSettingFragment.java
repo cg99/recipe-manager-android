@@ -68,6 +68,7 @@ public class AccountSettingFragment extends Fragment {
             editTextUserFullName.setText(args.getString("fullname"));
             editTextUserBio.setText(args.getString("bio"));
             editTextUserEmail.setText(args.getString("email"));
+            editTextUserEmail.setKeyListener(null);
             editTextUserPassword.setText(args.getString("password"));
 //            editTextUserRole.setText(args.getString("role"));
             userRole = args.getString("role");
