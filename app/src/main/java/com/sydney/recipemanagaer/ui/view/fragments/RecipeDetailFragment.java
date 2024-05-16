@@ -3,9 +3,11 @@ package com.sydney.recipemanagaer.ui.view.fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,6 +28,7 @@ import com.sydney.recipemanagaer.ui.viewmodel.factory.RecipeViewModelFactory;
 import com.sydney.recipemanagaer.utils.Util;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,13 +37,12 @@ public class RecipeDetailFragment extends Fragment {
 
     private TextView textViewTitle, textViewFoodType, textViewDescription, textViewIngredients, textViewInstructions, textViewCookingTime;
     private ImageView imageViewRecipe;
-    private ImageButton buttonEditRecipe, buttonDeleteRecipe, favoriteButton, buttonShareRecipe;
+    private ImageButton buttonEditRecipe, buttonDeleteRecipe, favoriteButton, buttonShareRecipe, buttonReviewRecipe;
+    private Button submitReviewButton;
     private RecipeViewModel viewModel;
-
     private RecyclerView imageRecyclerView;
     private ArrayList<Object> images = new ArrayList<>();
     private ImageAdapter imageAdapter;
-
 
 
     @Override
@@ -55,9 +57,6 @@ public class RecipeDetailFragment extends Fragment {
 
         // Retrieve and display recipe details
         displayRecipeDetails();
-
-        // Initialize the share button
-        buttonShareRecipe = view.findViewById(R.id.buttonShareRecipe);
 
         // Setup button listeners
         setupButtonListeners();
@@ -74,11 +73,13 @@ public class RecipeDetailFragment extends Fragment {
         imageViewRecipe = view.findViewById(R.id.imageViewRecipe);
         buttonEditRecipe = view.findViewById(R.id.buttonUpdateRecipe); // Button for editing
         buttonDeleteRecipe = view.findViewById(R.id.buttonDeleteRecipe); // Initialize the Delete Button
-        favoriteButton = view.findViewById(R.id.buttonMarkFavorite);
+        favoriteButton = view.findViewById(R.id.buttonMarkFavorite);  // Initialize the fav button
+        buttonReviewRecipe = view.findViewById(R.id.buttonReviewRecipe); // Initialize review button
+        buttonShareRecipe = view.findViewById(R.id.buttonShareRecipe); // Initialize the share button
+        submitReviewButton = view.findViewById(R.id.submitReviewButton); // Initialize submit review button
         textViewFoodType = view.findViewById(R.id.textViewFoodType);
         imageRecyclerView = view.findViewById(R.id.recipeImagesRecyclerView);
         imageRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-
         imageAdapter = new ImageAdapter(images); // Assuming 'images' is the list of images
         imageRecyclerView.setAdapter(imageAdapter);
 
@@ -127,9 +128,14 @@ public class RecipeDetailFragment extends Fragment {
                 throw new RuntimeException(e);
             }
         });
+        // Review button listener
+        buttonReviewRecipe.setOnClickListener(v -> navigateToReviewFragment());
 
         // Share button listener
         buttonShareRecipe.setOnClickListener(v -> shareRecipeDetails());
+
+        submitReviewButton.setOnClickListener(v -> submitReview());
+
     }
 
     private void navigateToUpdateFragment() {
@@ -171,6 +177,20 @@ public class RecipeDetailFragment extends Fragment {
                     Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
             });
         }
+    }
+
+    private void submitReview() {
+        Log.d("Submit REview", "submit review");
+    }
+
+    private void navigateToReviewFragment() {
+        Bundle args = getArguments();
+        RecipeReviewFragment fragment = new RecipeReviewFragment();
+        fragment.setArguments(args);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
     private void shareRecipeDetails() {
         String recipeTitle = textViewTitle.getText().toString();

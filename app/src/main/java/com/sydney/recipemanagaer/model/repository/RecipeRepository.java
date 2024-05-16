@@ -180,6 +180,7 @@ public class RecipeRepository {
         return result;
     }
 
+
     public LiveData<List<Recipe>> getUserFavorites() {
         MutableLiveData<List<Recipe>> favoritesLiveData = new MutableLiveData<>();
         String userId = userRepository.getLoggedInUserId();

@@ -73,13 +73,11 @@ public class AccountSettingFragment extends Fragment {
 //            editTextUserRole.setText(args.getString("role"));
             userRole = args.getString("role");
 
-
-
-                Glide.with(this)
-                        .load(Util.getBaseURL() + "user/images/" + args.getString("userImage"))
-                        .placeholder(R.drawable.placeholder_image_background)
-                        .error(R.drawable.error_image)
-                        .into(imageViewSelected);
+            Glide.with(this)
+                    .load(Util.getBaseURL() + "user/images/" + args.getString("userImage"))
+                    .placeholder(R.drawable.placeholder_image_background)
+                    .error(R.drawable.error_image)
+                    .into(imageViewSelected);
 
         } else {
             Toast.makeText(getContext(), "No user data found!", Toast.LENGTH_SHORT).show();
