@@ -13,15 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.Review;
+import com.sydney.recipemanagaer.model.repository.ReviewRepository;
 import com.sydney.recipemanagaer.ui.view.adapters.ReviewAdapter;
+import com.sydney.recipemanagaer.ui.viewmodel.ReviewViewModel;
+import com.sydney.recipemanagaer.ui.viewmodel.factory.ReviewViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeReviewFragment extends Fragment{
+public class RecipeReviewFragment extends Fragment {
     private RecyclerView reviewsRecyclerView;
     private ReviewAdapter reviewAdapter;
     private List<Review> reviews;
+    private ReviewViewModel reviewViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,26 +33,31 @@ public class RecipeReviewFragment extends Fragment{
 
         // Initialize RecyclerView and reviews list
         reviewsRecyclerView = rootView.findViewById(R.id.reviewsRecyclerView);
-        reviews = getReviews(); // Implement this method to fetch reviews
+        reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        // Create and set adapter
+        // Initialize reviews list and adapter
+        reviews = new ArrayList<>();
         reviewAdapter = new ReviewAdapter(reviews);
         reviewsRecyclerView.setAdapter(reviewAdapter);
-        reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        // Initialize ReviewRepository and ReviewViewModel
+        ReviewRepository reviewRepository = new ReviewRepository(getContext());
+        reviewViewModel = new ViewModelProvider(this, new ReviewViewModelFactory(reviewRepository)).get(ReviewViewModel.class);
+
+        // Fetch and observe reviews
+        fetchReviews();
 
         return rootView;
     }
 
-    // Method to fetch dummy reviews (replace with your implementation)
-    private List<Review> getReviews() {
-        List<Review> dummyReviews = new ArrayList<>();
-        // Add dummy reviews
-        dummyReviews.add(new Review("User1", 4.5f, "Great recipe! Loved it."));
-        dummyReviews.add(new Review("User2", 2.5f, "Could be better, but still good."));
-        dummyReviews.add(new Review("User3", 5.0f, "Wow! Loved the recipe."));
-        dummyReviews.add(new Review("User4", 5.0f, "Amazing! Will definitely make again."));
-        dummyReviews.add(new Review("User5", 5.0f, "Very Nice! Will definitely make again."));
-        dummyReviews.add(new Review("User6", 3.0f, "We Will definitely make again."));
-        return dummyReviews;
+    private void fetchReviews() {
+        String recipeId = getArguments().getString("recipeId");
+        reviewViewModel.getReviews(recipeId).observe(getViewLifecycleOwner(), reviews -> {
+            if (reviews != null) {
+                reviewAdapter.updateReviews(reviews);
+            } else {
+                Toast.makeText(getContext(), "Error fetching reviews", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

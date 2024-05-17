@@ -3,13 +3,14 @@ package com.sydney.recipemanagaer.ui.view.fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,14 +22,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.sydney.recipemanagaer.R;
+import com.sydney.recipemanagaer.model.Review;
 import com.sydney.recipemanagaer.model.repository.RecipeRepository;
 import com.sydney.recipemanagaer.ui.view.adapters.ImageAdapter;
 import com.sydney.recipemanagaer.ui.viewmodel.RecipeViewModel;
 import com.sydney.recipemanagaer.ui.viewmodel.factory.RecipeViewModelFactory;
 import com.sydney.recipemanagaer.utils.Util;
 
+import com.sydney.recipemanagaer.model.repository.ReviewRepository;
+import com.sydney.recipemanagaer.ui.viewmodel.ReviewViewModel;
+import com.sydney.recipemanagaer.ui.viewmodel.factory.ReviewViewModelFactory;
+
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +49,10 @@ public class RecipeDetailFragment extends Fragment {
     private ArrayList<Object> images = new ArrayList<>();
     private ImageAdapter imageAdapter;
 
+    private RatingBar ratingBar;
+    private EditText reviewEditText;
+    ReviewViewModel reviewViewModel;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,6 +60,10 @@ public class RecipeDetailFragment extends Fragment {
 
         RecipeRepository recipeRepository = new RecipeRepository(getContext());
         viewModel = new ViewModelProvider(this, new RecipeViewModelFactory(recipeRepository)).get(RecipeViewModel.class);
+
+        ReviewRepository reviewRepository = new ReviewRepository(getContext());
+        reviewViewModel = new ViewModelProvider(this, new ReviewViewModelFactory(reviewRepository)).get(ReviewViewModel.class);
+
 
         // Initialize UI components
         initializeUI(view);
@@ -76,12 +89,16 @@ public class RecipeDetailFragment extends Fragment {
         favoriteButton = view.findViewById(R.id.buttonMarkFavorite);  // Initialize the fav button
         buttonReviewRecipe = view.findViewById(R.id.buttonReviewRecipe); // Initialize review button
         buttonShareRecipe = view.findViewById(R.id.buttonShareRecipe); // Initialize the share button
-        submitReviewButton = view.findViewById(R.id.submitReviewButton); // Initialize submit review button
         textViewFoodType = view.findViewById(R.id.textViewFoodType);
         imageRecyclerView = view.findViewById(R.id.recipeImagesRecyclerView);
         imageRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         imageAdapter = new ImageAdapter(images); // Assuming 'images' is the list of images
         imageRecyclerView.setAdapter(imageAdapter);
+
+        // review
+        ratingBar = view.findViewById(R.id.ratingBar);
+        reviewEditText = view.findViewById(R.id.reviewEditText);
+        submitReviewButton = view.findViewById(R.id.submitReviewButton);
 
     }
 
@@ -180,7 +197,28 @@ public class RecipeDetailFragment extends Fragment {
     }
 
     private void submitReview() {
-        Log.d("Submit REview", "submit review");
+        float rating = ratingBar.getRating();
+        String reviewText = reviewEditText.getText().toString();
+        String recipeId = getArguments().getString("recipeId");
+
+        if (rating == 0) {
+            Toast.makeText(getContext(), "Please provide a rating.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Review review = new Review(reviewText, rating, recipeId);
+
+        reviewViewModel.submitReview(review).observe(getViewLifecycleOwner(), result -> {
+            if ("Review submitted successfully.".equals(result)) {
+                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+                // Optionally clear the review form
+                ratingBar.setRating(0);
+                reviewEditText.setText("");
+            } else {
+                Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     private void navigateToReviewFragment() {

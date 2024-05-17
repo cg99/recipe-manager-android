@@ -1,4 +1,5 @@
 package com.sydney.recipemanagaer.ui.view.adapters;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,14 +32,19 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
         Review review = reviews.get(position);
-        holder.usernameTextView.setText(review.getUsername());
+        holder.usernameTextView.setText(review.getReviewerName());
         holder.ratingBar.setRating(review.getRating());
-        holder.commentTextView.setText(review.getComment());
+        holder.commentTextView.setText(review.getReview());
     }
 
     @Override
     public int getItemCount() {
         return reviews.size();
+    }
+
+    public void updateReviews(List<Review> newReviews) {
+        this.reviews = newReviews;
+        notifyDataSetChanged();
     }
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder {

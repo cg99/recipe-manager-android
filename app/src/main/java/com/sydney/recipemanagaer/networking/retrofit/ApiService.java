@@ -1,5 +1,7 @@
 package com.sydney.recipemanagaer.networking.retrofit;
 
+import com.sydney.recipemanagaer.model.Review;
+
 import java.util.List;
 
 import okhttp3.MultipartBody;
@@ -96,4 +98,15 @@ public interface ApiService {
     @DELETE("user/{userId}")
     Call<ResponseBody> deleteUser(@Path("userId") String userId, @Header("Authorization") String token);
 
+    @POST("reviews")
+    Call<ResponseBody> submitReview(
+            @Header("Authorization") String token,
+            @Body Review review
+    );
+
+    @GET("reviews/{recipeId}")
+    Call<ResponseBody> getReviews(
+            @Path("recipeId") String recipeId,
+            @Header("Authorization") String token
+    );
 }

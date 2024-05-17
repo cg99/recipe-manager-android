@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.sydney.recipemanagaer.model.Recipe;
+import com.sydney.recipemanagaer.model.Review;
 import com.sydney.recipemanagaer.model.User;
 
 import org.json.JSONArray;
@@ -448,4 +449,48 @@ public class RetrofitService {
             }
         });
     }
+
+    public void submitReview(String token, Review review, retrofit2.Callback<ResponseBody> retrofitCallback) {
+        Call<ResponseBody> call = apiService.submitReview("Bearer " + token, review);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    retrofitCallback.onResponse(call, response);
+                } else {
+                    Log.e("RetrofitService", "Error in response: " + response.message());
+                    retrofitCallback.onFailure(call, new Throwable("Response Error: " + response.message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("RetrofitService", "Error in response: " + t);
+                retrofitCallback.onFailure(call, t);
+            }
+        });
+    }
+
+    public void getReviews(String recipeId, String token, retrofit2.Callback<ResponseBody> retrofitCallback) {
+        Call<ResponseBody> call = apiService.getReviews(recipeId, "Bearer " + token);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    retrofitCallback.onResponse(call, response);
+                } else {
+                    Log.e("RetrofitService", "Error in response: " + response.message());
+                    retrofitCallback.onFailure(call, new Throwable("Response Error: " + response.message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("RetrofitService", "Error in response: " + t);
+                retrofitCallback.onFailure(call, t);
+            }
+        });
+    }
+
+
 }

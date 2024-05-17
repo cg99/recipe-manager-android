@@ -1,27 +1,69 @@
 package com.sydney.recipemanagaer.model;
 
 public class Review {
-    private String username;
+    private String id;
+    private String recipeId;
+    private String userId;
+    private String review;
     private float rating;
-    private String comment;
+
+    public String getReviewerName() {
+        return reviewerName;
+    }
+
+    public void setReviewerName(String reviewerName) {
+        this.reviewerName = reviewerName;
+    }
+
+    private String reviewerName;
+
 
     // Constructor
-    public Review(String username, float rating, String comment) {
-        this.username = username;
+    public Review(String review, float rating, String recipeId) {
         this.rating = rating;
-        this.comment = comment;
+        this.review = review;
+        this.recipeId = recipeId;
     }
 
-    // Getter and Setter methods for username
-    public String getUsername() {
-        return username;
+    public Review(String review, float rating, String recipeId, String reviewerName) {
+        this.rating = rating;
+        this.review = review;
+        this.recipeId = recipeId;
+        this.reviewerName = reviewerName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getId() {
+        return id;
     }
 
-    // Getter and Setter methods for rating
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getRecipeId() {
+        return recipeId;
+    }
+
+    public void setRecipeId(String recipeId) {
+        this.recipeId = recipeId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getReview() {
+        return review;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
+    }
+
     public float getRating() {
         return rating;
     }
@@ -29,14 +71,7 @@ public class Review {
     public void setRating(float rating) {
         this.rating = rating;
     }
+// Getter and Setter methods for username
 
-    // Getter and Setter methods for comment
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
 }
 
