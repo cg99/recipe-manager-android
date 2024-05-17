@@ -231,32 +231,19 @@ public class RecipeDetailFragment extends Fragment {
                 .commit();
     }
     private void shareRecipeDetails() {
-        String recipeTitle = textViewTitle.getText().toString();
-        String recipeDescription = textViewDescription.getText().toString();
-        String recipeIngredients = textViewIngredients.getText().toString();
-        String recipeInstructions = textViewInstructions.getText().toString();
-
-        // Get the URI of the recipe image
-        Uri recipeImageUri = getRecipeImageUri();
-
-        // Create the share intent
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.setType("image/*");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, recipeTitle);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "Title: " + recipeTitle + "\n\nDescription: " + recipeDescription + "\n\nIngredients: " + recipeIngredients + "\n\nInstructions: " + recipeInstructions);
-//        if (recipeImageUri != null) {
-//            shareIntent.putExtra(Intent.EXTRA_STREAM, recipeImageUri);
-//            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//        }
+        shareIntent.setType("text/plain");
 
-        // Start the activity with the share intent
+        StringBuilder recipeDetails = new StringBuilder();
+        recipeDetails.append("Recipe Title: ").append(textViewTitle.getText().toString()).append("\n\n");
+        recipeDetails.append("Description: ").append(textViewDescription.getText().toString()).append("\n\n");
+        recipeDetails.append("Ingredients: ").append(textViewIngredients.getText().toString()).append("\n\n");
+        recipeDetails.append("Instructions: ").append(textViewInstructions.getText().toString()).append("\n\n");
+        recipeDetails.append("Cooking Time: ").append(textViewCookingTime.getText().toString()).append("\n\n");
+
+        // Add the recipe details to the intent
+        shareIntent.putExtra(Intent.EXTRA_TEXT, recipeDetails.toString());
         startActivity(Intent.createChooser(shareIntent, "Share Recipe"));
-    }
-
-    private Uri getRecipeImageUri() {
-        Bundle args = getArguments();
-        String imageUrl = args.getString("imageUrl");
-        return Uri.parse(Util.getBaseURL() + "recipe/images/" + imageUrl);
     }
 
 }
