@@ -53,7 +53,9 @@ public class DashboardFragment extends Fragment {
 
         logoutButton.setOnClickListener(v -> logoutUser());
         btnAdminDashboard.setOnClickListener(v -> navigateToAdminDashboard());
-        btnManageRecipeCategory.setOnClickListener(v -> navigateToAdminDashboard());
+
+        btnManageRecipeCategory.setOnClickListener(v -> navigateToManageCategory());
+
         myRecipesBtn.setOnClickListener(v -> navigateToMyRecipes());
         accountSettingsBtn.setOnClickListener(v -> navigateToAccountSetting());
 
@@ -101,6 +103,14 @@ public class DashboardFragment extends Fragment {
         Fragment adminFragment = new AdminFragment();
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, adminFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void navigateToManageCategory() {
+        Fragment categoryFragment = new CategoryFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, categoryFragment)
                 .addToBackStack(null)
                 .commit();
     }

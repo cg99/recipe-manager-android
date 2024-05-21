@@ -16,7 +16,7 @@ public class Recipe {
     private String featuredImage;
 
     private ArrayList<String> images;
-    private String foodType;
+    private String categoryId;
 
     public Recipe(String title, String description, List<String> ingredients, String instructions, int cookingTime) {
         this.title = title;
@@ -35,12 +35,12 @@ public class Recipe {
         this.cookingTime = cookingTime;
     }
 
-    public String getFoodType() {
-        return foodType;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setFoodType(String foodType) {
-        this.foodType = foodType;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     // Getter for the name

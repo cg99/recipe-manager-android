@@ -245,8 +245,8 @@ public class RecipeRepository {
                 recipe.setFeaturedImgURL(featuredImgURL);
                 recipe.setImages(imagesURL);
 
-                String foodType = recipeObject.optString("foodType", "no type");
-                recipe.setFoodType(foodType);
+                String category = recipeObject.optString("category", "no type");
+                recipe.setCategoryId(category);
 
                 recipes.add(recipe);
             } catch (JSONException e) {

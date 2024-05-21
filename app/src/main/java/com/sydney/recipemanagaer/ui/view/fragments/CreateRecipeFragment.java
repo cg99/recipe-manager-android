@@ -6,10 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -23,11 +25,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.sydney.recipemanagaer.R;
+import com.sydney.recipemanagaer.model.Category;
 import com.sydney.recipemanagaer.model.Recipe;
+import com.sydney.recipemanagaer.model.repository.CategoryRepository;
 import com.sydney.recipemanagaer.model.repository.RecipeRepository;
 import com.sydney.recipemanagaer.ui.view.adapters.ImageAdapter;
 import com.sydney.recipemanagaer.ui.view.adapters.IngredientAdapter;
+import com.sydney.recipemanagaer.ui.viewmodel.CategoryViewModel;
 import com.sydney.recipemanagaer.ui.viewmodel.RecipeViewModel;
+import com.sydney.recipemanagaer.ui.viewmodel.factory.CategoryViewModelFactory;
 import com.sydney.recipemanagaer.ui.viewmodel.factory.RecipeViewModelFactory;
 import com.sydney.recipemanagaer.utils.Util;
 
@@ -64,7 +70,11 @@ public class CreateRecipeFragment extends Fragment {
     private IngredientAdapter adapter;
     private ImageAdapter imgAdapter;
     private RecipeViewModel viewModel;
-    private EditText editTextFoodType;
+//    private EditText editTextFoodType;
+
+    private Spinner spinnerRecipeType;
+    private List<Category> categories;
+    private CategoryViewModel categoryViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,6 +82,12 @@ public class CreateRecipeFragment extends Fragment {
 
         RecipeRepository recipeRepository = new RecipeRepository(getContext());
         viewModel = new ViewModelProvider(this, new RecipeViewModelFactory(recipeRepository)).get(RecipeViewModel.class);
+
+
+        // Initialize CategoryRepository and CategoryViewModel
+        CategoryRepository categoryRepository = new CategoryRepository(getContext());
+        categoryViewModel = new ViewModelProvider(this, new CategoryViewModelFactory(categoryRepository)).get(CategoryViewModel.class);
+
     }
 
     @Override
@@ -114,7 +130,7 @@ public class CreateRecipeFragment extends Fragment {
         chipGroup = view.findViewById(R.id.chipGroupSelectedIngredients);
         autoCompleteTextView.setAdapter(adapter);
 
-        editTextFoodType = view.findViewById(R.id.editTextRecipeType);
+//        editTextFoodType = view.findViewById(R.id.editTextRecipeType);
 
         editTextInstructions = view.findViewById(R.id.editTextInstructions);
         editTextCookingTime = view.findViewById(R.id.editTextCookingTime);
@@ -130,7 +146,21 @@ public class CreateRecipeFragment extends Fragment {
         // Add a button to add new images
         addImageButton = view.findViewById(R.id.addImageButton);
 
+        spinnerRecipeType = view.findViewById(R.id.spinnerRecipeType);
+
+        loadCategories();
+
     }
+
+    private void loadCategories() {
+        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), results -> {
+            this.categories = results;
+            ArrayAdapter<Category> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, categories);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerRecipeType.setAdapter(adapter);
+        });
+    }
+
 
     /**
      * Sets up listeners for various interactive components like buttons and AutoCompleteTextView.
@@ -208,7 +238,8 @@ public class CreateRecipeFragment extends Fragment {
         String description = editTextRecipeDescription.getText().toString().trim();
         String instructions = editTextInstructions.getText().toString().trim();
         String cookingTimeStr = editTextCookingTime.getText().toString().trim();
-        String foodType = editTextFoodType.getText().toString().trim();
+//        String foodType = editTextFoodType.getText().toString().trim();
+        Category selectedCategory = (Category) spinnerRecipeType.getSelectedItem();
 
 
         if (featuredImagePath == null) {
@@ -248,9 +279,10 @@ public class CreateRecipeFragment extends Fragment {
         recipe.setFeaturedImage(featuredImagePath);
         recipe.setImages(imagesPaths);
 
-        if(!foodType.isEmpty()) {
-            recipe.setFoodType(foodType);
+        if (selectedCategory != null) {
+            recipe.setCategoryId(selectedCategory.get_id());
         }
+
 
         // If all validations are passed, proceed to use the data
         viewModel.createRecipe(recipe).observe(getViewLifecycleOwner(), result -> {
@@ -270,7 +302,7 @@ public class CreateRecipeFragment extends Fragment {
         editTextInstructions.setText("");
         editTextCookingTime.setText("");
         autoCompleteTextView.setText("");
-        editTextFoodType.setText("");
+//        editTextFoodType.setText("");
         chipGroup.removeAllViews();  // Remove all chips from the ChipGroup
         imageViewSelected.setImageResource(android.R.color.transparent);  // Reset or remove the image
         featuredImageUri = null;  // Clear the stored URI

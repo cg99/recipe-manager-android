@@ -47,7 +47,7 @@ public class Util {
             args.putString("description", recipe.getDescription());
             args.putString("ingredients", String.join(", ", recipe.getIngredients())); // Joining the list of ingredients into a single string
             args.putString("imageUrl", recipe.getFeaturedImgURL());
-            args.putString("foodType", recipe.getFoodType());
+            args.putString("category", recipe.getCategoryId());
             args.putStringArrayList("imagesUrl", (ArrayList<String>) recipe.getImages());
             args.putString("instructions", recipe.getInstructions());
             args.putString("cookingTime", recipe.getCookingTime() + ""); // Pass as int if you want to use it as a number later

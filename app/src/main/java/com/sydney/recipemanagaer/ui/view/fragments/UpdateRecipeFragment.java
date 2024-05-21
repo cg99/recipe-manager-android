@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,11 +24,15 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.sydney.recipemanagaer.R;
+import com.sydney.recipemanagaer.model.Category;
 import com.sydney.recipemanagaer.model.Recipe;
+import com.sydney.recipemanagaer.model.repository.CategoryRepository;
 import com.sydney.recipemanagaer.model.repository.RecipeRepository;
 import com.sydney.recipemanagaer.ui.view.adapters.ImageAdapter;
 import com.sydney.recipemanagaer.ui.view.adapters.IngredientAdapter;
+import com.sydney.recipemanagaer.ui.viewmodel.CategoryViewModel;
 import com.sydney.recipemanagaer.ui.viewmodel.RecipeViewModel;
+import com.sydney.recipemanagaer.ui.viewmodel.factory.CategoryViewModelFactory;
 import com.sydney.recipemanagaer.ui.viewmodel.factory.RecipeViewModelFactory;
 import com.sydney.recipemanagaer.utils.Util;
 
@@ -51,12 +57,20 @@ public class UpdateRecipeFragment extends Fragment {
     private ImageAdapter imgAdapter;
 
     private RecyclerView imagesRecyclerView;
+    private Spinner spinnerRecipeType;
+    private List<Category> categories;
+    private CategoryViewModel categoryViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_recipe, container, false);
         RecipeRepository recipeRepository = new RecipeRepository(getContext());
         viewModel = new ViewModelProvider(this, new RecipeViewModelFactory(recipeRepository)).get(RecipeViewModel.class);
+
+        // Initialize CategoryRepository and CategoryViewModel
+        CategoryRepository categoryRepository = new CategoryRepository(getContext());
+        categoryViewModel = new ViewModelProvider(this, new CategoryViewModelFactory(categoryRepository)).get(CategoryViewModel.class);
+
 
         initViews(view);
         populateFields();
@@ -69,7 +83,7 @@ public class UpdateRecipeFragment extends Fragment {
         TextView label = view.findViewById(R.id.textLayoutLabel);
         label.setText("Update Recipe");
 
-        editTextFoodType = view.findViewById(R.id.editTextRecipeType);
+//        editTextFoodType = view.findViewById(R.id.editTextRecipeType);
 
         editTextRecipeName = view.findViewById(R.id.editTextRecipeName);
         editTextRecipeDescription = view.findViewById(R.id.editTextRecipeDescription);
@@ -111,8 +125,31 @@ public class UpdateRecipeFragment extends Fragment {
         imagesRecyclerView.setAdapter(imgAdapter);
         imagesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
+        spinnerRecipeType = view.findViewById(R.id.spinnerRecipeType);
+
+        loadCategories();
+
     }
 
+    private void loadCategories() {
+        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), results -> {
+            this.categories = results;
+            ArrayAdapter<Category> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, categories);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerRecipeType.setAdapter(adapter);
+
+            // Set the selected category if there is a categoryId
+            String categoryId = getArguments() != null ? getArguments().getString("category") : null;
+            if (categoryId != null) {
+                for (int i = 0; i < categories.size(); i++) {
+                    if (categories.get(i).get_id().equals(categoryId)) {
+                        spinnerRecipeType.setSelection(i);
+                        break;
+                    }
+                }
+            }
+        });
+    }
     private void populateFields() {
         Bundle args = getArguments();
         if (args != null) {
@@ -121,7 +158,8 @@ public class UpdateRecipeFragment extends Fragment {
             editTextRecipeDescription.setText(args.getString("description"));
             editTextInstructions.setText(args.getString("instructions"));
             editTextCookingTime.setText(args.getString("cookingTime"));
-            editTextFoodType.setText(args.getString("foodType"));
+//            editTextFoodType.setText(args.getString("foodType"));
+
 
             Glide.with(this)
                     .load(Util.getBaseURL() + "recipe/images/" + args.getString("imageUrl"))
@@ -215,7 +253,7 @@ public class UpdateRecipeFragment extends Fragment {
         String description = editTextRecipeDescription.getText().toString();
         String instructions = editTextInstructions.getText().toString();
         String cookingTimeStr = editTextCookingTime.getText().toString();
-        String foodType = editTextFoodType.getText().toString();
+        Category selectedCategory = (Category) spinnerRecipeType.getSelectedItem();
 
         List<String> ingredients = new ArrayList<>();
         for (int i = 0; i < chipGroup.getChildCount(); i++) {
@@ -235,7 +273,10 @@ public class UpdateRecipeFragment extends Fragment {
         updatedRecipe.setFeaturedImage(featuredImagePath);
         updatedRecipe.setImages(imagesPaths);
 
-        updatedRecipe.setFoodType(foodType);
+
+        if (selectedCategory != null) {
+            updatedRecipe.setCategoryId(selectedCategory.get_id());
+        }
 
 
         viewModel.updateRecipe(updatedRecipe).observe(getViewLifecycleOwner(), result -> {

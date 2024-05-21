@@ -91,16 +91,28 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_marginBottom="8dp"
-            android:hint="@string/recipe_type">
+            android:hint="@string/recipe_type"
+            >
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Select a Category"
+                android:padding="8dp"
+                />
 
-            <EditText
-                android:id="@+id/editTextRecipeType"
+            <Spinner
+                android:id="@+id/spinnerRecipeType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
                 android:padding="8dp"/>
+
+<!--            <EditText-->
+<!--                android:id="@+id/editTextRecipeType"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:inputType="text"-->
+<!--                android:padding="8dp"/>-->
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Instructions -->

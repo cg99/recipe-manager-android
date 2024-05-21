@@ -3,6 +3,7 @@ package com.sydney.recipemanagaer.networking.retrofit;
 import android.content.Context;
 import android.util.Log;
 
+import com.sydney.recipemanagaer.model.Category;
 import com.sydney.recipemanagaer.model.Recipe;
 import com.sydney.recipemanagaer.model.Review;
 import com.sydney.recipemanagaer.model.User;
@@ -63,7 +64,7 @@ public class RetrofitService {
         RequestBody instructionsBody = RequestBody.create(recipeData.getInstructions(), MediaType.parse("text/plain"));
         RequestBody cookingTimeBody = RequestBody.create(Integer.toString(recipeData.getCookingTime()), MediaType.parse("text/plain"));
         RequestBody createdByBody = RequestBody.create(userId, MediaType.parse("text/plain"));
-        RequestBody foodTypeBody = RequestBody.create(recipeData.getFoodType(), MediaType.parse("text/plain"));
+        RequestBody categoryBody = RequestBody.create(recipeData.getCategoryId(), MediaType.parse("text/plain"));
 
 
         // Prepare file parameters
@@ -87,7 +88,7 @@ public class RetrofitService {
         // Make API call
         Call<Void> call = apiService.postRecipe(
                 titleBody, descriptionBody, ingredientsBody, instructionsBody,
-                cookingTimeBody, createdByBody, featuredImagePart, imageParts, foodTypeBody
+                cookingTimeBody, createdByBody, featuredImagePart, imageParts, categoryBody
         );
 
         call.enqueue(new Callback<Void>() {
@@ -117,7 +118,7 @@ public class RetrofitService {
         RequestBody ingredientsBody = RequestBody.create(new JSONArray(recipeData.getIngredients()).toString(), MediaType.parse("application/json"));
         RequestBody instructionsBody = RequestBody.create(recipeData.getInstructions(), MediaType.parse("text/plain"));
         RequestBody cookingTimeBody = RequestBody.create(Integer.toString(recipeData.getCookingTime()), MediaType.parse("text/plain"));
-        RequestBody foodTypeBody = RequestBody.create(recipeData.getFoodType(), MediaType.parse("text/plain"));
+        RequestBody categoryBody = RequestBody.create(recipeData.getCategoryId(), MediaType.parse("text/plain"));
 
         // Prepare file parameters (Handle null or empty paths)
         MultipartBody.Part featuredImagePart = null;
@@ -145,7 +146,7 @@ public class RetrofitService {
         // Make API call
         Call<Void> call = apiService.updateRecipe(
                 recipeData.getRecipeId(), titleBody, descriptionBody, ingredientsBody,
-                instructionsBody, cookingTimeBody, featuredImagePart, imageParts, foodTypeBody
+                instructionsBody, cookingTimeBody, featuredImagePart, imageParts, categoryBody
         );
 
         call.enqueue(new Callback<Void>() {
@@ -473,6 +474,48 @@ public class RetrofitService {
 
     public void getReviews(String recipeId, String token, retrofit2.Callback<ResponseBody> retrofitCallback) {
         Call<ResponseBody> call = apiService.getReviews(recipeId, "Bearer " + token);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    retrofitCallback.onResponse(call, response);
+                } else {
+                    Log.e("RetrofitService", "Error in response: " + response.message());
+                    retrofitCallback.onFailure(call, new Throwable("Response Error: " + response.message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("RetrofitService", "Error in response: " + t);
+                retrofitCallback.onFailure(call, t);
+            }
+        });
+    }
+
+    public void getCategories(String token, retrofit2.Callback<ResponseBody> retrofitCallback) {
+        Call<ResponseBody> call = apiService.getCategories("Bearer " + token);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    retrofitCallback.onResponse(call, response);
+                } else {
+                    Log.e("RetrofitService", "Error in response: " + response.message());
+                    retrofitCallback.onFailure(call, new Throwable("Response Error: " + response.message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("RetrofitService", "Error in response: " + t);
+                retrofitCallback.onFailure(call, t);
+            }
+        });
+    }
+
+    public void createCategory(Category category, String token, retrofit2.Callback<ResponseBody> retrofitCallback) {
+        Call<ResponseBody> call = apiService.createCategory(category, "Bearer " + token);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

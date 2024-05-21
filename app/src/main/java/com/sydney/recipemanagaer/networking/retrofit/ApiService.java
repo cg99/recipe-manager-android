@@ -1,5 +1,6 @@
 package com.sydney.recipemanagaer.networking.retrofit;
 
+import com.sydney.recipemanagaer.model.Category;
 import com.sydney.recipemanagaer.model.Review;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public interface ApiService {
             @Part("createdBy") RequestBody createdBy,
             @Part MultipartBody.Part featuredImage,
             @Part List<MultipartBody.Part> images,
-            @Part("foodType") RequestBody foodType
+            @Part("category") RequestBody category
 
     );
 
@@ -47,7 +48,7 @@ public interface ApiService {
             @Part("cookingTime") RequestBody cookingTime,
             @Part MultipartBody.Part featuredImage,
             @Part List<MultipartBody.Part> images,
-            @Part("foodType") RequestBody foodType
+            @Part("category") RequestBody category
     );
 
     @GET("recipe")
@@ -109,4 +110,10 @@ public interface ApiService {
             @Path("recipeId") String recipeId,
             @Header("Authorization") String token
     );
+
+    @GET("categories")
+    Call<ResponseBody> getCategories(@Header("Authorization") String token);
+
+    @POST("categories")
+    Call<ResponseBody> createCategory(@Body Category category, @Header("Authorization") String token);
 }
