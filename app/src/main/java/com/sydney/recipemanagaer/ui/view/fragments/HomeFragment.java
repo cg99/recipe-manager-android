@@ -75,6 +75,7 @@ public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRec
 
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             this.categories = categories;
+            Log.d("category", categories.toString());
             createCategoryButtons();
         });
 
@@ -104,15 +105,21 @@ public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRec
     private void createCategoryButtons() {
         linearLayoutCategoryButtons.removeAllViews();
 
-        int maxCategories = 4;
-        for (int i = 0; i < Math.min(categories.size(), maxCategories); i++) {
-            Category category = categories.get(i);
-            Button button = new Button(getContext());
+        for (Category category : categories) {
+            Button button = new Button(getContext(), null, 0, R.style.CategoryButtonStyle);
             button.setText(category.getName());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            int margin = (int) getResources().getDimension(R.dimen.button_margin);
+            params.setMargins(margin, margin, margin, margin);
+            button.setLayoutParams(params);
             button.setOnClickListener(v -> handleCategoryFilter(category));
             linearLayoutCategoryButtons.addView(button);
         }
     }
+
 
     @Override
     public void onRecipeClick(Recipe recipe) {
