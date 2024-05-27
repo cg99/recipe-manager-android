@@ -71,7 +71,7 @@ public class CategoryRepository {
                     try {
                         String responseBody = response.body().string();
                         JSONObject jsonObject = new JSONObject(responseBody);
-                        JSONArray categoryArray = jsonObject.getJSONArray("data");
+                        JSONArray categoryArray = jsonObject.getJSONArray("categories");
                         List<Category> categories = parseJsonToCategory(categoryArray);
                         result.setValue(categories);
                     } catch (IOException | JSONException e) {
