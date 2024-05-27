@@ -1,7 +1,6 @@
 package com.sydney.recipemanagaer.ui.view.fragments;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,16 +23,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.sydney.recipemanagaer.R;
 import com.sydney.recipemanagaer.model.Review;
 import com.sydney.recipemanagaer.model.repository.RecipeRepository;
+import com.sydney.recipemanagaer.model.repository.ReviewRepository;
 import com.sydney.recipemanagaer.ui.view.adapters.ImageAdapter;
 import com.sydney.recipemanagaer.ui.viewmodel.RecipeViewModel;
+import com.sydney.recipemanagaer.ui.viewmodel.ReviewViewModel;
 import com.sydney.recipemanagaer.ui.viewmodel.factory.RecipeViewModelFactory;
+import com.sydney.recipemanagaer.ui.viewmodel.factory.ReviewViewModelFactory;
 import com.sydney.recipemanagaer.utils.Util;
 
-import com.sydney.recipemanagaer.model.repository.ReviewRepository;
-import com.sydney.recipemanagaer.ui.viewmodel.ReviewViewModel;
-import com.sydney.recipemanagaer.ui.viewmodel.factory.ReviewViewModelFactory;
-
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,9 +107,20 @@ public class RecipeDetailFragment extends Fragment {
             textViewTitle.setText(args.getString("title"));
             textViewDescription.setText(args.getString("description"));
             textViewIngredients.setText(args.getString("ingredients"));
-            textViewFoodType.setText(args.getString("foodType"));
             textViewInstructions.setText(args.getString("instructions"));
             textViewCookingTime.setText("Time: " + args.getString("cookingTime") + " minutes");
+
+            // Extract and set the category name
+            String categoryJsonString = args.getString("category");
+            if (categoryJsonString != null) {
+                try {
+                    JSONObject categoryJson = new JSONObject(categoryJsonString);
+                    String categoryName = categoryJson.getString("name");
+                    textViewFoodType.setText(categoryName);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
 
             // Load the featured image using Glide
             String imageUrl = args.getString("imageUrl");

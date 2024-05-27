@@ -18,6 +18,16 @@ public class Recipe {
     private ArrayList<String> images;
     private String categoryId;
 
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    private String categoryName;
+
     public Recipe(String title, String description, List<String> ingredients, String instructions, int cookingTime) {
         this.title = title;
         this.description = description;

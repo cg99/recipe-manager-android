@@ -36,6 +36,9 @@ import com.sydney.recipemanagaer.ui.viewmodel.factory.CategoryViewModelFactory;
 import com.sydney.recipemanagaer.ui.viewmodel.factory.RecipeViewModelFactory;
 import com.sydney.recipemanagaer.utils.Util;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -139,13 +142,19 @@ public class UpdateRecipeFragment extends Fragment {
             spinnerRecipeType.setAdapter(adapter);
 
             // Set the selected category if there is a categoryId
-            String categoryId = getArguments() != null ? getArguments().getString("category") : null;
-            if (categoryId != null) {
-                for (int i = 0; i < categories.size(); i++) {
-                    if (categories.get(i).get_id().equals(categoryId)) {
-                        spinnerRecipeType.setSelection(i);
-                        break;
+            String categoryJsonString = getArguments() != null ? getArguments().getString("category") : null;
+            if (categoryJsonString != null) {
+                try {
+                    JSONObject categoryJson = new JSONObject(categoryJsonString);
+                    String categoryId = categoryJson.getString("_id");
+                    for (int i = 0; i < categories.size(); i++) {
+                        if (categories.get(i).get_id().equals(categoryId)) {
+                            spinnerRecipeType.setSelection(i);
+                            break;
+                        }
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         });

@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.SearchView;
@@ -14,12 +16,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sydney.recipemanagaer.R;
+import com.sydney.recipemanagaer.model.Category;
 import com.sydney.recipemanagaer.model.Recipe;
+import com.sydney.recipemanagaer.model.repository.CategoryRepository;
 import com.sydney.recipemanagaer.model.repository.RecipeRepository;
 import com.sydney.recipemanagaer.ui.view.adapters.GenericRecipeAdapter;
+import com.sydney.recipemanagaer.ui.viewmodel.CategoryViewModel;
 import com.sydney.recipemanagaer.ui.viewmodel.RecipeViewModel;
+import com.sydney.recipemanagaer.ui.viewmodel.factory.CategoryViewModelFactory;
 import com.sydney.recipemanagaer.ui.viewmodel.factory.RecipeViewModelFactory;
 import com.sydney.recipemanagaer.utils.Util;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +38,13 @@ public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRec
     private RecyclerView recyclerRecentRecipes;
     private RecyclerView recyclerPopularPosts;
     private RecipeViewModel viewModel;
+    private CategoryViewModel categoryViewModel;
     private RecyclerView recyclerSearchResults;
     private List<Recipe> allRecipes = new ArrayList<>();
+    private List<Category> categories = new ArrayList<>();
     private GenericRecipeAdapter searchAdapter;
+    private LinearLayout linearLayoutCategoryButtons;
     TextView searchResultLabel;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,12 +53,15 @@ public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRec
         RecipeRepository recipeRepository = new RecipeRepository(getContext());
         viewModel = new ViewModelProvider(this, new RecipeViewModelFactory(recipeRepository)).get(RecipeViewModel.class);
 
+        CategoryRepository categoryRepository = new CategoryRepository(getContext());
+        categoryViewModel = new ViewModelProvider(this, new CategoryViewModelFactory(categoryRepository)).get(CategoryViewModel.class);
+
         recyclerRecentRecipes = view.findViewById(R.id.recycler_recent_recipes);
         recyclerPopularPosts = view.findViewById(R.id.recycler_popular_posts);
+        linearLayoutCategoryButtons = view.findViewById(R.id.linearLayoutCategoryButtons);
 
-        // recycler for recipe search
+        // RecyclerView for search results
         searchResultLabel = view.findViewById(R.id.search_result_label);
-
         recyclerSearchResults = view.findViewById(R.id.search_results_list);
         recyclerSearchResults.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         searchAdapter = new GenericRecipeAdapter(allRecipes, this);
@@ -57,6 +71,11 @@ public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRec
             allRecipes = recipes;
             setupRecyclerView(recyclerRecentRecipes, recipes);
             setupRecyclerView(recyclerPopularPosts, recipes);
+        });
+
+        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
+            this.categories = categories;
+            createCategoryButtons();
         });
 
         SearchView searchView = view.findViewById(R.id.search_view);
@@ -82,6 +101,18 @@ public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRec
         recyclerView.setAdapter(new GenericRecipeAdapter(recipes, this));
     }
 
+    private void createCategoryButtons() {
+        linearLayoutCategoryButtons.removeAllViews();
+
+        int maxCategories = 4;
+        for (int i = 0; i < Math.min(categories.size(), maxCategories); i++) {
+            Category category = categories.get(i);
+            Button button = new Button(getContext());
+            button.setText(category.getName());
+            button.setOnClickListener(v -> handleCategoryFilter(category));
+            linearLayoutCategoryButtons.addView(button);
+        }
+    }
 
     @Override
     public void onRecipeClick(Recipe recipe) {
@@ -92,21 +123,19 @@ public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRec
         if (allRecipes == null || query.isEmpty()) {
             // Handle the case where allRecipes is null, e.g., show a message to the user
             Log.e("FilterRecipe", "No recipes");
-            return null;
+            return new ArrayList<>();
         }
 
         String lowerCaseQuery = query.toLowerCase();
 
-        List<Recipe> filteredRecipes = allRecipes.stream()
+        return allRecipes.stream()
                 .filter(recipe -> recipe.getTitle().toLowerCase().contains(lowerCaseQuery) ||
                         recipe.getIngredients().stream().anyMatch(ingredient ->
                                 ingredient.toLowerCase().contains(lowerCaseQuery)))
                 .collect(Collectors.toList());
-
-        return filteredRecipes;
     }
 
-    public void handleSearch (String value) {
+    public void handleSearch(String value) {
         if (value.isEmpty()) {
             searchAdapter.updateRecipes(new ArrayList<>());
             searchResultLabel.setVisibility(View.GONE);
@@ -115,4 +144,26 @@ public class HomeFragment extends Fragment implements GenericRecipeAdapter.OnRec
             searchResultLabel.setVisibility(View.VISIBLE);
         }
     }
+
+    private void handleCategoryFilter(Category category) {
+        List<Recipe> filteredRecipes = allRecipes.stream()
+                .filter(recipe -> {
+                    String categoryJsonString = recipe.getCategoryId();
+                    if (categoryJsonString != null) {
+                        try {
+                            JSONObject categoryJson = new JSONObject(categoryJsonString);
+                            String categoryName = categoryJson.getString("name");
+                            return categoryName.equals(category.getName());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    return false;
+                })
+                .collect(Collectors.toList());
+
+        searchAdapter.updateRecipes(filteredRecipes);
+        searchResultLabel.setVisibility(View.VISIBLE);
+    }
+
 }
