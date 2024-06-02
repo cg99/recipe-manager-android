@@ -291,6 +291,27 @@ public class UserRepository {
         return sharedPreferences.getString(Util.USER_ID_KEY, null);
     }
 
+    public LiveData<String> updatePassword(String currentPassword, String newPassword, String confirmPassword) {
+        MutableLiveData<String> result = new MutableLiveData<>();
+        String token = getToken();
+        retrofitService.updatePassword(token, currentPassword, newPassword, confirmPassword, new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    result.postValue("Password Updated Successfully");
+                } else {
+                    result.postValue("Error Updating Password: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                result.postValue("Error: " + t.getMessage());
+            }
+        });
+        return result;
+    }
+
     public void clearSession() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 //        editor.remove(Util.TOKEN_KEY);

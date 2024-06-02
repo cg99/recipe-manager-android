@@ -1,9 +1,11 @@
 package com.sydney.recipemanagaer.networking.retrofit;
 
+import com.google.gson.JsonObject;
 import com.sydney.recipemanagaer.model.Category;
 import com.sydney.recipemanagaer.model.Review;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -116,4 +118,16 @@ public interface ApiService {
 
     @POST("categories")
     Call<ResponseBody> createCategory(@Body Category category, @Header("Authorization") String token);
+
+    @POST("user/forgetPassword")
+    Call<ResponseBody> forgotPassword(@Body JsonObject email);
+
+    @PATCH("user/resetPassword/{token}")
+    Call<Void> resetPassword(@Path("token") String token, @Body JsonObject password);
+
+    @PATCH("user/login/updatePassword")
+    Call<ResponseBody> updatePassword(
+            @Header("Authorization") String token,
+            @Body Map<String, String> body
+    );
 }

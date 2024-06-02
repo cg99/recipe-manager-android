@@ -3,6 +3,7 @@ package com.sydney.recipemanagaer.networking.retrofit;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.JsonObject;
 import com.sydney.recipemanagaer.model.Category;
 import com.sydney.recipemanagaer.model.Recipe;
 import com.sydney.recipemanagaer.model.Review;
@@ -14,7 +15,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -535,5 +538,22 @@ public class RetrofitService {
         });
     }
 
+
+    public void forgotPassword(String email, Callback<ResponseBody> callback) {
+        JsonObject emailJson = new JsonObject();
+        emailJson.addProperty("email", email);
+        Call<ResponseBody> call = apiService.forgotPassword(emailJson);
+        call.enqueue(callback);
+    }
+
+    public void updatePassword(String token, String currentPassword, String newPassword, String confirmPassword, Callback<ResponseBody> callback) {
+        Map<String, String> body = new HashMap<>();
+        body.put("currentPassword", currentPassword);
+        body.put("password", newPassword);
+        body.put("confirmPassword", confirmPassword);
+
+        Call<ResponseBody> call = apiService.updatePassword("Bearer " + token, body);
+        call.enqueue(callback);
+    }
 
 }
