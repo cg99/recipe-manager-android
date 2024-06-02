@@ -247,7 +247,7 @@ public class RecipeRepository {
                 recipe.setFeaturedImgURL(featuredImgURL);
                 recipe.setImages(imagesURL);
 
-                String category = recipeObject.optString("category", "no type");
+                String category = recipeObject.getString("category");
                 recipe.setCategoryId(category);
 
                 recipes.add(recipe);
