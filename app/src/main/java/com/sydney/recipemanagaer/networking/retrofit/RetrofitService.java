@@ -59,10 +59,12 @@ public class RetrofitService {
     }
 
     private MultipartBody.Part createMultipartBodyPart(String partName, String filePath) {
-        File file = new File(filePath);
-        if (file.exists()) {
-            RequestBody fileBody = RequestBody.create(file, MediaType.parse("image/*"));
-            return MultipartBody.Part.createFormData(partName, file.getName(), fileBody);
+        if (filePath != null && !filePath.isEmpty()) {
+            File file = new File(filePath);
+            if (file.exists()) {
+                RequestBody fileBody = RequestBody.create(file, MediaType.parse("image/*"));
+                return MultipartBody.Part.createFormData(partName, file.getName(), fileBody);
+            }
         }
         return null;
     }
