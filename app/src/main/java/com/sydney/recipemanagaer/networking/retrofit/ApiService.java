@@ -35,7 +35,8 @@ public interface ApiService {
             @Part("createdBy") RequestBody createdBy,
             @Part MultipartBody.Part featuredImage,
             @Part List<MultipartBody.Part> images,
-            @Part("category") RequestBody category
+            @Part("category") RequestBody category,
+            @Header("Authorization") String token
 
     );
 
@@ -50,7 +51,8 @@ public interface ApiService {
             @Part("cookingTime") RequestBody cookingTime,
             @Part MultipartBody.Part featuredImage,
             @Part List<MultipartBody.Part> images,
-            @Part("category") RequestBody category
+            @Part("category") RequestBody category,
+            @Header("Authorization") String token
     );
 
     @GET("recipe")
@@ -81,19 +83,19 @@ public interface ApiService {
     );
 
     @GET("recipe/favorites/{userId}")
-    Call<ResponseBody> getUserFavorites(@Path("userId") String userId);
+    Call<ResponseBody> getUserFavorites(@Path("userId") String userId, @Header("Authorization") String token);
 
     @GET("recipe/myrecipe/{userId}")
-    Call<ResponseBody> getUserRecipes(@Path("userId") String userId);
+    Call<ResponseBody> getUserRecipes(@Path("userId") String userId, @Header("Authorization") String token);
 
     @DELETE("recipe/{recipeId}")
-    Call<String> deleteRecipe(@Path("recipeId") String recipeId);
+    Call<String> deleteRecipe(@Path("recipeId") String recipeId, @Header("Authorization") String token);
 
     @GET("user/{userId}")
     Call<ResponseBody> getUserById(@Path("userId") String userId, @Header("Authorization") String token);
 
     @PATCH("recipe/{recipeId}/favorite")
-    Call<ResponseBody> markRecipeAsFavorite(@Path("recipeId") String recipeId, @Query("userId") String userId);
+    Call<ResponseBody> markRecipeAsFavorite(@Path("recipeId") String recipeId, @Query("userId") String userId, @Header("Authorization") String token);
 
     @GET("user")
     Call<ResponseBody> getUsers(@Header("Authorization") String token);
